@@ -49,14 +49,14 @@ Examples: `examples/` has a hello window, a security-header checker (a real smal
 ## What is verified
 
 Checked by hand on an Intel Mac (macOS 15.5) with Python 3.14 and PyObjC 12.2.2, in dark appearance (light appearance only with an early prototype):
-- All three examples start and render: boxes, `Spacer`, `TextBox`, `ComboBox`, `Button`, `CheckBox`, `SpinBox`, `GroupBox`, `TabControl` (General tab), `show_info`, `on_click` and `App.invoke`.
-- The control tests run on macOS (`python -m pytest`).
+- All four examples start and render: boxes, `Spacer`, `TextBox`, `ComboBox`, `Button`, `CheckBox`, `SpinBox`, `GroupBox`, `TabControl` (General tab), `RadioGroup`, `DropDown`, `Slider`, `ProgressBar` (driven from a worker thread via `App.invoke`), `Image` (SF Symbol), `Separator`, `ListBox`, `Table`, `HBox(align="stretch")`, `show_info`, `on_click`, `on_change`, `on_select` and `on_double_click`.
+- Example 03 also looked right in light appearance.
+- The test suite passes on macOS (`python -m pytest`: 42 passed, 3 skipped, the skipped ones are the non-macOS tests).
 
 Not yet checked on real hardware:
-- `RadioGroup`, `DropDown`, `Slider`, `ProgressBar`, `Image`, `Separator`, `ListBox`, `Table` and `HBox(align="stretch")` (example 03 and their tests have not been run on a Mac yet).
-- The Advanced tab, `on_change` handlers, `ask_yes_no`, the file dialogs.
+- The Advanced tab, `ask_yes_no`, the file dialogs.
 - The menu bar shortcuts (Cmd+C, Cmd+V, Cmd+A, Cmd+Q).
-- Light appearance for the newer controls.
+- Light appearance for the other examples.
 - Apple Silicon, other macOS versions, multiple displays.
 - The CI workflow itself.
 
