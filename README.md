@@ -84,6 +84,16 @@ Run slow work in a thread and hand the result back with `app.invoke(function, *a
 
 A Mac has one menu bar for the whole app, so a `MenuBar` belongs to a window: while that window is the key window, its menus sit between the standard App menu and the Edit and Window menus. Shortcuts are written `Cmd+S`, `Cmd+Shift+N`, `F5` (`Ctrl+S` also means Cmd, so code written for BareWinGUI keeps working). `&` access-key markers in labels are removed.
 
+## Differences from BareWinGUI
+
+Compared by reading the constructor signatures of both libraries (not by running the Windows one). Names that stay different on purpose, because the native thing is different:
+
+- `Table`, `Tree`, `IconGrid`, `Sidebar`, `SplitView`, `Switch`, `ColorWell`, `DropZone`, `StatusItem`, `Settings` have no or different counterparts (BareWinGUI calls its table `ListView` and its tree `TreeView`).
+- `DatePicker(calendar=True)` shows the calendar style of NSDatePicker; BareWinGUI has `long=` for the long date format.
+- `Slider` has no `vertical=`/`ticks=` yet; `RadioGroup` is one control with `items`, not single radio buttons.
+- Dialogs take `parent=` and `then=` (macOS sheets); `choose_color` and `choose_font` do not exist yet.
+- `Cmd` is the shortcut modifier; "Ctrl" in a shortcut string also means Cmd, so one string works on both systems.
+
 ## Accessibility
 
 Every control takes `tooltip="..."` (the hint on hover) and `accessibility_label="..."` (what VoiceOver reads). Controls with visible text (a `Button("Save")`, a `CheckBox`) are read from their title by AppKit; give a label to everything without text of its own: icon buttons, `Image(..., description="Warning")`, `Slider`, `ProgressBar`, `SegmentedControl` with symbols, `SearchField`. The examples do this. Whether the labels read well with VoiceOver has not been checked by hand.
