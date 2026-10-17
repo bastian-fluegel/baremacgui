@@ -1,8 +1,8 @@
-# baremacgui
+# BareMacGUI
 
-A thin Python layer for native macOS windows. Real AppKit controls through PyObjC, put together with short `with` blocks. No own drawing layer, no widget toolkit of its own: Dark Mode, system fonts and standard behaviour come from macOS.
+BareMacGUI is a thin Python layer for native macOS windows. Real AppKit controls through PyObjC, put together with short `with` blocks. No own drawing layer, no widget toolkit of its own: Dark Mode, system fonts and standard behaviour come from macOS.
 
-Same API shape as [BareWinGUI](https://github.com/bastian-fluegel/barewingui), its Windows sibling.
+The package and import name is `baremacgui`. The API shape follows BareWinGUI, the author's library for Windows.
 
 > **Status: pre-alpha.** The API will change. See "What is verified" below.
 

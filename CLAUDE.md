@@ -1,7 +1,8 @@
-# baremacgui: notes for Claude
+# BareMacGUI: notes for Claude
 
-Thin Python layer for native macOS GUIs on AppKit via PyObjC. Sibling of BareWinGUI
-(github.com/bastian-fluegel/barewingui): same API shape, same names.
+The project is called BareMacGUI (package and import name `baremacgui`, shorthand "bmc").
+Thin Python layer for native macOS GUIs on AppKit via PyObjC. Its API shape follows BareWinGUI,
+the author's Windows library; the Windows project is a different project and never the name of this one.
 
 ## Rules
 - The only runtime dependency is PyObjC (`pyobjc-framework-Cocoa`). Add nothing else without a reason and a test.

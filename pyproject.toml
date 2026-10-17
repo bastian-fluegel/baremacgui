@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "baremacgui"
 dynamic = ["version"]
-description = "Thin Python layer for native macOS GUIs on AppKit via PyObjC. Same API shape as BareWinGUI."
+description = "BareMacGUI: a thin Python layer for native macOS GUIs on AppKit via PyObjC."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"

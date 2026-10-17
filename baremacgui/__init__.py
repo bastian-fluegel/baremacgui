@@ -1,6 +1,6 @@
-"""baremacgui: a thin Python layer for native macOS windows on AppKit.
+"""BareMacGUI (import name: baremacgui): a thin Python layer for native macOS windows on AppKit.
 
-Same API shape as BareWinGUI: windows and controls from short with-blocks,
+The API shape follows BareWinGUI, the author's Windows library: windows and controls from short with-blocks,
 handlers without arguments, background work handed back with App.invoke.
 Importing this package works on any OS; building windows needs macOS and PyObjC.
 """
