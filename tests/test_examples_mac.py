@@ -38,7 +38,7 @@ def run_example(path):
 
 
 def test_there_are_examples():
-    assert len(EXAMPLES) >= 14
+    assert len(EXAMPLES) >= 15
 
 
 @pytest.mark.parametrize("path", EXAMPLES, ids=lambda p: p.stem)
@@ -98,3 +98,11 @@ def test_drop_example_collects_files(headless, tmp_path):
     assert ns["summary"].text == "2 item(s)"
     ns["clear"].on_click.emit()
     assert ns["table"].rows == [] and ns["summary"].text == "Nothing dropped yet"
+
+
+def test_checklist_example(headless):
+    ns = run_example(example("14_checklist"))
+    assert ns["progress_text"]([[True], [False]]) == "1 of 2 done"
+    assert ns["status"].text == "2 of 5 done"
+    ns["table"]._table.viewAtColumn_row_makeIfNecessary_(0, 1, True).subviews()[0].performClick_(None)
+    assert ns["status"].text == "3 of 5 done"

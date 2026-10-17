@@ -168,26 +168,74 @@ def table_source_class():
         def tableView_viewForTableColumn_row_(self, table, column, row):
             # View-based cells: this is what gives the modern inset look and rounded selection.
             ak = AK()
-            cell = table.makeViewWithIdentifier_owner_("BareMacCell", self)
-            if cell is None:
-                cell = ak.NSTableCellView.alloc().init()
-                cell.setIdentifier_("BareMacCell")
-                field = ak.NSTextField.labelWithString_("")
-                field.setTranslatesAutoresizingMaskIntoConstraints_(False)
-                field.setLineBreakMode_(ak.NSLineBreakByTruncatingTail)
-                field.setDelegate_(self)  # controlTextDidEndEditing_ reports edits
-                cell.addSubview_(field)
-                cell.setTextField_(field)
-                field.leadingAnchor().constraintEqualToAnchor_constant_(cell.leadingAnchor(), 2.0).setActive_(True)
-                field.trailingAnchor().constraintEqualToAnchor_constant_(cell.trailingAnchor(), -2.0).setActive_(True)
-                field.centerYAnchor().constraintEqualToAnchor_(cell.centerYAnchor()).setActive_(True)
             position = int(column.identifier())
+            kind = self._owner._kinds[position]
+            value = self._owner._rows[row][position]
+            identifier = {"text": "BareMacCell", "check": "BareMacCheck", "icon": "BareMacIcon"}[kind]
+            cell = table.makeViewWithIdentifier_owner_(identifier, self)
+            if cell is None:
+                cell = self._new_cell(kind, identifier)
+            if kind == "check":
+                cell.subviews()[0].setState_(ak.NSControlStateValueOn if value else ak.NSControlStateValueOff)
+                return cell
             field = cell.textField()
-            field.setStringValue_(self._owner._rows[row][position])
             editable = position in self._owner._editable
             field.setEditable_(editable)
             field.setSelectable_(editable)
+            if kind == "icon":
+                symbol, text = value
+                image = ak.NSImage.imageWithSystemSymbolName_accessibilityDescription_(symbol, None) if symbol else None
+                cell.imageView().setImage_(image)
+                cell.imageView().setHidden_(image is None)
+                field.setStringValue_(text)
+            else:
+                field.setStringValue_(value)
             return cell
+
+        @objc.python_method
+        def _new_cell(self, kind, identifier):
+            ak = AK()
+            cell = ak.NSTableCellView.alloc().init()
+            cell.setIdentifier_(identifier)
+            if kind == "check":
+                button = ak.NSButton.alloc().init()
+                button.setButtonType_(ak.NSButtonTypeSwitch)
+                button.setTitle_("")
+                button.setTranslatesAutoresizingMaskIntoConstraints_(False)
+                button.setTarget_(self)
+                button.setAction_(b"checkToggled:")
+                cell.addSubview_(button)
+                button.leadingAnchor().constraintEqualToAnchor_constant_(cell.leadingAnchor(), 2.0).setActive_(True)
+                button.centerYAnchor().constraintEqualToAnchor_(cell.centerYAnchor()).setActive_(True)
+                return cell
+            field = ak.NSTextField.labelWithString_("")
+            field.setTranslatesAutoresizingMaskIntoConstraints_(False)
+            field.setLineBreakMode_(ak.NSLineBreakByTruncatingTail)
+            field.setDelegate_(self)  # controlTextDidEndEditing_ reports edits
+            cell.addSubview_(field)
+            cell.setTextField_(field)
+            leading = cell.leadingAnchor()
+            offset = 2.0
+            if kind == "icon":
+                icon = ak.NSImageView.alloc().init()
+                icon.setTranslatesAutoresizingMaskIntoConstraints_(False)
+                if hasattr(icon, "setContentTintColor_"):
+                    icon.setContentTintColor_(ak.NSColor.secondaryLabelColor())
+                cell.addSubview_(icon)
+                cell.setImageView_(icon)
+                icon.leadingAnchor().constraintEqualToAnchor_constant_(leading, 2.0).setActive_(True)
+                icon.centerYAnchor().constraintEqualToAnchor_(cell.centerYAnchor()).setActive_(True)
+                icon.widthAnchor().constraintEqualToConstant_(18.0).setActive_(True)
+                leading = icon.trailingAnchor()
+                offset = 6.0
+            field.leadingAnchor().constraintEqualToAnchor_constant_(leading, offset).setActive_(True)
+            field.trailingAnchor().constraintEqualToAnchor_constant_(cell.trailingAnchor(), -2.0).setActive_(True)
+            field.centerYAnchor().constraintEqualToAnchor_(cell.centerYAnchor()).setActive_(True)
+            return cell
+
+        @objc.IBAction
+        def checkToggled_(self, button):
+            safe_call(self._owner._toggled, button)
 
         def tableView_sortDescriptorsDidChange_(self, table, old):
             safe_call(self._owner._sort_changed)

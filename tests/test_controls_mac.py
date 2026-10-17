@@ -802,6 +802,40 @@ def test_clipboard_text_roundtrip():
     assert clipboard.text == ""
 
 
+# -- table cell kinds ---------------------------------------------------------
+def test_table_check_and_icon_columns():
+    calls = []
+    rows = [[False, ("doc", "one"), "x"], [True, ("folder", "two"), "y"]]
+    t = build(("t", lambda: Table(["Done", "Name", "Note"], rows, kinds=["check", "icon", "text"],
+                                  sortable=True, on_edit=lambda: calls.append(1))))["t"]
+    assert t.rows == rows
+    first = t._table.viewAtColumn_row_makeIfNecessary_(0, 0, True)
+    box = first.subviews()[0]
+    assert int(box.state()) == 0
+    assert int(t._table.viewAtColumn_row_makeIfNecessary_(0, 1, True).subviews()[0].state()) == 1
+    box.performClick_(None)  # what a mouse click does
+    assert t.rows[0][0] is True and t.edited == (0, 0) and calls == [1]
+    named = t._table.viewAtColumn_row_makeIfNecessary_(1, 1, True)
+    assert str(named.textField().stringValue()) == "two"
+    assert named.imageView().image() is not None and not named.imageView().isHidden()
+    t.rows = [[False, "no icon", "z"]]  # a plain string is a cell without an icon
+    assert t.rows == [[False, ("", "no icon"), "z"]]
+    assert t._table.viewAtColumn_row_makeIfNecessary_(1, 0, True).imageView().isHidden()
+    t.sort(0)
+    assert t.sorted_by == (0, True)
+
+
+def test_table_kinds_are_checked():
+    with Window("t", visible=False):
+        with VBox():
+            with pytest.raises(ValueError):
+                Table(["a", "b"], [], kinds=["check"])
+            with pytest.raises(TypeError):
+                Table(["a"], [["yes"]], kinds=["check"])
+            with pytest.raises(ValueError):
+                Table(["a"], [[("no.such.symbol.xyz", "t")]], kinds=["icon"])
+
+
 # -- drag and drop ------------------------------------------------------------
 class _FakeDrag:
     """Stands in for NSDraggingInfo: the pasteboard carries real file URLs, as Finder would put them."""

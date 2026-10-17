@@ -134,16 +134,53 @@ def check_columns(columns):
     return result
 
 
-def check_rows(rows, width):
-    """Rows of cells, each exactly `width` long; every cell becomes a string."""
+COLUMN_KINDS = ("text", "check", "icon")
+
+
+def check_kinds(kinds, width):
+    """Column kinds of a Table: None (all text) or one of 'text', 'check', 'icon' per column."""
+    if kinds is None:
+        return ["text"] * width
+    if isinstance(kinds, str):
+        raise TypeError("kinds must be a list with one entry per column, not a single string")
+    result = list(kinds)
+    if len(result) != width:
+        raise ValueError(f"kinds has {len(result)} entries, expected {width} (one per column)")
+    for kind in result:
+        if kind not in COLUMN_KINDS:
+            raise ValueError(f"column kind must be one of {', '.join(COLUMN_KINDS)}; got {kind!r}")
+    return result
+
+
+def _check_cell(kind, cell, where):
+    if kind == "check":
+        if not isinstance(cell, bool):
+            raise TypeError(f"{where}: a check cell must be True or False, got {cell!r}")
+        return cell
+    if kind == "icon":
+        if isinstance(cell, (tuple, list)):
+            if len(cell) != 2:
+                raise ValueError(f"{where}: an icon cell is (symbol, text), got {cell!r}")
+            return (str(cell[0]), str(cell[1]))
+        return ("", str(cell))
+    return str(cell)
+
+
+def check_rows(rows, width, kinds=None):
+    """Rows of cells, each exactly `width` long.
+
+    Cells become strings, except in 'check' columns (True/False) and 'icon' columns
+    ((symbol, text) tuples; a plain string is a cell without an icon).
+    """
+    kinds = check_kinds(kinds, width)
     result = []
     for number, row in enumerate(rows):
         if isinstance(row, str):
             raise TypeError(f"row {number} must be a list of cells, not a string")
-        cells = [str(cell) for cell in row]
+        cells = list(row)
         if len(cells) != width:
             raise ValueError(f"row {number} has {len(cells)} cells, expected {width}")
-        result.append(cells)
+        result.append([_check_cell(kind, cell, f"row {number}") for kind, cell in zip(kinds, cells)])
     return result
 
 
@@ -382,6 +419,10 @@ def format_color(r, g, b, a=1.0):
 
 
 def _sort_value(text):
+    if isinstance(text, bool):
+        return (0, float(text), "")
+    if isinstance(text, tuple):  # an icon cell sorts by its text
+        text = text[1]
     try:
         return (0, float(str(text).strip().replace(",", ".")), "")
     except ValueError:

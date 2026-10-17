@@ -2,9 +2,10 @@
 from __future__ import annotations
 
 from ._bridge import AK, FN, make_target, table_source_class
+from ._collections import _symbol_image
 from ._controls import Control
 from ._events import event
-from ._options import check_columns, check_editable, check_index, check_items, check_rows, sort_order
+from ._options import check_columns, check_editable, check_index, check_items, check_kinds, check_rows, sort_order
 
 
 class Table(Control):
@@ -19,11 +20,16 @@ class Table(Control):
     editable  True, or a list of column indexes: double-click a cell to edit it (on_edit fires; the
               position is in .edited, the new text is in .rows)
     sortable  clicking a column header sorts by it (numbers numerically, text case-insensitive)
+    kinds     one entry per column: "text" (default), "check" or "icon".
+              A "check" column shows a checkbox per row; its cells are True/False and the user toggles
+              them (on_edit fires, .edited holds the position). An "icon" column shows an SF Symbol
+              before the text; its cells are (symbol, text) tuples, or a plain string for no icon.
 
     Setting .rows, the selection or the sort order from code never calls the handlers; only user
     input does.
 
-    Native counterpart: NSTableView with view-based cells. Difference: cells are always text.
+    Native counterpart: NSTableView with view-based cells (NSTableCellView with a text field, an image
+    view, or an NSButton checkbox). Difference: one cell kind per column, not per row.
     """
 
     on_edit = event()
@@ -33,10 +39,11 @@ class Table(Control):
     on_double_click = event()
 
     def __init__(self, columns, rows=(), multiple=False, header=True, striped=False, grow=0,
-                 editable=False, sortable=False, **size):
+                 editable=False, sortable=False, kinds=None, **size):
         ak = AK()
         titles = check_columns(columns)
-        self._rows = check_rows(rows, len(titles))
+        self._kinds = check_kinds(kinds, len(titles))
+        self._rows = self._checked(rows, len(titles))
         self._muted = False
         self._quiet = False
         self._sorted_by = None
@@ -75,6 +82,15 @@ class Table(Control):
         size.setdefault("min_width", 200)
         super().__init__(scroll, grow, **size)
         self._bind_double(table)
+
+    def _checked(self, rows, width):
+        """Validated rows; the symbols of icon cells must exist."""
+        result = check_rows(rows, width, self._kinds)
+        for row in result:
+            for kind, cell in zip(self._kinds, row):
+                if kind == "icon" and cell[0]:
+                    _symbol_image(cell[0])
+        return result
 
     def _menu_view(self):
         return self._table
@@ -127,9 +143,24 @@ class Table(Control):
         if row < 0 or column < 0:
             return
         text = str(field.stringValue())
-        if text == self._rows[row][column]:
+        old = self._rows[row][column]
+        if self._kinds[column] == "icon":
+            if text == old[1]:
+                return
+            self._rows[row][column] = (old[0], text)
+        else:
+            if text == old:
+                return
+            self._rows[row][column] = text
+        self.edited = (row, column)
+        self.on_edit.emit()
+
+    def _toggled(self, button):
+        row = int(self._table.rowForView_(button))
+        column = int(self._table.columnForView_(button))
+        if row < 0 or column < 0 or self._kinds[column] != "check":
             return
-        self._rows[row][column] = text
+        self._rows[row][column] = int(button.state()) == int(AK().NSControlStateValueOn)
         self.edited = (row, column)
         self.on_edit.emit()
 
@@ -156,7 +187,7 @@ class Table(Control):
 
     @rows.setter
     def rows(self, values):
-        self._rows = [list(row) for row in check_rows(values, len(self._columns))]
+        self._rows = [list(row) for row in self._checked(values, len(self._columns))]
         if self._sorted_by is not None:
             column, ascending = self._sorted_by
             self._rows = [self._rows[i] for i in sort_order(self._rows, column, ascending)]

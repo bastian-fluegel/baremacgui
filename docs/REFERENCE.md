@@ -658,7 +658,7 @@ Properties:
 - `texts` (read-only): Texts of all selected entries.
 - `visible`: False hides the control; a box closes the gap it leaves.
 
-### `Table(columns, rows=(), multiple=False, header=True, striped=False, grow=0, editable=False, sortable=False, **size)`
+### `Table(columns, rows=(), multiple=False, header=True, striped=False, grow=0, editable=False, sortable=False, kinds=None, **size)`
 
 ```text
 A scrollable table of text cells with a header row.
@@ -672,11 +672,16 @@ striped   alternating row backgrounds (off by default; modern macOS lists are pl
 editable  True, or a list of column indexes: double-click a cell to edit it (on_edit fires; the
           position is in .edited, the new text is in .rows)
 sortable  clicking a column header sorts by it (numbers numerically, text case-insensitive)
+kinds     one entry per column: "text" (default), "check" or "icon".
+          A "check" column shows a checkbox per row; its cells are True/False and the user toggles
+          them (on_edit fires, .edited holds the position). An "icon" column shows an SF Symbol
+          before the text; its cells are (symbol, text) tuples, or a plain string for no icon.
 
 Setting .rows, the selection or the sort order from code never calls the handlers; only user
 input does.
 
-Native counterpart: NSTableView with view-based cells. Difference: cells are always text.
+Native counterpart: NSTableView with view-based cells (NSTableCellView with a text field, an image
+view, or an NSButton checkbox). Difference: one cell kind per column, not per row.
 ```
 
 Events: `on_double_click`, `on_edit`, `on_select`, `on_sort`

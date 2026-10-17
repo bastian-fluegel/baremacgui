@@ -111,6 +111,7 @@ Run them with `python examples/<file>.py`:
 - `11_notes.py`: split view with list and editor, notes kept with `Settings`
 - `12_menubar.py`: menu-bar clock without a Dock icon
 - `13_drop.py`: drop files from Finder onto a `DropZone`
+- `14_checklist.py`: table with a checkbox column and SF Symbols (`Table(kinds=...)`)
 
 `tests/test_examples_mac.py` builds every example on macOS CI and tests the helper functions they define.
 
@@ -142,6 +143,7 @@ Not yet checked on real hardware:
 - `SplitView`: dragging the dividers by mouse, remembering them across a restart (`autosave=`), window resizing with `fixed=` panes.
 - `Settings` across real app restarts (CI only checks that a second object sees the values), `Window(autosave=)` restoring the position after a real quit.
 - `ColorWell` with the real color panel, `Switch` by mouse, `clipboard` pasting into other apps.
+- `Table(kinds=...)`: CI toggles the checkbox with `performClick`; clicking it by mouse, and how the checkbox and symbol cells look in light and dark, are unchecked.
 - `DropZone` with a real drag from Finder (CI feeds it a pasteboard with file URLs and calls the drag methods; the mouse drag itself, the highlight and the cursor are unchecked).
 - `Table` and `Tree` `on_double_click` ignoring double-clicks on the header or empty space (uses `clickedRow`).
 - Light appearance for the other examples.

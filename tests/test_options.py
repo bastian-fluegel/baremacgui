@@ -273,3 +273,25 @@ def test_filter_dropped(tmp_path):
     assert filter_dropped(["/a/one.png"], ("png",), multiple=False) == ["/a/one.png"]
     assert filter_dropped(["/a/one.png", "/a/two.png"], ("png",), multiple=False) == []
     assert filter_dropped(["/a/one.png", "/a/two.txt"], ("png",), multiple=False) == []
+
+
+# -- Table column kinds -----------------------------------------------------
+def test_check_kinds_and_typed_rows():
+    assert o.check_kinds(None, 2) == ["text", "text"]
+    assert o.check_kinds(["check", "icon"], 2) == ["check", "icon"]
+    for bad in ("check", ["check"], ["check", "x"]):
+        with pytest.raises((TypeError, ValueError)):
+            o.check_kinds(bad, 2)
+    rows = o.check_rows([[True, ("doc", "a"), 5], [False, "plain", "x"]], 3, ["check", "icon", "text"])
+    assert rows == [[True, ("doc", "a"), "5"], [False, ("", "plain"), "x"]]
+    with pytest.raises(TypeError):
+        o.check_rows([["yes"]], 1, ["check"])
+    with pytest.raises(ValueError):
+        o.check_rows([[("a", "b", "c")]], 1, ["icon"])
+
+
+def test_sort_order_check_and_icon_cells():
+    rows = [[True, ("a", "Beta")], [False, ("b", "alpha")], [True, ("c", "Gamma")]]
+    assert o.sort_order(rows, 0) == [1, 0, 2]
+    assert o.sort_order(rows, 0, False) == [0, 2, 1]
+    assert o.sort_order(rows, 1) == [1, 0, 2]

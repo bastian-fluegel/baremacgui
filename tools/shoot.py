@@ -98,6 +98,10 @@ SCENARIOS = {
         (lambda g: g["new_note"](), 0.8, "notes-new"),
         (lambda g: g["split"].set_position(0, 260) if "split" in g else None, 0.8, "notes-wide"),
     ]),
+    "checklist": ("14_checklist.py", [
+        (None, 1.0, "checklist-start"),
+        (lambda g: (g["table"]._table.viewAtColumn_row_makeIfNecessary_(0, 1, True).subviews()[0].performClick_(None)), 0.8, "checklist-ticked"),
+    ]),
     "drop": ("13_drop.py", [
         (None, 1.0, "drop-empty"),
         (lambda g: g["zone"]._drop([os.path.abspath(f"examples/{n}") for n in ("00_hello.py", "06_everything.py", "../docs")]), 0.8, "drop-received"),
