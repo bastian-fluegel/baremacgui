@@ -16,3 +16,9 @@ Thin Python layer for native macOS GUIs on AppKit via PyObjC. Sibling of BareWin
 - The author tests on a real Mac (Intel, Python 3.14, PyObjC 12.x) and reports back. Claude cannot run macOS code here: say so, never claim a macOS test passed.
 - Answer the author in German. Code, comments, README and commit messages are English.
 - Most likely to need fixes after the first real run: GroupBox and TabControl sizing, the filler spacing in boxes, the menu bar selectors.
+
+## Looking at the windows (no Mac needed)
+- The GitHub workflow "Screenshots" runs every example on a macOS runner, drives it with `tools/shoot.py` and pushes the PNGs and a log to the branch `ci-screenshots`. Start it with `gh api -X POST repos/bastian-fluegel/baremacgui/actions/workflows/screenshots.yml/dispatches -f ref=main` (the `gh workflow` commands need GraphQL, which is blocked here), wait for the run via `gh api .../actions/runs/<id>`, then `git fetch origin ci-screenshots` and `git archive FETCH_HEAD` into the scratchpad and view the images. Artifact downloads and job logs are blocked from this sandbox; that is why the images go to a branch.
+- Scenarios call handlers and set controls from code; real clicks are not simulated. Add a step to `SCENARIOS` in `tools/shoot.py` for new features. `dump_window` prints the view tree with frames for layout bugs.
+- The runner's macOS is newer than the author's Mac (15.5). Layout differences between the two are real findings.
+- In PyObjC subclasses every method becomes a selector: helper methods need `@objc.python_method`.
