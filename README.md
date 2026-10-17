@@ -39,14 +39,17 @@ Needs macOS and Python 3.10 or newer. The one dependency is PyObjC (`pyobjc-fram
 - **Controls:** `Label`, `TextBox` (single and multi-line), `ComboBox`, `DropDown` (the standard pop-up menu), `Button`, `CheckBox`, `RadioGroup`, `SpinBox`, `Slider`, `ProgressBar`, `Image` (file or system symbol), `Separator`, `SearchField`, `SegmentedControl`, `ListBox` and `Table` (read-only text cells, single or multiple selection).
 - **Finder-style window:** `Window(..., style="unified")` hides the title text and lets the content start below a transparent title bar; `with Toolbar():` puts buttons (`Button("", symbol="chevron.left")`), `SegmentedControl`, `SearchField` and `Spacer` into that title bar. See `examples/04_finder.py`.
 - **Settings-style window:** `Window(..., style="sidebar")` with `with Sidebar():` and one `with Page("General", symbol="gearshape"):` per entry: a system sidebar on the left, the selected page on the right, window title follows the page. See `examples/05_settings_sidebar.py`.
+- **Icon view and tree:** `IconGrid` (icons with labels in a wrapping grid, SF Symbols) and `Tree` (expandable outline, optional source-list look; select by path).
 - **Containers:** `GroupBox`, `TabControl` with `Tab`.
-- **Dialogs:** `show_info`, `show_warning`, `show_error`, `ask_yes_no`, `open_file`, `save_file`, `choose_folder`.
+- **Sheets and popovers:** `Sheet(parent_window)` is a window built like a `Window` that slides down over its parent; `Popover` is a bubble next to a control (`popover.show(button)`).
+- **Escape hatch:** `Custom(view)` puts any AppKit view you made yourself into the layout; every control exposes its view as `.ns`.
+- **Dialogs:** `show_info`, `show_warning`, `show_error`, `ask_yes_no`, `open_file`, `save_file`, `choose_folder`. Give `parent=window` to get a sheet on that window; with `then=function` the call returns at once and function(result) runs later.
 - **Menu bar:** the standard App, Edit and Window menus, so Cmd+C, Cmd+V, Cmd+A and Cmd+Q work.
 - **Threads:** run slow work in a thread and hand the result back with `app.invoke(function, *args)`. Controls are never touched from other threads.
 
 Handlers are plain functions without arguments. Exceptions inside a handler are printed to the terminal; they do not crash the app.
 
-Examples: `examples/` has a hello window, a security-header checker (a real small tool), a settings window with tabs, a tour of the standard controls and a Finder-style window.
+Examples: `examples/` has a hello window, a security-header checker (a real small tool), a settings window with tabs, a tour of the standard controls, a Finder-style window, a settings window with a sidebar, and a small file browser (`06_everything.py`) that combines toolbar, tree, table, icon grid, popover, sheet and sheet dialogs.
 
 ## What is verified
 
@@ -58,6 +61,7 @@ Checked by hand on an Intel Mac (macOS 15.5) with Python 3.14 and PyObjC 12.2.2,
 - The test suite passes on macOS (`python -m pytest`: 53 passed, 3 skipped, the skipped ones are the non-macOS tests).
 
 Not yet checked on real hardware:
+- `IconGrid`, `Tree`, `Custom`, `Sheet`, `Popover`, sheet dialogs (`parent=`, `then=`), `Control.visible` and example 06 (written, never run on a Mac). The most fragile: the blocking sheet form (without `then`), the double-click on icons, and hiding/showing the table and icon grid in example 06.
 - `Sidebar` details: dragging the divider, hiding it, the minimum window size, light appearance.
 - Example 04 after the `Table` restyle: back/forward navigation, double-click into folders, search filter, light appearance.
 - The Advanced tab, `ask_yes_no`, the file dialogs.
@@ -70,7 +74,7 @@ Not yet checked on real hardware:
 
 - macOS only, standard AppKit controls only. No custom drawing, no rich text, no editable tables, no column sorting.
 - Needs PyObjC. "Bare" here means thin, not dependency-free.
-- Dialogs are application-modal; there are no window-modal sheets yet.
+- Dialogs without `parent` are application-modal. With `parent` and without `then`, the call waits through a nested modal loop (see the unverified list); `then=` is the dependable form.
 - Menu labels are English.
 - Running a script from a terminal gives a plain Python process: the menu bar title and Dock icon are Python's. A packaged `.app` is a separate step.
 

@@ -35,6 +35,15 @@ class Control:
     def enabled(self, value):
         self.ns.setEnabled_(bool(value))
 
+    @property
+    def visible(self):
+        """False hides the control; a box closes the gap it leaves."""
+        return not bool(self.ns.isHidden())
+
+    @visible.setter
+    def visible(self, value):
+        self.ns.setHidden_(not value)
+
     def _bind(self, ns, handler):
         """Route the action of `ns` to `handler` (a function without arguments)."""
         if not callable(handler):

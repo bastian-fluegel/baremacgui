@@ -14,7 +14,8 @@ if sys.platform == "darwin":
         SearchField, SegmentedControl, Separator, Slider, SpinBox, Spacer, Tab, TabControl, Table, TextBox, Toolbar,
         VBox, Window,
     )
-    from baremacgui import Page, Sidebar
+    from baremacgui import Custom, IconGrid, Page, Popover, Sheet, Sidebar, Tree
+    from baremacgui import show_info
     from baremacgui import _core
 
 
@@ -375,3 +376,125 @@ def test_page_outside_sidebar_raises():
         with VBox():
             with pytest.raises(RuntimeError, match="Sidebar"):
                 Page("x")
+
+
+def test_custom_embeds_view_and_visible():
+    from AppKit import NSColorWell
+
+    custom = build(("c", lambda: Custom(NSColorWell.alloc().init(), width=44, height=24)))["c"]
+    assert custom.visible
+    custom.visible = False
+    assert not custom.visible
+    with Window("test", visible=False):
+        with VBox():
+            with pytest.raises(TypeError):
+                Custom(None)
+            with pytest.raises(TypeError):
+                Custom("not a view")
+
+
+def test_icongrid_items_and_selection():
+    grid = build(("g", lambda: IconGrid(["a", ("b", "gear")], selected=1)))["g"]
+    assert grid.items == ["a", "b"] and grid.index == 1 and grid.text == "b"
+    grid.index = None
+    assert grid.index is None and grid.texts == []
+    grid.items = ["x", "y", "z"]
+    grid.index = 2
+    assert grid.indexes == [2]
+    with pytest.raises(ValueError):
+        grid.index = 3
+
+
+def test_icongrid_errors():
+    with Window("test", visible=False):
+        with VBox():
+            with pytest.raises(ValueError):
+                IconGrid(["a"], symbol="no.such.symbol.at.all")
+            with pytest.raises(ValueError):
+                IconGrid(["a"], icon_size=4)
+            with pytest.raises(ValueError):
+                IconGrid([("a", "no.such.symbol.at.all")])
+
+
+def test_icongrid_code_changes_do_not_call_handler():
+    calls = []
+    grid = build(("g", lambda: IconGrid(["a", "b"])))["g"]
+    grid.on_select(lambda: calls.append(1))
+    grid.index = 1
+    grid.items = ["c"]
+    assert calls == []
+    grid.on_double_click(lambda: None)
+
+
+def test_tree_path_selection():
+    tree = build(("t", lambda: Tree([("Home", [("Docs", ["a.txt"]), "Pics"]), "Other"], expanded=True)))["t"]
+    assert tree.path is None and tree.text is None
+    tree.path = ["Home", "Docs"]
+    assert tree.path == ["Home", "Docs"] and tree.text == "Docs"
+    tree.path = ["Home", "Docs", "a.txt"]
+    assert tree.paths == [["Home", "Docs", "a.txt"]]
+    with pytest.raises(ValueError):
+        tree.path = ["Home", "Nope"]
+    tree.path = None
+    assert tree.path is None
+
+
+def test_tree_collapsed_path_still_selectable_and_nodes_replace():
+    calls = []
+    tree = build(("t", lambda: Tree([("A", ["b"])], sidebar=True)))["t"]
+    tree.on_select(lambda: calls.append(1))
+    tree.path = ["A", "b"]
+    assert tree.path == ["A", "b"]
+    tree.nodes = [("X", ["y"])]
+    assert tree.nodes[0]["text"] == "X"
+    tree.expand_all()
+    tree.collapse_all()
+    assert calls == []
+
+
+def test_tree_bad_symbol():
+    with Window("test", visible=False):
+        with VBox():
+            with pytest.raises(ValueError):
+                Tree([{"text": "a", "symbol": "no.such.symbol.at.all"}])
+
+
+def test_sheet_builds_and_checks_parent():
+    with Window("test", visible=False) as win:
+        with VBox():
+            Label("x")
+    with pytest.raises(TypeError):
+        Sheet(object())
+    with Sheet(win, size=(300, 120)) as sheet:
+        with VBox(padding=10):
+            Label("hi")
+            Button("Close").on_click(sheet.close)
+    assert not sheet.is_open and not _core._stack
+    sheet.close()  # closing a sheet that is not open does nothing
+
+
+def test_popover_builds_and_checks():
+    with Popover() as pop:
+        with VBox(padding=10):
+            Label("hi")
+    assert pop.ns is not None and not pop.is_open
+    with pytest.raises(ValueError, match="needs content"):
+        with Popover():
+            pass
+    with pytest.raises(ValueError, match="exactly one child"):
+        with Popover():
+            Label("a")
+            Label("b")
+    with Window("test", visible=False):
+        with VBox():
+            label = Label("anchor")
+    with pytest.raises(ValueError):
+        pop.show(label, edge="middle")
+    assert not _core._stack
+
+
+def test_dialog_arguments_are_checked():
+    with pytest.raises(ValueError, match="needs parent"):
+        show_info("x", then=print)
+    with pytest.raises(TypeError):
+        show_info("x", parent=object())

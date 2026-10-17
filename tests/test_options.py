@@ -115,3 +115,45 @@ def test_check_window_style():
     assert o.check_window_style("unified") == "unified"
     with pytest.raises(ValueError):
         o.check_window_style("fancy")
+
+
+def test_check_icon_items():
+    assert o.check_icon_items(["a", ("b", "gear")], "doc") == [("a", "doc"), ("b", "gear")]
+    with pytest.raises(TypeError):
+        o.check_icon_items("abc")
+    with pytest.raises(TypeError):
+        o.check_icon_items([("a",)])
+    with pytest.raises(TypeError):
+        o.check_icon_items([3])
+
+
+def test_check_nodes_forms():
+    nodes = o.check_nodes([
+        "leaf",
+        ("branch", ["x", ("y", ["z"])]),
+        {"text": "full", "symbol": "folder", "children": ["c"]},
+    ])
+    assert [n["text"] for n in nodes] == ["leaf", "branch", "full"]
+    assert nodes[0] == {"text": "leaf", "symbol": None, "children": []}
+    assert nodes[1]["children"][1]["children"][0]["text"] == "z"
+    assert nodes[2]["symbol"] == "folder"
+
+
+def test_check_nodes_rejects_bad_input():
+    for bad in ("abc", {"text": "a"}, [3], [("a",)], [("a", "b", "c")], [{"symbol": "x"}],
+                [{"text": "a", "colour": 1}], [{"text": "a", "symbol": 3}]):
+        with pytest.raises(TypeError):
+            o.check_nodes(bad)
+
+
+def test_find_node_path():
+    nodes = o.check_nodes([("a", [("b", ["c"])]), "d"])
+    assert [n["text"] for n in o.find_node_path(nodes, ["a", "b", "c"])] == ["a", "b", "c"]
+    assert o.find_node_path(nodes, ["a", "x"]) is None
+    assert o.find_node_path(nodes, []) == []
+
+
+def test_check_popover_edge():
+    assert o.check_popover_edge("top") == "top"
+    with pytest.raises(ValueError):
+        o.check_popover_edge("middle")

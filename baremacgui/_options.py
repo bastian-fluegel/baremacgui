@@ -152,3 +152,78 @@ def check_window_style(style):
     if style not in WINDOW_STYLES:
         raise ValueError(f"Window style must be one of {', '.join(WINDOW_STYLES)}; got {style!r}")
     return style
+
+
+def check_icon_items(items, default_symbol="doc"):
+    """IconGrid entries: each a label, or a (label, symbol) pair. Returns [(label, symbol), ...]."""
+    if isinstance(items, str):
+        raise TypeError("items must be a list, not a single string")
+    result = []
+    for number, entry in enumerate(items):
+        if isinstance(entry, str):
+            result.append((entry, str(default_symbol)))
+        elif isinstance(entry, (tuple, list)) and len(entry) == 2 and all(isinstance(part, str) for part in entry):
+            result.append((entry[0], entry[1]))
+        else:
+            raise TypeError(f"item {number} must be a label or a (label, symbol) pair, got {entry!r}")
+    return result
+
+
+def check_nodes(nodes, _depth=0):
+    """Tree nodes. Each node is one of:
+
+        "Label"                                a leaf
+        ("Label", [children])                  a node with children
+        {"text": ..., "symbol": ..., "children": [...]}   symbol and children optional
+
+    Returns a list of {"text", "symbol", "children"} dicts (children normalized too).
+    """
+    if isinstance(nodes, (str, dict)):
+        raise TypeError("nodes must be a list")
+    if _depth > 50:
+        raise ValueError("tree is nested too deeply")
+    result = []
+    for number, node in enumerate(nodes):
+        if isinstance(node, str):
+            node = {"text": node}
+        elif isinstance(node, (tuple, list)):
+            if len(node) != 2 or not isinstance(node[0], str):
+                raise TypeError(f"node {number}: a tuple must be (label, [children]), got {node!r}")
+            node = {"text": node[0], "children": node[1]}
+        elif not isinstance(node, dict):
+            raise TypeError(f"node {number} must be a string, a (label, children) pair or a dict, got {node!r}")
+        unknown = sorted(set(node) - {"text", "symbol", "children"})
+        if unknown:
+            raise TypeError(f"node {number}: unexpected key(s): {', '.join(unknown)}")
+        if not isinstance(node.get("text"), str):
+            raise TypeError(f"node {number} needs a string under 'text'")
+        symbol = node.get("symbol")
+        if symbol is not None and not isinstance(symbol, str):
+            raise TypeError(f"node {number}: symbol must be a string")
+        result.append({
+            "text": node["text"],
+            "symbol": symbol,
+            "children": check_nodes(node.get("children") or [], _depth + 1),
+        })
+    return result
+
+
+def find_node_path(nodes, texts):
+    """Follow `texts` down normalized `nodes`; return the list of matching dicts, or None."""
+    found, level = [], nodes
+    for text in texts:
+        match = next((node for node in level if node["text"] == text), None)
+        if match is None:
+            return None
+        found.append(match)
+        level = match["children"]
+    return found
+
+
+POPOVER_EDGES = ("bottom", "top", "left", "right")
+
+
+def check_popover_edge(edge):
+    if edge not in POPOVER_EDGES:
+        raise ValueError(f"edge must be one of {', '.join(POPOVER_EDGES)}; got {edge!r}")
+    return edge

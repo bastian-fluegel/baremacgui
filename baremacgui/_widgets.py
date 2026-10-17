@@ -307,3 +307,19 @@ class SegmentedControl(Control):
     def on_change(self, handler):
         """Call handler() when the user picks another segment."""
         self._bind(self.ns, handler)
+
+
+class Custom(Control):
+    """Embed any AppKit view (an NSView) you made yourself.
+
+    The escape hatch for what baremacgui has no control for yet:
+
+        Custom(NSColorWell.alloc().init(), width=44, height=24)
+
+    The view takes part in the layout like any other control; `.ns` is the view.
+    """
+
+    def __init__(self, view, grow=0, **size):
+        if view is None or not hasattr(view, "setHidden_"):
+            raise TypeError("Custom needs an NSView, got %r" % (view,))
+        super().__init__(view, grow, **size)
