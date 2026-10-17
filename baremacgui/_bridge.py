@@ -116,8 +116,23 @@ def table_source_class():
         def numberOfRowsInTableView_(self, table):
             return len(self._owner._rows)
 
-        def tableView_objectValueForTableColumn_row_(self, table, column, row):
-            return self._owner._rows[row][int(column.identifier())]
+        def tableView_viewForTableColumn_row_(self, table, column, row):
+            # View-based cells: this is what gives the modern inset look and rounded selection.
+            ak = AK()
+            cell = table.makeViewWithIdentifier_owner_("BareMacCell", self)
+            if cell is None:
+                cell = ak.NSTableCellView.alloc().init()
+                cell.setIdentifier_("BareMacCell")
+                field = ak.NSTextField.labelWithString_("")
+                field.setTranslatesAutoresizingMaskIntoConstraints_(False)
+                field.setLineBreakMode_(ak.NSLineBreakByTruncatingTail)
+                cell.addSubview_(field)
+                cell.setTextField_(field)
+                field.leadingAnchor().constraintEqualToAnchor_constant_(cell.leadingAnchor(), 2.0).setActive_(True)
+                field.trailingAnchor().constraintEqualToAnchor_constant_(cell.trailingAnchor(), -2.0).setActive_(True)
+                field.centerYAnchor().constraintEqualToAnchor_(cell.centerYAnchor()).setActive_(True)
+            cell.textField().setStringValue_(self._owner._rows[row][int(column.identifier())])
+            return cell
 
         def tableViewSelectionDidChange_(self, notification):
             safe_call(self._owner._selection_changed)
