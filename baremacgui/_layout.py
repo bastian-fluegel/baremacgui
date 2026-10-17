@@ -13,6 +13,7 @@ _ALIGN_ATTR = {
     ("HBox", "start"): "NSLayoutAttributeTop",
     ("HBox", "center"): "NSLayoutAttributeCenterY",
     ("HBox", "end"): "NSLayoutAttributeBottom",
+    ("HBox", "stretch"): "NSLayoutAttributeTop",
 }
 
 
@@ -84,7 +85,8 @@ class _Box:
 
     padding  space between the box edge and its children
     gap      space between children
-    align    cross-axis alignment: start, center, end (VBox also: stretch)
+    align    cross-axis alignment: start, center, end, or stretch (children fill
+             the cross axis: the full width in a VBox, the full height in an HBox)
     grow     flex weight of the box itself inside its parent
 
     A box packs its children at the start. If none of them has grow > 0, an
@@ -169,6 +171,13 @@ class _Box:
                     item.view.widthAnchor().constraintEqualToAnchor_constant_(
                         stack.widthAnchor(), -2.0 * pad
                     ).setActive_(True)
+        elif self.align == "stretch":
+            for item in items:
+                if item.spacer:
+                    continue
+                item.view.heightAnchor().constraintEqualToAnchor_constant_(
+                    stack.heightAnchor(), -2.0 * pad
+                ).setActive_(True)
 
         _core.apply_size(stack, self._size)
         self.ns = stack

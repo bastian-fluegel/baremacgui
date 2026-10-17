@@ -10,7 +10,8 @@ pytestmark = pytest.mark.skipif(sys.platform != "darwin", reason="needs macOS an
 
 if sys.platform == "darwin":
     from baremacgui import (
-        Button, CheckBox, ComboBox, GroupBox, HBox, Label, SpinBox, Spacer, Tab, TabControl, TextBox, VBox, Window,
+        Button, CheckBox, ComboBox, DropDown, GroupBox, HBox, Image, Label, ListBox, ProgressBar, RadioGroup,
+        Separator, Slider, SpinBox, Spacer, Tab, TabControl, Table, TextBox, VBox, Window,
     )
     from baremacgui import _core
 
@@ -162,3 +163,94 @@ def test_exception_in_block_leaves_no_open_container():
             with VBox():
                 raise KeyError("boom")
     assert not _core._stack
+
+
+def test_radiogroup_selection():
+    radio = build(("radio", lambda: RadioGroup(["a", "b", "c"], selected=1)))["radio"]
+    assert radio.index == 1 and radio.text == "b"
+    radio.index = 2
+    assert radio.index == 2 and radio.text == "c"
+    with pytest.raises(ValueError):
+        radio.index = 5
+
+
+def test_radiogroup_needs_two_items():
+    with Window("test", visible=False):
+        with VBox():
+            with pytest.raises(ValueError):
+                RadioGroup(["only"])
+
+
+def test_dropdown():
+    dropdown = build(("dd", lambda: DropDown(["x", "y"], selected=1)))["dd"]
+    assert dropdown.text == "y" and dropdown.index == 1
+    dropdown.items = ["a", "b", "c"]
+    assert dropdown.items == ["a", "b", "c"]
+    dropdown.index = 2
+    assert dropdown.text == "c"
+
+
+def test_slider_clamps():
+    slider = build(("s", lambda: Slider(10, minimum=0, maximum=20)))["s"]
+    assert slider.value == 10.0
+    slider.value = 99
+    assert slider.value == 20.0
+
+
+def test_progressbar_value_and_no_enabled():
+    bar = build(("p", lambda: ProgressBar(5, maximum=10)))["p"]
+    bar.value = 7
+    assert bar.value == 7.0
+    with pytest.raises(TypeError):
+        bar.enabled = False
+
+
+def test_image_symbol_and_errors():
+    image = build(("img", lambda: Image(symbol="gearshape", width=16, height=16)))["img"]
+    assert image.ns is not None
+    with Window("test", visible=False):
+        with VBox():
+            with pytest.raises(FileNotFoundError):
+                Image(path="/nonexistent/picture.png")
+            with pytest.raises(ValueError):
+                Image()
+
+
+def test_separator_is_added():
+    box = build(("sep", Separator))["vbox"]
+    assert box.ns.arrangedSubviews().count() == 2  # separator + filler
+
+
+def test_listbox_selection_and_items():
+    listbox = build(("lb", lambda: ListBox(["a", "b", "c"], selected=1)))["lb"]
+    assert listbox.index == 1 and listbox.text == "b" and listbox.items == ["a", "b", "c"]
+    listbox.index = None
+    assert listbox.index is None and listbox.text is None
+    listbox.items = ["x"]
+    assert listbox.items == ["x"]
+
+
+def test_table_rows_and_selection():
+    table = build(("t", lambda: Table(["A", "B"], [[1, 2], [3, 4]], multiple=True)))["t"]
+    assert table.rows == [["1", "2"], ["3", "4"]]
+    table.index = 1
+    assert table.selected_rows == [["3", "4"]]
+    with pytest.raises(ValueError):
+        table.rows = [["only one"]]
+
+
+def test_selection_from_code_does_not_call_handler():
+    calls = []
+    listbox = build(("lb", lambda: ListBox(["a", "b"])))["lb"]
+    listbox.on_select(lambda: calls.append(1))
+    listbox.index = 1
+    listbox.items = ["c", "d"]
+    assert calls == []
+
+
+def test_hbox_stretch_builds():
+    with Window("test", visible=False):
+        with HBox(align="stretch") as row:
+            Label("a")
+            Label("b")
+    assert row.ns is not None

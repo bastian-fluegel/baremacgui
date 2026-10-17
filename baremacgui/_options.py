@@ -5,7 +5,7 @@ SIZE_KEYS = ("width", "height", "min_width", "max_width", "min_height", "max_hei
 
 _ALIGN = {
     "VBox": ("start", "center", "end", "stretch"),
-    "HBox": ("start", "center", "end"),
+    "HBox": ("start", "center", "end", "stretch"),
 }
 
 
@@ -92,3 +92,54 @@ def normalize_filetypes(filetypes):
             raise ValueError("file types must be non-empty strings like 'txt' or '.png'")
         result.append(entry.strip().lstrip(".").lower())
     return result or None
+
+
+def check_float_range(value, minimum, maximum):
+    """Slider/progress range: numbers only, minimum < maximum; returns value clamped."""
+    for name, number in (("value", value), ("minimum", minimum), ("maximum", maximum)):
+        if isinstance(number, bool) or not isinstance(number, (int, float)):
+            raise TypeError(f"{name} must be a number, got {number!r}")
+    if minimum >= maximum:
+        raise ValueError(f"minimum ({minimum}) must be smaller than maximum ({maximum})")
+    return float(clamp(value, minimum, maximum))
+
+
+def check_index(index, count, what="index"):
+    if isinstance(index, bool) or not isinstance(index, int):
+        raise TypeError(f"{what} must be an int, got {index!r}")
+    if not 0 <= index < count:
+        detail = f"outside 0..{count - 1}" if count else "invalid: the list is empty"
+        raise ValueError(f"{what} {index} is {detail}")
+    return index
+
+
+def check_items(items, minimum=0, what="items"):
+    """A list of labels as strings. A bare string is a mistake, not a list of letters."""
+    if isinstance(items, str):
+        raise TypeError(f"{what} must be a list of strings, not a single string")
+    result = [str(item) for item in items]
+    if len(result) < minimum:
+        raise ValueError(f"needs at least {minimum} {what}, got {len(result)}")
+    return result
+
+
+def check_columns(columns):
+    if isinstance(columns, str):
+        raise TypeError("columns must be a list of column titles, not a single string")
+    result = [str(column) for column in columns]
+    if not result:
+        raise ValueError("a Table needs at least one column")
+    return result
+
+
+def check_rows(rows, width):
+    """Rows of cells, each exactly `width` long; every cell becomes a string."""
+    result = []
+    for number, row in enumerate(rows):
+        if isinstance(row, str):
+            raise TypeError(f"row {number} must be a list of cells, not a string")
+        cells = [str(cell) for cell in row]
+        if len(cells) != width:
+            raise ValueError(f"row {number} has {len(cells)} cells, expected {width}")
+        result.append(cells)
+    return result

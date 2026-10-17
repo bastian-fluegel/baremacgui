@@ -27,8 +27,9 @@ def test_check_align_defaults_and_limits():
     assert o.check_align("VBox", None) == "start"
     assert o.check_align("HBox", None) == "center"
     assert o.check_align("VBox", "stretch") == "stretch"
+    assert o.check_align("HBox", "stretch") == "stretch"
     with pytest.raises(ValueError):
-        o.check_align("HBox", "stretch")
+        o.check_align("HBox", "diagonal")
 
 
 def test_check_window_size():
@@ -63,3 +64,47 @@ def test_normalize_filetypes():
     assert o.normalize_filetypes([]) is None
     with pytest.raises(ValueError):
         o.normalize_filetypes(["."])
+
+
+def test_check_float_range():
+    assert o.check_float_range(5, 0, 10) == 5.0
+    assert o.check_float_range(50, 0, 10) == 10.0
+    assert o.check_float_range(-1.5, 0, 10) == 0.0
+    with pytest.raises(ValueError):
+        o.check_float_range(1, 5, 5)
+    with pytest.raises(TypeError):
+        o.check_float_range("1", 0, 10)
+
+
+def test_check_index():
+    assert o.check_index(0, 3) == 0
+    assert o.check_index(2, 3) == 2
+    for bad in (-1, 3):
+        with pytest.raises(ValueError, match="outside"):
+            o.check_index(bad, 3)
+    with pytest.raises(ValueError, match="empty"):
+        o.check_index(0, 0)
+    with pytest.raises(TypeError):
+        o.check_index(1.0, 3)
+
+
+def test_check_items():
+    assert o.check_items([1, "b"]) == ["1", "b"]
+    with pytest.raises(TypeError):
+        o.check_items("abc")
+    with pytest.raises(ValueError, match="at least 2"):
+        o.check_items(["a"], minimum=2)
+
+
+def test_check_columns_and_rows():
+    assert o.check_columns(["A", "B"]) == ["A", "B"]
+    for bad in ([], ()):
+        with pytest.raises(ValueError):
+            o.check_columns(bad)
+    with pytest.raises(TypeError):
+        o.check_columns("AB")
+    assert o.check_rows([[1, 2], ("x", None)], 2) == [["1", "2"], ["x", "None"]]
+    with pytest.raises(ValueError, match="row 1 has 1 cells"):
+        o.check_rows([["a", "b"], ["c"]], 2)
+    with pytest.raises(TypeError):
+        o.check_rows(["ab"], 2)

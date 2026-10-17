@@ -97,3 +97,29 @@ def delegate_class():
             return True
 
     return BareMacDelegate
+
+
+@functools.lru_cache(maxsize=None)
+def table_source_class():
+    """Data source and delegate for Table/ListBox; reads the rows of its owner."""
+    objc = OBJC()
+    NSObject = FN().NSObject
+
+    class BareMacTableSource(NSObject):
+        def initWithOwner_(self, owner):
+            self = objc.super(BareMacTableSource, self).init()
+            if self is None:
+                return None
+            self._owner = owner
+            return self
+
+        def numberOfRowsInTableView_(self, table):
+            return len(self._owner._rows)
+
+        def tableView_objectValueForTableColumn_row_(self, table, column, row):
+            return self._owner._rows[row][int(column.identifier())]
+
+        def tableViewSelectionDidChange_(self, notification):
+            safe_call(self._owner._selection_changed)
+
+    return BareMacTableSource

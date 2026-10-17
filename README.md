@@ -36,7 +36,7 @@ Needs macOS and Python 3.10 or newer. The one dependency is PyObjC (`pyobjc-fram
 ## What it offers
 
 - **Layout:** `Window`, `VBox`, `HBox`, `Spacer`. Flexbox-like: `grow` weights, `padding`, `gap`, `align`, `width`/`height`/`min_*`/`max_*`. The minimum window size follows from the content.
-- **Controls:** `Label`, `TextBox` (single and multi-line), `ComboBox`, `Button`, `CheckBox`, `SpinBox`.
+- **Controls:** `Label`, `TextBox` (single and multi-line), `ComboBox`, `DropDown` (the standard pop-up menu), `Button`, `CheckBox`, `RadioGroup`, `SpinBox`, `Slider`, `ProgressBar`, `Image` (file or system symbol), `Separator`, `ListBox` and `Table` (read-only text cells, single or multiple selection).
 - **Containers:** `GroupBox`, `TabControl` with `Tab`.
 - **Dialogs:** `show_info`, `show_warning`, `show_error`, `ask_yes_no`, `open_file`, `save_file`, `choose_folder`.
 - **Menu bar:** the standard App, Edit and Window menus, so Cmd+C, Cmd+V, Cmd+A and Cmd+Q work.
@@ -44,15 +44,16 @@ Needs macOS and Python 3.10 or newer. The one dependency is PyObjC (`pyobjc-fram
 
 Handlers are plain functions without arguments. Exceptions inside a handler are printed to the terminal; they do not crash the app.
 
-Examples: `examples/` has a hello window, a security-header checker (a real small tool) and a settings window with tabs.
+Examples: `examples/` has a hello window, a security-header checker (a real small tool), a settings window with tabs and a tour of the standard controls.
 
 ## What is verified
 
-Checked by hand on an Intel Mac with Python 3.14 and PyObjC 12.2.2, in dark appearance (light appearance only with an early prototype):
+Checked by hand on an Intel Mac (macOS 15.5) with Python 3.14 and PyObjC 12.2.2, in dark appearance (light appearance only with an early prototype):
 - All three examples start and render: boxes, `Spacer`, `TextBox`, `ComboBox`, `Button`, `CheckBox`, `SpinBox`, `GroupBox`, `TabControl` (General tab), `show_info`, `on_click` and `App.invoke`.
 - The control tests run on macOS (`python -m pytest`).
 
 Not yet checked on real hardware:
+- `RadioGroup`, `DropDown`, `Slider`, `ProgressBar`, `Image`, `Separator`, `ListBox`, `Table` and `HBox(align="stretch")` (example 03 and their tests have not been run on a Mac yet).
 - The Advanced tab, `on_change` handlers, `ask_yes_no`, the file dialogs.
 - The menu bar shortcuts (Cmd+C, Cmd+V, Cmd+A, Cmd+Q).
 - Light appearance for the newer controls.
@@ -61,7 +62,7 @@ Not yet checked on real hardware:
 
 ## Limits
 
-- macOS only, standard AppKit controls only. No custom drawing, no tables or lists yet, no rich text.
+- macOS only, standard AppKit controls only. No custom drawing, no rich text, no editable tables, no column sorting.
 - Needs PyObjC. "Bare" here means thin, not dependency-free.
 - Dialogs are application-modal; there are no window-modal sheets yet.
 - Menu labels are English.
