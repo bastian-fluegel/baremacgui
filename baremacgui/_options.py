@@ -1,6 +1,8 @@
 """Pure-Python option checks. No PyObjC in here, so this runs (and is tested) on any OS."""
 from __future__ import annotations
 
+from .errors import LayoutError
+
 SIZE_KEYS = ("width", "height", "min_width", "max_width", "min_height", "max_height")
 
 _ALIGN = {
@@ -11,7 +13,7 @@ _ALIGN = {
 
 def _number(name, value):
     if isinstance(value, bool) or not isinstance(value, (int, float)) or value < 0:
-        raise ValueError(f"{name} must be a number >= 0, got {value!r}")
+        raise LayoutError(f"{name} must be a number >= 0, got {value!r}")
     return float(value)
 
 
@@ -32,7 +34,7 @@ def check_size(options):
     for axis in ("width", "height"):
         low, high = checked.get("min_" + axis), checked.get("max_" + axis)
         if low is not None and high is not None and low > high:
-            raise ValueError(f"min_{axis} ({low:g}) is larger than max_{axis} ({high:g})")
+            raise LayoutError(f"min_{axis} ({low:g}) is larger than max_{axis} ({high:g})")
     return checked
 
 
@@ -42,7 +44,7 @@ def check_align(kind, align):
     if align is None:
         return "start" if kind == "VBox" else "center"
     if align not in allowed:
-        raise ValueError(f"{kind} align must be one of {', '.join(allowed)}; got {align!r}")
+        raise LayoutError(f"{kind} align must be one of {', '.join(allowed)}; got {align!r}")
     return align
 
 
@@ -50,10 +52,10 @@ def check_window_size(size):
     try:
         width, height = size
     except (TypeError, ValueError):
-        raise ValueError(f"size must be a (width, height) pair, got {size!r}") from None
+        raise LayoutError(f"size must be a (width, height) pair, got {size!r}") from None
     for name, value in (("width", width), ("height", height)):
         if isinstance(value, bool) or not isinstance(value, (int, float)) or value <= 0:
-            raise ValueError(f"window {name} must be a number > 0, got {value!r}")
+            raise LayoutError(f"window {name} must be a number > 0, got {value!r}")
     return float(width), float(height)
 
 
@@ -150,7 +152,7 @@ WINDOW_STYLES = ("standard", "unified", "sidebar")
 
 def check_window_style(style):
     if style not in WINDOW_STYLES:
-        raise ValueError(f"Window style must be one of {', '.join(WINDOW_STYLES)}; got {style!r}")
+        raise LayoutError(f"Window style must be one of {', '.join(WINDOW_STYLES)}; got {style!r}")
     return style
 
 

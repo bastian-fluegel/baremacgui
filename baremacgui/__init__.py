@@ -5,9 +5,11 @@ handlers without arguments, background work handed back with App.invoke.
 Importing this package works on any OS; building windows needs macOS and PyObjC.
 """
 from ._app import App
+from .errors import BareMacGUIError, LayoutError, PlatformError
 from ._collections import IconGrid, Tree
 from ._containers import GroupBox, Tab, TabControl
 from ._controls import Button, CheckBox, ComboBox, Label, SpinBox, TextBox
+from ._events import Event
 from ._dialogs import ask_yes_no, choose_folder, open_file, save_file, show_error, show_info, show_warning
 from ._layout import HBox, Spacer, VBox, Window
 from ._overlays import Popover, Sheet
@@ -19,6 +21,10 @@ from ._widgets import Custom, DropDown, Image, ProgressBar, RadioGroup, SearchFi
 __version__ = "0.0.1.dev0"
 
 __all__ = [
+    "BareMacGUIError",
+    "PlatformError",
+    "LayoutError",
+    "Event",
     "App",
     "Window",
     "VBox",

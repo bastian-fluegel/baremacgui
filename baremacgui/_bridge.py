@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import functools
 import sys
-import traceback
 
 _NEEDS_PYOBJC = "baremacgui needs PyObjC: pip install pyobjc-framework-Cocoa"
 
@@ -57,8 +56,10 @@ def safe_call(function, *args):
     """
     try:
         return function(*args)
-    except Exception:  # noqa: BLE001 - deliberately broad, see docstring
-        traceback.print_exc()
+    except Exception as exc:  # noqa: BLE001 - deliberately broad, see docstring
+        from ._events import report_error
+
+        report_error(exc)
         return None
 
 
@@ -97,6 +98,33 @@ def delegate_class():
             return True
 
     return BareMacDelegate
+
+
+@functools.lru_cache(maxsize=None)
+def window_delegate_class():
+    """NSWindow delegate: forwards close, resize and destroy to the Python Window."""
+    objc = OBJC()
+    NSObject = FN().NSObject
+
+    class BareMacWindowDelegate(NSObject):
+        def initWithOwner_(self, owner):
+            self = objc.super(BareMacWindowDelegate, self).init()
+            if self is None:
+                return None
+            self._owner = owner
+            return self
+
+        def windowShouldClose_(self, sender):
+            result = safe_call(self._owner._should_close)
+            return True if result is None else bool(result)
+
+        def windowDidResize_(self, notification):
+            safe_call(self._owner.on_resize.emit)
+
+        def windowWillClose_(self, notification):
+            safe_call(self._owner.on_destroy.emit)
+
+    return BareMacWindowDelegate
 
 
 @functools.lru_cache(maxsize=None)

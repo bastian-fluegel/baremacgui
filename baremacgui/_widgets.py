@@ -4,11 +4,14 @@ from __future__ import annotations
 from . import _core
 from ._bridge import AK, FN, make_target
 from ._controls import Control
+from ._events import event
 from ._options import check_float_range, check_index, check_items, clamp
 
 
 class RadioGroup(Control):
     """Mutually exclusive choices. vertical=False lays them out in a row."""
+
+    on_change = event()
 
     def __init__(self, items, selected=0, vertical=True, gap=6, grow=0, **size):
         ak = AK()
@@ -24,19 +27,14 @@ class RadioGroup(Control):
         )
         stack.setSpacing_(float(gap))
         stack.setAlignment_(ak.NSLayoutAttributeLeading if vertical else ak.NSLayoutAttributeCenterY)
-        self._on_change = None
         super().__init__(stack, grow, **size)
         # One shared target and one action: that is what makes AppKit treat the buttons as a group.
-        target = make_target(self._changed)
+        target = make_target(self.on_change.emit)
         self._targets["group"] = target
         for button in self._buttons:
             button.setTarget_(target)
             button.setAction_(b"fire:")
         self.index = selected
-
-    def _changed(self):
-        if self._on_change is not None:
-            self._on_change()
 
     @property
     def index(self):
@@ -67,15 +65,12 @@ class RadioGroup(Control):
         for button in self._buttons:
             button.setEnabled_(bool(flag))
 
-    def on_change(self, handler):
-        """Call handler() when the user picks another choice."""
-        if not callable(handler):
-            raise TypeError("handler must be callable")
-        self._on_change = handler
 
 
 class DropDown(Control):
     """The standard macOS pop-up menu: pick one entry from a list (no typing)."""
+
+    on_change = event()
 
     def __init__(self, items=(), selected=0, grow=0, **size):
         ak = AK()
@@ -86,6 +81,7 @@ class DropDown(Control):
             check_index(selected, len(entries), "selected")
             ns.selectItemAtIndex_(selected)
         super().__init__(ns, grow, **size)
+        self._bind(ns, self.on_change.emit)
 
     @property
     def text(self):
@@ -111,9 +107,6 @@ class DropDown(Control):
         self.ns.removeAllItems()
         self.ns.addItemsWithTitles_(check_items(values))
 
-    def on_change(self, handler):
-        """Call handler() when the user picks an entry."""
-        self._bind(self.ns, handler)
 
 
 class Slider(Control):
@@ -122,6 +115,8 @@ class Slider(Control):
     continuous=True calls the handler while dragging, False only on release.
     Assigning .value never calls the handler; only user input does.
     """
+
+    on_change = event()
 
     def __init__(self, value=0, minimum=0, maximum=100, continuous=True, grow=0, **size):
         value = check_float_range(value, minimum, maximum)
@@ -132,6 +127,7 @@ class Slider(Control):
         ns.setContinuous_(bool(continuous))
         size.setdefault("min_width", 120)
         super().__init__(ns, grow, **size)
+        self._bind(ns, self.on_change.emit)
 
     @property
     def value(self):
@@ -143,9 +139,6 @@ class Slider(Control):
             raise TypeError(f"Slider value must be a number, got {number!r}")
         self.ns.setDoubleValue_(clamp(float(number), self._min, self._max))
 
-    def on_change(self, handler):
-        """Call handler() when the user moves the slider."""
-        self._bind(self.ns, handler)
 
 
 class ProgressBar(Control):
@@ -241,6 +234,8 @@ class Separator:
 class SearchField(Control):
     """The standard search field. on_change fires while typing and on Enter."""
 
+    on_change = event()
+
     def __init__(self, text="", placeholder="Search", grow=0, **size):
         size.setdefault("min_width", 160.0)
         ns = AK().NSSearchField.alloc().init()
@@ -248,6 +243,7 @@ class SearchField(Control):
         ns.setPlaceholderString_(str(placeholder))
         ns.setSendsSearchStringImmediately_(True)
         super().__init__(ns, grow, **size)
+        self._bind(ns, self.on_change.emit)
 
     @property
     def text(self):
@@ -257,9 +253,6 @@ class SearchField(Control):
     def text(self, value):
         self.ns.setStringValue_(str(value))
 
-    def on_change(self, handler):
-        """Call handler() when the search text changes."""
-        self._bind(self.ns, handler)
 
 
 class SegmentedControl(Control):
@@ -267,6 +260,8 @@ class SegmentedControl(Control):
 
     Give labels in `items`, or SF Symbol names in `symbols` (not both).
     """
+
+    on_change = event()
 
     def __init__(self, items=None, symbols=None, selected=0, grow=0, **size):
         if (items is None) == (symbols is None):
@@ -289,6 +284,7 @@ class SegmentedControl(Control):
         ns.setTrackingMode_(ak.NSSegmentSwitchTrackingSelectOne)
         ns.setSelectedSegment_(selected)
         super().__init__(ns, grow, **size)
+        self._bind(ns, self.on_change.emit)
 
     @property
     def index(self):
@@ -304,9 +300,6 @@ class SegmentedControl(Control):
         """Label (or symbol name) of the selected segment."""
         return self._items[self.index]
 
-    def on_change(self, handler):
-        """Call handler() when the user picks another segment."""
-        self._bind(self.ns, handler)
 
 
 class Custom(Control):

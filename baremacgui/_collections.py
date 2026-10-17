@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from ._bridge import AK, FN, icon_classes, make_target, outline_source_class
 from ._controls import Control
+from ._events import event
 from ._options import check_icon_items, check_index, check_nodes, find_node_path
 
 
@@ -13,12 +14,6 @@ def _symbol_image(symbol):
     if image is None:
         raise ValueError(f"unknown system symbol: {symbol!r}")
     return image
-
-
-def _check_handler(handler):
-    if not callable(handler):
-        raise TypeError("handler must be callable")
-    return handler
 
 
 class IconGrid(Control):
@@ -33,6 +28,9 @@ class IconGrid(Control):
     Selecting from code never calls on_select; only user input does.
     """
 
+    on_select = event()
+    on_double_click = event()
+
     def __init__(self, items=(), symbol="doc", icon_size=64, multiple=False, selected=None, grow=0, **size):
         ak = AK()
         if isinstance(icon_size, bool) or not isinstance(icon_size, (int, float)) or icon_size < 16:
@@ -43,7 +41,6 @@ class IconGrid(Control):
         for _, entry_symbol in self._entries:
             _symbol_image(entry_symbol)  # fail early, not while drawing
         self._icon_size = float(icon_size)
-        self._on_select = None
         self._muted = False
         self._images = {}
 
@@ -72,6 +69,7 @@ class IconGrid(Control):
         size.setdefault("min_height", 140)
         size.setdefault("min_width", 200)
         super().__init__(scroll, grow, **size)
+        view._double = self.on_double_click.emit
         if selected is not None:
             self.index = selected
 
@@ -87,8 +85,8 @@ class IconGrid(Control):
         return self._images[symbol]
 
     def _selection_changed(self):
-        if not self._muted and self._on_select is not None:
-            self._on_select()
+        if not self._muted:
+            self.on_select.emit()
 
     # -- items -------------------------------------------------------------
     @property
@@ -149,14 +147,6 @@ class IconGrid(Control):
     def enabled(self, flag):
         self._view.setSelectable_(bool(flag))
 
-    # -- handlers ----------------------------------------------------------
-    def on_select(self, handler):
-        """Call handler() when the user changes the selection."""
-        self._on_select = _check_handler(handler)
-
-    def on_double_click(self, handler):
-        """Call handler() when the user double-clicks an icon."""
-        self._view._double = _check_handler(handler)
 
 
 class _Node:
@@ -190,11 +180,13 @@ class Tree(Control):
     Selecting from code (path = [...]) never calls on_select; only user input does.
     """
 
+    on_select = event()
+    on_double_click = event()
+
     def __init__(self, nodes=(), sidebar=False, expanded=False, multiple=False, grow=0, **size):
         ak = AK()
         self._specs = check_nodes(nodes)
         self._roots = [_Node(spec) for spec in self._specs]
-        self._on_select = None
         self._muted = False
         self._images = {}
         self._check_symbols(self._specs)
@@ -226,6 +218,10 @@ class Tree(Control):
         size.setdefault("min_height", 120)
         size.setdefault("min_width", 160)
         super().__init__(scroll, grow, **size)
+        target = make_target(self._double_clicked)
+        self._targets["double"] = target
+        view.setTarget_(target)
+        view.setDoubleAction_(b"fire:")
         if expanded:
             self.expand_all()
 
@@ -242,8 +238,12 @@ class Tree(Control):
         return self._images[symbol]
 
     def _selection_changed(self):
-        if not self._muted and self._on_select is not None:
-            self._on_select()
+        if not self._muted:
+            self.on_select.emit()
+
+    def _double_clicked(self):
+        if int(self._view.clickedRow()) >= 0:
+            self.on_double_click.emit()
 
     def _node_at(self, row):
         return self._view.itemAtRow_(row)
@@ -326,15 +326,3 @@ class Tree(Control):
     @enabled.setter
     def enabled(self, flag):
         self._view.setEnabled_(bool(flag))
-
-    # -- handlers ----------------------------------------------------------
-    def on_select(self, handler):
-        """Call handler() when the user changes the selection."""
-        self._on_select = _check_handler(handler)
-
-    def on_double_click(self, handler):
-        """Call handler() when the user double-clicks a row."""
-        target = make_target(_check_handler(handler))
-        self._targets["double"] = target
-        self._view.setTarget_(target)
-        self._view.setDoubleAction_(b"fire:")

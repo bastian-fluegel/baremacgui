@@ -498,3 +498,85 @@ def test_dialog_arguments_are_checked():
         show_info("x", then=print)
     with pytest.raises(TypeError):
         show_info("x", parent=object())
+
+
+# -- events -----------------------------------------------------------------
+def test_constructor_options_and_multiple_handlers():
+    calls = []
+    button = build(("b", lambda: Button("x", on_click=lambda: calls.append("opt"))))["b"]
+    button.on_click(lambda: calls.append("second"))
+    button.on_click.emit()
+    assert calls == ["opt", "second"]
+
+
+def test_unknown_event_option_is_rejected():
+    with pytest.raises(TypeError):
+        build(("b", lambda: Button("x", on_nothing=print)))
+
+
+def test_every_control_event_can_be_emitted():
+    calls = []
+    note = lambda: calls.append(1)  # noqa: E731
+    r = build(
+        ("check", lambda: CheckBox("c", on_change=note)),
+        ("text", lambda: TextBox("t", on_enter=note, on_change=note)),
+        ("combo", lambda: ComboBox(["a"], on_change=note)),
+        ("drop", lambda: DropDown(["a", "b"], on_change=note)),
+        ("slider", lambda: Slider(on_change=note)),
+        ("spin", lambda: SpinBox(on_change=note)),
+        ("list", lambda: ListBox(["a"], on_select=note, on_double_click=note)),
+        ("grid", lambda: IconGrid(["a"], on_select=note, on_double_click=note)),
+        ("tree", lambda: Tree(["a"], on_select=note, on_double_click=note)),
+        ("radio", lambda: RadioGroup(["a", "b"], on_change=note)),
+        ("segments", lambda: SegmentedControl(["a", "b"], on_change=note)),
+        ("search", lambda: SearchField(on_change=note)),
+    )
+    for name, control in r.items():
+        if name == "vbox":
+            continue
+        for event_name in ("on_enter", "on_change", "on_select", "on_double_click"):
+            if hasattr(type(control), event_name):
+                getattr(control, event_name).emit()
+    assert len(calls) == 16
+
+
+def test_textbox_typing_event_not_fired_from_code():
+    calls = []
+    box = build(("t", lambda: TextBox("a", on_change=lambda: calls.append(1))))["t"]
+    box.text = "b"
+    assert calls == []  # unverified assumption on a real Mac: setting text posts no edit notification
+
+
+def test_window_close_veto_and_destroy():
+    seen = []
+    with Window("w", visible=False, on_close=lambda: seen.append("close") or False) as win:
+        with VBox():
+            Label("x")
+    assert win._should_close() is False
+    win.on_close = None
+    assert win._should_close() is True
+    win.on_destroy(lambda: seen.append("destroy"))
+    win.on_destroy.emit()
+    assert seen == ["close", "destroy"]
+    assert win.size[0] > 0
+
+
+def test_window_rejects_unknown_option():
+    with pytest.raises(TypeError):
+        Window("w", visible=False, on_nothing=print)
+
+
+def test_app_on_error_and_call():
+    from baremacgui import App, _events
+
+    app = App("test", menu=False)
+    seen = []
+    app.on_error = seen.append
+    try:
+        Button_event = build(("b", lambda: Button("x", on_click=lambda: 1 / 0)))["b"]
+        Button_event.on_click.emit()
+    finally:
+        app.on_error = None
+    assert isinstance(seen[0], ZeroDivisionError)
+    assert app.call(lambda a, b=1: a + b, 1, b=2) == 3  # on the main thread: runs directly
+    assert _events._error_hook[0] is None

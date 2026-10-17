@@ -2,7 +2,8 @@
 from __future__ import annotations
 
 from . import _core
-from ._bridge import AK, FN, ensure_app
+from ._bridge import AK, FN, ensure_app, window_delegate_class
+from ._events import connect_options, event, split_options
 from ._options import (
     check_align, check_grow, check_padding, check_size, check_window_size, check_window_style,
 )
@@ -34,9 +35,17 @@ class Window:
                       `with Toolbar():` block directly inside the window.
     """
 
-    def __init__(self, title, size=(400, 300), resizable=True, visible=True, style="standard"):
+    on_resize = event()
+    on_destroy = event()
+
+    def __init__(self, title, size=(400, 300), resizable=True, visible=True, style="standard", **options):
         ak = AK()
         ensure_app()
+        handlers = split_options(options)
+        if options:
+            raise TypeError(f"Window got unexpected options: {sorted(options)}")
+        self.on_close = handlers.pop("on_close", None)
+        connect_options(self, handlers)
         self.style = check_window_style(style)
         self._toolbar = None
         self._sidebar = None
@@ -57,6 +66,8 @@ class Window:
         )
         # Python owns the reference; without this AppKit over-releases on close.
         self.ns.setReleasedWhenClosed_(False)
+        self._delegate = window_delegate_class().alloc().initWithOwner_(self)  # held weakly by the window
+        self.ns.setDelegate_(self._delegate)
         self.ns.setTitle_(str(title))
         if self.style in ("unified", "sidebar"):
             self.ns.setTitlebarAppearsTransparent_(True)
@@ -73,7 +84,24 @@ class Window:
     def title(self, value):
         self.ns.setTitle_(str(value))
 
+    @property
+    def size(self):
+        """Content size (width, height) in points."""
+        content = self.ns.contentView().frame().size
+        return (float(content.width), float(content.height))
+
+    def _should_close(self):
+        """Called when the user closes the window. on_close returning False keeps it open."""
+        if self.on_close is None:
+            return True
+        return self.on_close() is not False
+
     def close(self):
+        """Close the window (like the red button: on_close may veto)."""
+        self.ns.performClose_(None)
+
+    def destroy(self):
+        """Close the window without asking on_close."""
         self.ns.close()
 
     def accept(self, item):

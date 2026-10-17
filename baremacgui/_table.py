@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from ._bridge import AK, FN, make_target, table_source_class
 from ._controls import Control
+from ._events import event
 from ._options import check_columns, check_index, check_items, check_rows
 
 
@@ -19,11 +20,13 @@ class Table(Control):
     on_select; only user input does.
     """
 
+    on_select = event()
+    on_double_click = event()
+
     def __init__(self, columns, rows=(), multiple=False, header=True, striped=False, grow=0, **size):
         ak = AK()
         titles = check_columns(columns)
         self._rows = check_rows(rows, len(titles))
-        self._on_select = None
         self._muted = False
 
         table = ak.NSTableView.alloc().init()
@@ -55,11 +58,22 @@ class Table(Control):
         size.setdefault("min_height", 120)
         size.setdefault("min_width", 200)
         super().__init__(scroll, grow, **size)
+        self._bind_double(table)
+
+    def _bind_double(self, table):
+        target = make_target(self._double_clicked)
+        self._targets["double"] = target
+        table.setTarget_(target)
+        table.setDoubleAction_(b"fire:")
+
+    def _double_clicked(self):
+        if int(self._table.clickedRow()) >= 0:  # not on the header or on empty space
+            self.on_double_click.emit()
 
     # -- called by the data source ---------------------------------------
     def _selection_changed(self):
-        if not self._muted and self._on_select is not None:
-            self._on_select()
+        if not self._muted:
+            self.on_select.emit()
 
     # -- rows --------------------------------------------------------------
     @property
@@ -120,22 +134,6 @@ class Table(Control):
     @enabled.setter
     def enabled(self, flag):
         self._table.setEnabled_(bool(flag))
-
-    # -- handlers ----------------------------------------------------------
-    def on_select(self, handler):
-        """Call handler() when the user changes the selection."""
-        if not callable(handler):
-            raise TypeError("handler must be callable")
-        self._on_select = handler
-
-    def on_double_click(self, handler):
-        """Call handler() when the user double-clicks a row."""
-        if not callable(handler):
-            raise TypeError("handler must be callable")
-        target = make_target(handler)
-        self._targets["double"] = target
-        self._table.setTarget_(target)
-        self._table.setDoubleAction_(b"fire:")
 
 
 class ListBox(Table):

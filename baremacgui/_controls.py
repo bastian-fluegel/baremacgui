@@ -2,7 +2,8 @@
 from __future__ import annotations
 
 from . import _core
-from ._bridge import AK, make_target
+from ._bridge import AK, FN, make_target
+from ._events import connect_options, event, split_options
 from ._options import check_grow, check_size, check_spin_range, clamp, parse_int
 
 
@@ -20,12 +21,15 @@ class Control:
     """
 
     def __init__(self, ns, grow=0, **size):
+        handlers = split_options(size)
         grow = check_grow(grow)
         size = check_size(size)
         self.ns = ns
         self._targets = {}
+        self._muted = getattr(self, "_muted", False)
         _core.apply_size(ns, size)
         _core.add(ns, grow, fill=grow > 0)
+        connect_options(self, handlers)
 
     @property
     def enabled(self):
@@ -75,6 +79,9 @@ class TextBox(Control):
     quotes, dashes and spelling correction, which get in the way in tools.
     """
 
+    on_enter = event()
+    on_change = event()
+
     def __init__(self, text="", multiline=False, readonly=False, password=False,
                  placeholder="", grow=0, **size):
         ak = AK()
@@ -106,6 +113,18 @@ class TextBox(Control):
             if placeholder:
                 ns.setPlaceholderString_(str(placeholder))
         super().__init__(ns, grow, **size)
+        if not self.multiline:
+            self._bind(ns, self.on_enter.emit)  # Return in a single-line field
+        self._watch_typing(self._tv if self.multiline else ns)
+
+    def _watch_typing(self, view):
+        """Call on_change on every edit of the user (not for changes made from code)."""
+        name = "NSTextDidChangeNotification" if self.multiline else "NSControlTextDidChangeNotification"
+        target = make_target(self.on_change.emit)
+        self._targets["typing"] = target  # the notification center does not keep its observer alive
+        FN().NSNotificationCenter.defaultCenter().addObserver_selector_name_object_(
+            target, b"fire:", name, view
+        )
 
     @property
     def text(self):
@@ -148,15 +167,11 @@ class TextBox(Control):
         else:
             self.ns.setEnabled_(bool(value))
 
-    def on_enter(self, handler):
-        """Call handler() when Return is pressed (single-line only)."""
-        if self.multiline:
-            raise TypeError("on_enter() is for single-line TextBox")
-        self._bind(self.ns, handler)
-
 
 class ComboBox(Control):
     """Drop-down list with a text field. editable=False restricts it to the list."""
+
+    on_change = event()
 
     def __init__(self, items=(), selected=None, editable=True, grow=0, **size):
         ns = AK().NSComboBox.alloc().init()
@@ -169,6 +184,7 @@ class ComboBox(Control):
             ns.selectItemAtIndex_(selected)
             ns.setStringValue_(items[selected])
         super().__init__(ns, grow, **size)
+        self._bind(ns, self.on_change.emit)
 
     @property
     def text(self):
@@ -200,12 +216,10 @@ class ComboBox(Control):
         self.ns.removeAllItems()
         self.ns.addItemsWithObjectValues_([str(value) for value in values])
 
-    def on_change(self, handler):
-        """Call handler() when an entry is picked or Return is pressed."""
-        self._bind(self.ns, handler)
-
 
 class Button(Control):
+    on_click = event()
+
     def __init__(self, title, default=False, symbol=None, grow=0, **size):
         ak = AK()
         ns = ak.NSButton.buttonWithTitle_target_action_(str(title), None, None)
@@ -220,6 +234,7 @@ class Button(Control):
         if default:
             ns.setKeyEquivalent_("\r")
         super().__init__(ns, grow, **size)
+        self._bind(ns, self.on_click.emit)
 
     @property
     def title(self):
@@ -229,15 +244,14 @@ class Button(Control):
     def title(self, value):
         self.ns.setTitle_(str(value))
 
-    def on_click(self, handler):
-        """Call handler() on click. Handlers take no arguments."""
-        self._bind(self.ns, handler)
-
 
 class CheckBox(Control):
+    on_change = event()
+
     def __init__(self, title, checked=False, grow=0, **size):
         ns = AK().NSButton.checkboxWithTitle_target_action_(str(title), None, None)
         super().__init__(ns, grow, **size)
+        self._bind(ns, self.on_change.emit)
         self.checked = checked
 
     @property
@@ -249,10 +263,6 @@ class CheckBox(Control):
         ak = AK()
         self.ns.setState_(ak.NSControlStateValueOn if value else ak.NSControlStateValueOff)
 
-    def on_change(self, handler):
-        """Call handler() when the user toggles the box."""
-        self._bind(self.ns, handler)
-
 
 class SpinBox(Control):
     """Integer field with up/down arrows.
@@ -261,12 +271,13 @@ class SpinBox(Control):
     Reading .value also picks up text typed but not yet committed.
     """
 
+    on_change = event()
+
     def __init__(self, value=0, minimum=0, maximum=100, step=1, grow=0, **size):
         value = check_spin_range(value, minimum, maximum, step)
         ak = AK()
         self._min, self._max = minimum, maximum
         self._value = value
-        self._on_change = None
 
         field = ak.NSTextField.textFieldWithString_(str(value))
         field.setAlignment_(ak.NSTextAlignmentRight)
@@ -296,8 +307,7 @@ class SpinBox(Control):
         self._stepper.setIntegerValue_(self._value)
 
     def _fire(self):
-        if self._on_change is not None:
-            self._on_change()
+        self.on_change.emit()
 
     def _from_field(self):
         parsed = parse_int(_text_of(self._field))
@@ -327,9 +337,3 @@ class SpinBox(Control):
     def enabled(self, flag):
         self._field.setEnabled_(bool(flag))
         self._stepper.setEnabled_(bool(flag))
-
-    def on_change(self, handler):
-        """Call handler() when the user changes the number."""
-        if not callable(handler):
-            raise TypeError("handler must be callable")
-        self._on_change = handler

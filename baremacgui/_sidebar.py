@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from . import _core
 from ._bridge import AK, FN, safe_call, sidebar_source_class
+from ._events import connect_options, event, split_options
 from ._options import check_index, check_size
 
 
@@ -50,8 +51,14 @@ class Sidebar:
     title follows the selected page, like System Settings.
     """
 
-    def __init__(self, selected=0, width=200):
+    on_change = event()
+
+    def __init__(self, selected=0, width=200, **options):
         from ._layout import Window
+
+        connect_options(self, split_options(options))
+        if options:
+            raise TypeError(f"Sidebar got unexpected options: {sorted(options)}")
 
         window = _core.current()
         if not isinstance(window, Window) or window.style != "sidebar":
@@ -62,7 +69,6 @@ class Sidebar:
         self._selected = selected
         self._width = check_size({"width": width})["width"]
         self._pages = []
-        self._on_change = None
         self._muted = False
         self.ns = None
 
@@ -173,8 +179,7 @@ class Sidebar:
         if row < 0:
             return
         self._show(row)
-        if self._on_change is not None:
-            self._on_change()
+        self.on_change.emit()
 
     # -- public ------------------------------------------------------------
     @property
@@ -193,9 +198,3 @@ class Sidebar:
     def text(self):
         """Title of the shown page."""
         return self._pages[self.index].title
-
-    def on_change(self, handler):
-        """Call handler() when the user picks another page."""
-        if not callable(handler):
-            raise TypeError("handler must be callable")
-        self._on_change = handler
