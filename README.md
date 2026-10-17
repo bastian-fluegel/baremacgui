@@ -53,12 +53,13 @@ Examples: `examples/` has a hello window, a security-header checker (a real smal
 Checked by hand on an Intel Mac (macOS 15.5) with Python 3.14 and PyObjC 12.2.2, in dark appearance (light appearance only with an early prototype):
 - All four examples start and render: boxes, `Spacer`, `TextBox`, `ComboBox`, `Button`, `CheckBox`, `SpinBox`, `GroupBox`, `TabControl` (General tab), `RadioGroup`, `DropDown`, `Slider`, `ProgressBar` (driven from a worker thread via `App.invoke`), `Image` (SF Symbol), `Separator`, `ListBox`, `Table`, `HBox(align="stretch")`, `show_info`, `on_click`, `on_change`, `on_select` and `on_double_click`.
 - Example 03 also looked right in light appearance.
-- The test suite passes on macOS (`python -m pytest`: 42 passed, 3 skipped, the skipped ones are the non-macOS tests).
+- `Window(style="sidebar")` with `Sidebar` and `Page` (example 05: sidebar with symbols, page switching, window title following the page, `on_change`) in dark appearance.
+- `Window(style="unified")` with `Toolbar`, `SearchField`, `SegmentedControl` and icon `Button`s (example 04) in dark appearance; the view-based `Table` restyle and the navigation added to the example afterwards were not rechecked.
+- The test suite passes on macOS (`python -m pytest`: 53 passed, 3 skipped, the skipped ones are the non-macOS tests).
 
 Not yet checked on real hardware:
-- `Window(style="sidebar")`, `Sidebar`, `Page` and example 05 (written, never run on a Mac).
-- The Finder-style window got looks fixes (view-based `Table`) and real navigation in example 04 after the first test; not rechecked.
-- `Window(style="unified")`, `Toolbar`, `SearchField`, `SegmentedControl`, `Button(symbol=...)` and example 04 (written, never run on a Mac).
+- `Sidebar` details: dragging the divider, hiding it, the minimum window size, light appearance.
+- Example 04 after the `Table` restyle: back/forward navigation, double-click into folders, search filter, light appearance.
 - The Advanced tab, `ask_yes_no`, the file dialogs.
 - The menu bar shortcuts (Cmd+C, Cmd+V, Cmd+A, Cmd+Q).
 - Light appearance for the other examples.
