@@ -20,7 +20,7 @@ TARGET = ROOT / "docs" / "REFERENCE.md"
 GROUPS = [
     ("App and errors", ["App", "Event", "BareMacGUIError", "PlatformError", "LayoutError"]),
     ("Windows and layout", ["Window", "Sheet", "Popover", "VBox", "HBox", "Spacer", "GroupBox", "TabControl", "Tab",
-                            "Sidebar", "Page", "Toolbar"]),
+                            "Sidebar", "Page", "Toolbar", "SplitView"]),
     ("Controls", ["Label", "TextBox", "ComboBox", "DropDown", "Button", "CheckBox", "RadioGroup", "SpinBox", "Slider",
                   "ProgressBar", "Image", "Separator", "SearchField", "SegmentedControl", "DatePicker", "TimePicker", "Switch", "ColorWell",
                   "ListBox", "Table", "IconGrid", "Tree", "Custom"]),

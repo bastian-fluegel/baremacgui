@@ -16,6 +16,7 @@ if sys.platform == "darwin":
     )
     from baremacgui import Custom, IconGrid, Page, Popover, Sheet, Sidebar, Tree
     from baremacgui import show_info
+    from baremacgui import SplitView
     from baremacgui import Settings, Switch, ColorWell, clipboard
     from baremacgui import ContextMenu, DatePicker, Menu, MenuBar, MenuItem, MenuSeparator, Timer, TimePicker
     from baremacgui import _core
@@ -841,3 +842,39 @@ def test_table_edit_updates_rows_and_fires_event():
     assert calls == [1]
     with pytest.raises(ValueError):
         build(("t", lambda: Table(["a"], [], editable=[3])))
+
+
+# -- split view -----------------------------------------------------------------
+def test_split_view_builds_and_moves_divider():
+    for orientation in ("horizontal", "vertical"):
+        with Window("w", size=(600, 400), visible=False):
+            with VBox(padding=0) as outer:
+                with SplitView(orientation=orientation, fixed=[0], min_pane=100, grow=1) as split:
+                    with VBox(padding=8):
+                        Label("left")
+                    with VBox(padding=8):
+                        Label("right")
+        assert split.count == 2 and len(split.ns.arrangedSubviews()) == 2
+        split.ns.superview().layoutSubtreeIfNeeded()
+        split.set_position(0, 250)
+        split.ns.layoutSubtreeIfNeeded()
+        assert abs(split.position(0) - 250) < 2
+        with pytest.raises(ValueError):
+            split.set_position(1, 10)
+
+
+def test_split_view_errors():
+    with pytest.raises(ValueError):
+        with Window("w", visible=False):
+            with SplitView():
+                with VBox():
+                    Label("alone")
+    with pytest.raises(ValueError):
+        SplitView(orientation="diagonal")
+    with pytest.raises(ValueError):
+        with Window("w", visible=False):
+            with SplitView(fixed=[0, 1]):
+                with VBox():
+                    Label("a")
+                with VBox():
+                    Label("b")

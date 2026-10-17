@@ -93,6 +93,11 @@ SCENARIOS = {
         (None, 1.0, "tasks-start"),
         (lambda g: g["table"].sort(1), 0.8, "tasks-sorted"),
     ]),
+    "notes": ("11_notes.py", [
+        (None, 1.0, "notes-start"),
+        (lambda g: g["new_note"](), 0.8, "notes-new"),
+        (lambda g: g["split"].set_position(0, 260) if "split" in g else None, 0.8, "notes-wide"),
+    ]),
     "everything": ("06_everything.py", [
         (None, 1.0, "everything-list"),
         (lambda g: (setattr(g["view"], "index", 0), g["set_view"]()), 1.0, "everything-icons"),

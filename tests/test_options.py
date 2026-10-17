@@ -237,3 +237,14 @@ def test_check_editable():
         o.check_editable([3], 3)
     with pytest.raises(TypeError):
         o.check_editable(5, 3)
+
+
+def test_check_split_and_fixed_panes():
+    assert o.check_split("horizontal", "thin") == ("horizontal", "thin")
+    for args in (("diagonal", "thin"), ("horizontal", "wide")):
+        with pytest.raises(ValueError):
+            o.check_split(*args)
+    assert o.check_fixed_panes([2, 0, 0], 3) == [0, 2]
+    for bad in ([3], [True], [0, 1]):
+        with pytest.raises(ValueError):
+            o.check_fixed_panes(bad, 2)

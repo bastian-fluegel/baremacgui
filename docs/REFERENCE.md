@@ -268,6 +268,36 @@ Methods:
 
 - `accept(item)`
 
+### `SplitView(orientation='horizontal', min_pane=120, fixed=(), divider='thin', autosave=None, grow=1, **size)`
+
+```text
+Two or more panes separated by draggable dividers (native NSSplitView).
+
+    with SplitView(fixed=[0], min_pane=160, autosave="main-split", grow=1) as split:
+        with VBox(padding=8): ...      # pane 0
+        with VBox(padding=8): ...      # pane 1
+
+orientation  "horizontal": panes side by side (default); "vertical": stacked
+min_pane     smallest size of a pane in points; the user cannot drag below it
+fixed        pane indexes that keep their size when the window grows; the others take the space
+divider      "thin" (default), "thick" or "pane"
+autosave     a name: the divider positions are remembered between runs
+
+Each child (normally a VBox or HBox) is one pane. `split.set_position(0, 220)` moves a divider
+from code (points from the start edge). Differences from native: panes cannot collapse by
+dragging past the minimum, and panes cannot be added after the with-block.
+```
+
+Properties:
+
+- `count` (read-only)
+
+Methods:
+
+- `accept(item)`
+- `position(divider_index)`: Size of the panes before a divider in points (where the divider sits).
+- `set_position(divider_index, points)`: Move a divider (0 = between the first two panes) to `points` from the start edge.
+
 ## Controls
 
 ### `Label(text='', grow=0, **size)`

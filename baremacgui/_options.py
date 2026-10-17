@@ -410,3 +410,27 @@ def check_editable(editable, count):
         if isinstance(column, bool) or not isinstance(column, int) or not 0 <= column < count:
             raise ValueError(f"editable column {column!r} is outside the {count} columns")
     return columns
+
+
+SPLIT_ORIENTATIONS = ("horizontal", "vertical")
+SPLIT_DIVIDERS = ("thin", "thick", "pane")
+
+
+def check_split(orientation, divider):
+    if orientation not in SPLIT_ORIENTATIONS:
+        raise LayoutError(f"SplitView orientation must be one of {', '.join(SPLIT_ORIENTATIONS)}; got {orientation!r}")
+    if divider not in SPLIT_DIVIDERS:
+        raise LayoutError(f"SplitView divider must be one of {', '.join(SPLIT_DIVIDERS)}; got {divider!r}")
+    return orientation, divider
+
+
+def check_fixed_panes(fixed, count):
+    """Pane indexes that keep their size when the window is resized."""
+    result = []
+    for index in fixed:
+        if isinstance(index, bool) or not isinstance(index, int) or not 0 <= index < count:
+            raise LayoutError(f"fixed pane {index!r} is outside the {count} panes")
+        result.append(index)
+    if len(set(result)) == count:
+        raise LayoutError("at least one pane must be allowed to grow")
+    return sorted(set(result))
