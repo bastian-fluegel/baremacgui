@@ -52,7 +52,7 @@ Needs macOS and Python 3.10 or newer. The one dependency is PyObjC (`pyobjc-fram
 | Lists | `ListBox`, `Table` (text cells; `editable=`, `sortable=True`), `IconGrid`, `Tree` |
 | Menus | `MenuBar`, `Menu`, `MenuItem` (shortcuts, check marks), `MenuSeparator`, `ContextMenu` (`context_menu=` on any control) |
 | Dialogs | `show_info`, `show_warning`, `show_error`, `ask_yes_no`, `ask_ok_cancel`, `input_box`, `open_file`, `save_file`, `choose_folder` (with `parent=` they become sheets; `then=` gets the answer) |
-| Other | `Settings` (NSUserDefaults), `Window(autosave=...)`, `clipboard`, `Timer`, `Event`, `Custom(view)` for any AppKit view, errors `BareMacGUIError`, `PlatformError`, `LayoutError` |
+| Other | `StatusItem` (menu-bar item), `App(background=True)`, `Settings` (NSUserDefaults), `Window(autosave=...)`, `clipboard`, `Timer`, `Event`, `Custom(view)` for any AppKit view, errors `BareMacGUIError`, `PlatformError`, `LayoutError` |
 
 The full list with signatures is in [`docs/REFERENCE.md`](docs/REFERENCE.md), generated from the docstrings.
 
@@ -109,6 +109,7 @@ Run them with `python examples/<file>.py`:
 - `09_progress.py`: long task in a worker thread with progress bar, cancel and timer
 - `10_tasks.py`: editable, sortable table
 - `11_notes.py`: split view with list and editor, notes kept with `Settings`
+- `12_menubar.py`: menu-bar clock without a Dock icon
 
 `tests/test_examples_mac.py` builds every example on macOS CI and tests the helper functions they define.
 
@@ -135,6 +136,8 @@ Not yet checked on real hardware:
 - `Window.on_close` veto with the red button, `Window.show_modal`, the menu bar switching between windows.
 - `input_box`, `ask_ok_cancel`, the date and time pickers with the mouse, `Timer` while a menu is open.
 - Editing a `Table` cell by double-click and Return/Tab/Escape behaviour, clicking a header to sort (CI only drives it from code), and that an edit in a sorted table does not re-sort until the next click.
+- `StatusItem` and `App(background=True)`: the entry appears and updates, the menu works, no Dock icon, the app keeps running without windows. Example 12.
+- Everything added after the last green CI run (SplitView, StatusItem, example 11 and 12) has not been built on macOS at all yet.
 - `SplitView`: dragging the dividers by mouse, remembering them across a restart (`autosave=`), window resizing with `fixed=` panes.
 - `Settings` across real app restarts (CI only checks that a second object sees the values), `Window(autosave=)` restoring the position after a real quit.
 - `ColorWell` with the real color panel, `Switch` by mouse, `clipboard` pasting into other apps.

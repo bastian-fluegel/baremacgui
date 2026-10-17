@@ -19,6 +19,7 @@ it does not mean a person clicked it.
 - [ ] `TextBox.on_change` while typing, in single-line and multi-line boxes
 - [ ] `Window.on_close` veto with the red button, `show_modal`
 - [ ] Blocking sheet dialogs (without `then=`), file dialogs, `input_box`
+- [ ] StatusItem: icon and title in the menu bar, menu actions, quit from the menu (example 12); a background App stays alive without windows
 - [ ] SplitView: drag the divider, minimum pane size, divider position remembered after restart (example 11)
 - [ ] Table: double-click edit, Return/Tab/Escape in the editor, header click sorting, selection kept after sorting
 - [ ] `Settings` values and `Window(autosave=)` position survive a real quit and restart

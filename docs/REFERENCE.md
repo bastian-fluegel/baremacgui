@@ -6,7 +6,7 @@ Handlers take no arguments. Every event can be given as an `on_*=` option, regis
 
 ## App and errors
 
-### `App(name=None, menu=True)`
+### `App(name=None, menu=True, background=False)`
 
 ```text
 Create one App before any Window, then call run().
@@ -14,6 +14,9 @@ Create one App before any Window, then call run().
 name  shown in the menu bar entries (best effort for a plain script; a
       packaged .app takes its name from its bundle)
 menu  install the standard App/Edit/Window menus (needed for Cmd+C/V/Q)
+background  a menu-bar app: no Dock icon, no menu bar of its own, and it keeps running when the
+      last window closes (use it with StatusItem; quit with app.quit() from a menu item).
+      Native counterpart: activation policy "accessory" (LSUIElement in a packaged app).
 ```
 
 Properties:
@@ -818,6 +821,36 @@ Properties:
 Methods:
 
 - `popup()`: Show the menu at the mouse pointer.
+
+### `StatusItem(title='', symbol=None)`
+
+```text
+An entry on the right side of the menu bar (native NSStatusItem) that opens a menu.
+
+    app = App("Clock", background=True)
+    with StatusItem(symbol="clock", title="12:00") as item:
+        MenuItem("Say hello", on_click=hello)
+        MenuSeparator()
+        MenuItem("Quit", shortcut="Cmd+Q", on_click=app.quit)
+    item.title = "12:01"              # change it later (UI thread)
+
+symbol  an SF Symbol name shown as the icon (macOS 11+)
+title   text next to (or instead of) the icon
+
+Needs an App. Keep the StatusItem object alive: the entry disappears when it is deleted.
+Differences from native: only a menu is supported, not a popover or a custom view.
+```
+
+Properties:
+
+- `items` (read-only): The MenuItems and submenus in order (separators excluded).
+- `symbol`
+- `title`
+- `visible`
+
+Methods:
+
+- `remove()`: Take the entry out of the menu bar.
 
 ## Timer, settings and clipboard
 

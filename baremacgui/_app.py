@@ -20,9 +20,12 @@ class App:
     name  shown in the menu bar entries (best effort for a plain script; a
           packaged .app takes its name from its bundle)
     menu  install the standard App/Edit/Window menus (needed for Cmd+C/V/Q)
+    background  a menu-bar app: no Dock icon, no menu bar of its own, and it keeps running when the
+          last window closes (use it with StatusItem; quit with app.quit() from a menu item).
+          Native counterpart: activation policy "accessory" (LSUIElement in a packaged app).
     """
 
-    def __init__(self, name=None, menu=True):
+    def __init__(self, name=None, menu=True, background=False):
         ak = AK()
         self.name = str(name) if name else _default_name()
         try:  # best effort: the menu bar title of a plain script comes from the bundle name
@@ -34,8 +37,12 @@ class App:
             pass
         self._on_error = None
         self.ns = ak.NSApplication.sharedApplication()
-        self.ns.setActivationPolicy_(ak.NSApplicationActivationPolicyRegular)
+        self.background = bool(background)
+        self.ns.setActivationPolicy_(
+            ak.NSApplicationActivationPolicyAccessory if self.background else ak.NSApplicationActivationPolicyRegular
+        )
         self._delegate = delegate_class().alloc().init()  # the application holds its delegate weakly
+        self._delegate._quit_on_close = not self.background
         self.ns.setDelegate_(self._delegate)
         if menu:
             from ._menu import install_menu

@@ -16,7 +16,7 @@ if sys.platform == "darwin":
     )
     from baremacgui import Custom, IconGrid, Page, Popover, Sheet, Sidebar, Tree
     from baremacgui import show_info
-    from baremacgui import SplitView
+    from baremacgui import SplitView, StatusItem
     from baremacgui import Settings, Switch, ColorWell, clipboard
     from baremacgui import ContextMenu, DatePicker, Menu, MenuBar, MenuItem, MenuSeparator, Timer, TimePicker
     from baremacgui import _core
@@ -878,3 +878,32 @@ def test_split_view_errors():
                     Label("a")
                 with VBox():
                     Label("b")
+
+
+# -- status item and background app -----------------------------------------------
+def test_status_item_menu_and_title():
+    calls = []
+    with StatusItem("Hi", symbol="clock") as item:
+        entry = MenuItem("Do it", on_click=lambda: calls.append(1))
+        MenuSeparator()
+    try:
+        assert item.title == "Hi" and item.symbol == "clock" and item.visible
+        item.title = "Ho"
+        assert item.title == "Ho"
+        entry.click()
+        assert calls == [1] and [e.text for e in item.items] == ["Do it"]
+        with pytest.raises(ValueError):
+            item.symbol = "no.such.symbol.at.all"
+    finally:
+        item.remove()
+    with pytest.raises(ValueError):
+        StatusItem()
+
+
+def test_app_background_flag():
+    from baremacgui import App
+
+    app = App("bg", menu=False, background=True)
+    assert app.background and app._delegate._quit_on_close is False
+    app2 = App("fg", menu=False)
+    assert not app2.background

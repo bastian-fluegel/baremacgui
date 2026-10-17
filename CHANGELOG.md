@@ -13,6 +13,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - `Switch` (NSSwitch), `ColorWell` (NSColorWell, hex string value) and `clipboard` (NSPasteboard text). Example 03 shows them.
 - `Table(editable=..., sortable=True)`: edit cells in place (`on_edit`, `.edited`), sort by clicking a header (`on_sort`, `.sorted_by`, `.sort(column)`). Example 10.
 - `SplitView`: panes with draggable dividers (NSSplitView), `fixed=`, `min_pane=`, `autosave=`, `set_position`. Example 11 (notes).
+- `StatusItem` (NSStatusItem with a menu) and `App(background=True)` for menu-bar apps without Dock icon. Example 12. Not yet run on macOS (CI was unavailable).
 
 ## [0.1.0a1] - unreleased
 

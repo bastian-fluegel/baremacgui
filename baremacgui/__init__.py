@@ -20,6 +20,7 @@ from ._sidebar import Page, Sidebar
 from ._settings import Settings
 from ._system import ColorWell, Clipboard, Switch, clipboard
 from ._split import SplitView
+from ._statusitem import StatusItem
 from ._table import ListBox, Table
 from ._toolbar import Toolbar
 from ._widgets import Custom, DropDown, Image, ProgressBar, RadioGroup, SearchField, SegmentedControl, Separator, Slider
@@ -69,6 +70,7 @@ __all__ = [
     "MenuItem",
     "MenuSeparator",
     "ContextMenu",
+    "StatusItem",
     "Timer",
     "Switch",
     "ColorWell",

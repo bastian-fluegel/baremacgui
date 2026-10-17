@@ -97,7 +97,7 @@ def delegate_class():
 
     class BareMacDelegate(NSObject):
         def applicationShouldTerminateAfterLastWindowClosed_(self, app):
-            return True
+            return bool(getattr(self, "_quit_on_close", True))
 
     return BareMacDelegate
 

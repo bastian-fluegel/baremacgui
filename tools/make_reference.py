@@ -24,7 +24,7 @@ GROUPS = [
     ("Controls", ["Label", "TextBox", "ComboBox", "DropDown", "Button", "CheckBox", "RadioGroup", "SpinBox", "Slider",
                   "ProgressBar", "Image", "Separator", "SearchField", "SegmentedControl", "DatePicker", "TimePicker", "Switch", "ColorWell",
                   "ListBox", "Table", "IconGrid", "Tree", "Custom"]),
-    ("Menus", ["MenuBar", "Menu", "MenuItem", "MenuSeparator", "ContextMenu"]),
+    ("Menus", ["MenuBar", "Menu", "MenuItem", "MenuSeparator", "ContextMenu", "StatusItem"]),
     ("Timer, settings and clipboard", ["Timer", "Settings", "Clipboard"]),
     ("Dialogs", ["show_info", "show_warning", "show_error", "ask_yes_no", "ask_ok_cancel", "input_box", "open_file",
                  "save_file", "choose_folder"]),
