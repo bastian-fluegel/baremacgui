@@ -28,6 +28,18 @@ button.on_click(lambda: show_info("It works!", "Hello", parent=win))
 app.run()
 ```
 
+## Showcase
+
+<p align="center"><img src="docs/screenshots/showcase.png" alt="Atelier: a sidebar window with a task table, built with BareMacGUI" width="760"></p>
+
+This window is [`examples/16_showcase.py`](examples/16_showcase.py), 136 lines of Python. Nothing in it is drawn by the library: the sidebar, the table with its checkboxes and SF Symbols, the icon grid, the switch, the slider with tick marks, the segmented control, the color well and the calendar field are AppKit views, so the look, the fonts and Dark Mode are the system's own.
+
+| Dark mode | Icon grid and drop zone | Settings-style rows |
+|---|---|---|
+| ![Today page in dark mode](docs/screenshots/showcase-dark.png) | ![Library page](docs/screenshots/showcase-library.png) | ![Appearance page in dark mode](docs/screenshots/showcase-appearance.png) |
+
+The screenshots come from GitHub's macOS runner, where the window is not in focus, so the accent color shows grey in places (a focused window uses your accent color). Run it yourself: `python examples/16_showcase.py`.
+
 ## Install
 
 From a clone:
