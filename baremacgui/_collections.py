@@ -40,6 +40,8 @@ class IconGrid(Control):
         self._default_symbol = str(symbol)
         _symbol_image(self._default_symbol)  # fail early on a bad default
         self._entries = check_icon_items(items, self._default_symbol)
+        for _, entry_symbol in self._entries:
+            _symbol_image(entry_symbol)  # fail early, not while drawing
         self._icon_size = float(icon_size)
         self._on_select = None
         self._muted = False
