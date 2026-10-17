@@ -48,11 +48,11 @@ Needs macOS and Python 3.10 or newer. The one dependency is PyObjC (`pyobjc-fram
 | Windows | `App`, `Window` (styles `standard`, `unified`, `sidebar`; `on_close`, `on_resize`, `on_destroy`, `size`, `add_shortcut`, `default_button`, `cancel_button`, `show_modal`), `Sheet`, `Popover`, `Toolbar`, `Sidebar` / `Page` |
 | Layout | `VBox`, `HBox`, `Spacer`; options `padding`, `gap`, `align`, `justify`, `grow`, `width`/`height`/`min_*`/`max_*` |
 | Containers | `GroupBox`, `TabControl` / `Tab` |
-| Controls | `Label`, `TextBox` (single line, multi line, password), `ComboBox`, `DropDown`, `Button` (SF Symbols), `CheckBox`, `RadioGroup`, `SpinBox`, `Slider`, `ProgressBar`, `Image`, `Separator`, `SearchField`, `SegmentedControl`, `DatePicker`, `TimePicker` |
+| Controls | `Label`, `TextBox` (single line, multi line, password), `ComboBox`, `DropDown`, `Button` (SF Symbols), `CheckBox`, `RadioGroup`, `SpinBox`, `Slider`, `ProgressBar`, `Image`, `Separator`, `SearchField`, `SegmentedControl`, `DatePicker`, `TimePicker`, `Switch` (NSSwitch), `ColorWell` (NSColorWell) |
 | Lists | `ListBox`, `Table` (read-only text cells), `IconGrid`, `Tree` |
 | Menus | `MenuBar`, `Menu`, `MenuItem` (shortcuts, check marks), `MenuSeparator`, `ContextMenu` (`context_menu=` on any control) |
 | Dialogs | `show_info`, `show_warning`, `show_error`, `ask_yes_no`, `ask_ok_cancel`, `input_box`, `open_file`, `save_file`, `choose_folder` (with `parent=` they become sheets; `then=` gets the answer) |
-| Other | `Timer`, `Event`, `Custom(view)` for any AppKit view, errors `BareMacGUIError`, `PlatformError`, `LayoutError` |
+| Other | `Settings` (NSUserDefaults), `Window(autosave=...)`, `clipboard`, `Timer`, `Event`, `Custom(view)` for any AppKit view, errors `BareMacGUIError`, `PlatformError`, `LayoutError` |
 
 The full list with signatures is in [`docs/REFERENCE.md`](docs/REFERENCE.md), generated from the docstrings.
 
@@ -132,6 +132,8 @@ Not yet checked on real hardware:
 - `TextBox.on_change` while typing (single and multi line), and that setting `.text` from code does not fire it.
 - `Window.on_close` veto with the red button, `Window.show_modal`, the menu bar switching between windows.
 - `input_box`, `ask_ok_cancel`, the date and time pickers with the mouse, `Timer` while a menu is open.
+- `Settings` across real app restarts (CI only checks that a second object sees the values), `Window(autosave=)` restoring the position after a real quit.
+- `ColorWell` with the real color panel, `Switch` by mouse, `clipboard` pasting into other apps.
 - `Table` and `Tree` `on_double_click` ignoring double-clicks on the header or empty space (uses `clickedRow`).
 - Light appearance for the other examples.
 - Apple Silicon, other macOS versions, multiple displays.
