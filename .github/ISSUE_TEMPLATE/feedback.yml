@@ -1,0 +1,16 @@
+name: Feedback
+description: Does the API feel right? Something missing? Tried it on your Mac?
+labels: [feedback]
+body:
+  - type: textarea
+    id: feedback
+    attributes:
+      label: What would you like to tell us?
+      description: What worked, what felt awkward, what is missing.
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version and chip
+      placeholder: "macOS 15.5, Apple Silicon"

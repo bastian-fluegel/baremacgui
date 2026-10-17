@@ -38,3 +38,29 @@ jobs:
           chunk = re.sub(r"\n{2,}", "\n", chunk)[:3500]
           print("::error title=pytest::" + chunk.replace("%", "%25").replace("\r", "").replace("\n", "%0A"))
           PY
+
+  package:
+    # The wheel must install and import on a machine without AppKit.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m compileall -q baremacgui examples tools
+      - run: python -m pip install build
+      - run: python -m build
+      - name: Install the wheel into a clean environment and import it
+        run: |
+          python -m venv /tmp/wheel-env
+          /tmp/wheel-env/bin/pip install dist/*.whl
+          cd /tmp && /tmp/wheel-env/bin/python -c "import baremacgui, sys; print(baremacgui.__version__); assert 'AppKit' not in sys.modules"
+      - name: Wheel and sdist contain what they should
+        run: |
+          python - <<'PY'
+          import glob, zipfile
+          names = zipfile.ZipFile(glob.glob("dist/*.whl")[0]).namelist()
+          assert any(n.endswith("baremacgui/__init__.py") for n in names), names
+          assert any(n.endswith("LICENSE") for n in names), names
+          print(len(names), "files in the wheel")
+          PY

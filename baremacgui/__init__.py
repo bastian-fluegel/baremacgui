@@ -21,7 +21,7 @@ from ._table import ListBox, Table
 from ._toolbar import Toolbar
 from ._widgets import Custom, DropDown, Image, ProgressBar, RadioGroup, SearchField, SegmentedControl, Separator, Slider
 
-__version__ = "0.0.1.dev0"
+__version__ = "0.1.0a1"
 
 __all__ = [
     "BareMacGUIError",

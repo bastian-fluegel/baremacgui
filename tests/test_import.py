@@ -21,3 +21,19 @@ def test_import_does_not_load_appkit():
         "assert 'objc' not in sys.modules, 'objc was imported at import time'\n"
     )
     subprocess.run([sys.executable, "-c", code], check=True)
+
+
+def test_all_names_exist_and_version_is_semver_like():
+    import re
+
+    assert re.fullmatch(r"\d+\.\d+\.\d+((a|b|rc)\d+|\.dev\d+)?", baremacgui.__version__)
+    for name in baremacgui.__all__:
+        assert hasattr(baremacgui, name), name
+    assert len(set(baremacgui.__all__)) == len(baremacgui.__all__)
+
+
+def test_changelog_mentions_current_version():
+    import pathlib
+
+    text = (pathlib.Path(__file__).parent.parent / "CHANGELOG.md").read_text(encoding="utf-8")
+    assert f"[{baremacgui.__version__}]" in text
