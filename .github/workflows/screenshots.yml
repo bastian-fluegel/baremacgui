@@ -1,0 +1,38 @@
+name: Screenshots
+
+# Starts the examples on a macOS runner, drives them from code and uploads screenshots.
+# Run it by hand: Actions > Screenshots > Run workflow.
+on:
+  workflow_dispatch:
+
+jobs:
+  shoot:
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - run: python -m pip install -e .
+      - name: Show the display
+        run: |
+          sw_vers
+          system_profiler SPDisplaysDataType | head -20 || true
+      - name: Take screenshots
+        run: |
+          mkdir -p shots
+          status=0
+          for appearance in "" "--dark"; do
+            for scenario in hello settings widgets finder sidebar everything; do
+              echo "=== $scenario $appearance"
+              python tools/shoot.py "$scenario" shots $appearance || status=1
+            done
+          done
+          exit 0
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: screenshots
+          path: shots
+          if-no-files-found: warn
