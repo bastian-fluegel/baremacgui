@@ -55,6 +55,10 @@ class Table(Control):
             column = ak.NSTableColumn.alloc().initWithIdentifier_(str(position))
             column.setTitle_(title)
             column.setEditable_(False)
+            if self._kinds[position] == "check":  # a checkbox needs no more room than the title
+                column.setMinWidth_(48.0)
+                column.setMaxWidth_(64.0)
+                column.setWidth_(56.0)
             if sortable:
                 column.setSortDescriptorPrototype_(ak.NSSortDescriptor.sortDescriptorWithKey_ascending_(str(position), True))
             table.addTableColumn_(column)
