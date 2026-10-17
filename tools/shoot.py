@@ -9,6 +9,7 @@ click path works.
 import os
 import subprocess
 import sys
+import threading
 import traceback
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -52,6 +53,15 @@ def main():
     scenario, outdir = args
     example, steps = SCENARIOS[scenario]
     os.makedirs(outdir, exist_ok=True)
+
+    def watchdog():
+        print("WATCHDOG: scenario did not finish in 60 seconds", flush=True)
+        os._exit(2)
+
+    timer = threading.Timer(60.0, watchdog)
+    timer.daemon = True
+    timer.start()
+    print(f"start {scenario} {'dark' if dark else 'light'}", flush=True)
     suffix = "-dark" if dark else "-light"
     failures = []
 
@@ -64,7 +74,7 @@ def main():
         path = os.path.join(outdir, f"{name}{suffix}.png")
         result = subprocess.run(["screencapture", "-x", path], capture_output=True, text=True)
         size = os.path.getsize(path) if os.path.exists(path) else 0
-        print(f"screenshot {name}{suffix}: exit {result.returncode}, {size} bytes {result.stderr.strip()}")
+        print(f"screenshot {name}{suffix}: exit {result.returncode}, {size} bytes {result.stderr.strip()}", flush=True)
         if result.returncode != 0 or size == 0:
             failures.append(name)
 
@@ -76,7 +86,7 @@ def main():
 
         def advance(index):
             if index >= len(steps):
-                print("scenario finished")
+                print("scenario finished", flush=True)
                 self.ns.terminate_(None)
                 return
             action, wait, shot = steps[index]
