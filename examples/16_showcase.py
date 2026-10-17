@@ -7,7 +7,7 @@ text styles. Light and dark appearance, the accent color and every control come 
 import datetime as dt
 
 from baremacgui import (
-    App, ColorWell, DatePicker, DropZone, HBox, IconGrid, Label, Page, ProgressBar, SearchField,
+    App, CheckBox, ColorWell, DatePicker, DropDown, DropZone, HBox, IconGrid, Label, Page, ProgressBar, SearchField,
     SegmentedControl, Separator, Sidebar, Slider, Spacer, Switch, Table, VBox, Window,
 )
 
@@ -18,6 +18,8 @@ TASKS = [
     [False, ("calendar", "Book the train to Munich"), "13:00"],
     [False, ("doc.text", "Write the quarterly report"), "15:30"],
     [False, ("bicycle", "Evening ride"), "18:30"],
+    [False, ("fork.knife", "Cook dinner for four"), "19:30"],
+    [False, ("book", "Read a chapter"), "21:30"],
 ]
 
 LIBRARY = [
@@ -92,6 +94,17 @@ with Window("Atelier", size=(900, 600), style="sidebar") as win:
                     Label("Density", style="headline")
                     Spacer()
                     SegmentedControl(["Compact", "Comfortable", "Spacious"], selected=1, accessibility_label="Density")
+                Separator()
+                with HBox():
+                    Label("Language", style="headline")
+                    Spacer()
+                    DropDown(["English", "Deutsch", "Fran\u00e7ais", "Espa\u00f1ol"], selected=0, width=160,
+                             accessibility_label="Language")
+                Separator()
+                with HBox():
+                    Label("Notifications", style="headline")
+                    Spacer()
+                    CheckBox("Allow notifications", checked=True)
                 Separator()
                 with HBox():
                     Label("Next review", style="headline")

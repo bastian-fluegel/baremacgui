@@ -124,9 +124,9 @@ def test_showcase_example(headless):
     assert ns["share_done"]([]) == 0.0 and ns["share_done"]([[True], [False]]) == 50.0
     names = [item[0] for item in ns["filter_library"](ns["LIBRARY"], " MA")]
     assert names == ["Maps", "Mail"]
-    assert ns["summary"].text == "2 of 6 done" and round(ns["bar"].value) == 33
+    assert ns["summary"].text == "2 of 8 done" and round(ns["bar"].value) == 25
     ns["table"]._table.viewAtColumn_row_makeIfNecessary_(0, 2, True).subviews()[0].performClick_(None)
-    assert ns["summary"].text == "3 of 6 done" and round(ns["bar"].value) == 50
+    assert ns["summary"].text == "3 of 8 done" and round(ns["bar"].value) == 38
     ns["search"].text = "ma"
     ns["search"].on_change.emit()
     assert ns["grid"].items == ["Maps", "Mail"]
