@@ -225,6 +225,16 @@ class _Box:
                     stack.heightAnchor(), -2.0 * pad
                 ).setActive_(True)
 
+        # Children that fill the cross axis must not resist being stretched there: a scroll view
+        # reports an intrinsic size on newer macOS, and with the default priority 250 it would
+        # keep its row small while another row took the free space.
+        cross = 0 if vertical else 1
+        for item in items:
+            if item.spacer:
+                continue
+            if (vertical and (self.align == "stretch" or item.fill)) or (not vertical and self.align == "stretch"):
+                item.view.setContentHuggingPriority_forOrientation_(1, cross)
+
         _core.apply_size(stack, self._size)
         self.ns = stack
         _core.add(stack, self.grow, fill=True)
