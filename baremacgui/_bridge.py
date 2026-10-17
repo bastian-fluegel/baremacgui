@@ -273,6 +273,7 @@ def icon_classes():
             objc.super(BareMacIconItem, self).setSelected_(flag)
             self._paint(bool(flag))
 
+        @objc.python_method
         def _paint(self, selected):
             if getattr(self, "_box", None) is None:
                 return
@@ -283,6 +284,7 @@ def icon_classes():
             else:
                 self._label.setTextColor_(ak.NSColor.labelColor())
 
+        @objc.python_method
         def configure(self, title, image, size):
             self.view()  # makes sure loadView ran
             self._label.setStringValue_(title)
