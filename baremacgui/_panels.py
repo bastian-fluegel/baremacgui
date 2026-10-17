@@ -4,8 +4,6 @@ macOS has one shared, non-modal color panel and font panel for the whole app. Th
 panel, run it modally and return what is selected when the user closes it. Native difference to the
 Windows dialogs: the panels have no OK and Cancel buttons, so there is no "cancelled" result.
 """
-from __future__ import annotations
-
 from typing import NamedTuple
 
 from ._bridge import AK, FN, ensure_app, make_target
@@ -13,6 +11,8 @@ from ._options import format_color, parse_color
 
 
 class FontChoice(NamedTuple):
+    """A font as the font panel reports it: family name, size in points, bold and italic flags."""
+
     name: str  # family, e.g. "Helvetica Neue"
     size: float  # points
     bold: bool

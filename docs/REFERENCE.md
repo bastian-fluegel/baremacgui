@@ -1099,8 +1099,8 @@ Open the system font panel; return a FontChoice(name, size, bold, italic).
 the panel; the result is the font selected at that moment.
 ```
 
-### `FontChoice(name: ForwardRef('str'), size: ForwardRef('float'), bold: ForwardRef('bool'), italic: ForwardRef('bool'))`
+### `FontChoice(name: str, size: float, bold: bool, italic: bool)`
 
 ```text
-FontChoice(name, size, bold, italic)
+A font as the font panel reports it: family name, size in points, bold and italic flags.
 ```
