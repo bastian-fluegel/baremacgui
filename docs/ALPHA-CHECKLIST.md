@@ -9,7 +9,6 @@ it does not mean a person clicked it.
 - [x] Every control and container is built and its properties are exercised on macOS CI
 - [x] Wheel builds and installs into a clean environment; `import baremacgui` works without AppKit (CI job `package`)
 - [x] Changelog, contributing guide, security policy, issue forms
-- [x] Publishing workflow prepared (PyPI trusted publishing, TestPyPI by manual run)
 - [x] Screenshots of every example from a macOS runner (workflow "Screenshots")
 
 ## To check by hand on a real Mac
@@ -30,7 +29,6 @@ it does not mean a person clicked it.
 
 ## Before beta
 - [ ] API names stable; experimental parts marked in the docs
-- [ ] PyPI name checked and a test upload to TestPyPI done
 - [ ] Menu bar behaviour with several windows reviewed
 - [ ] Accessibility (VoiceOver labels) reviewed
 - [ ] `.app` packaging documented

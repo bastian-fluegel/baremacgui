@@ -30,7 +30,7 @@ app.run()
 
 ## Install
 
-Not on PyPI yet (the publishing workflow is prepared, see `.github/workflows/publish.yml`). From a clone:
+From a clone:
 
 ```
 python3 -m venv .venv
