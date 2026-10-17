@@ -1,10 +1,11 @@
-"""A tour of the standard controls: radio buttons, drop-down, slider, list, table, progress bar."""
+"""A tour of the standard controls: radio buttons, drop-down, slider, switch, color well,
+clipboard, list, table, progress bar."""
 import threading
 import time
 
 from baremacgui import (
-    App, Button, DropDown, HBox, Image, Label, ListBox, ProgressBar, RadioGroup, Separator, Slider,
-    Table, VBox, Window, show_info,
+    App, Button, ColorWell, DropDown, HBox, Image, Label, ListBox, ProgressBar, RadioGroup, Separator, Slider,
+    Spacer, Switch, Table, VBox, Window, clipboard, show_info,
 )
 
 FRUIT = ["Apple", "Banana", "Cherry", "Fig", "Grape", "Lemon", "Mango", "Orange", "Pear", "Plum"]
@@ -32,6 +33,14 @@ with Window("Widgets", size=(640, 520)):
                 sort_by = DropDown(["Name", "Size", "Date"])
                 Label("Volume")
                 volume = Slider(40)
+        with HBox(gap=8):
+            Label("Notifications")
+            notify = Switch(True)
+            Spacer(size=16)
+            Label("Accent")
+            accent = ColorWell("#3366FF")
+            Spacer()
+            copy = Button("Copy status")
         with HBox(gap=12, grow=1, align="stretch"):
             fruit = ListBox(FRUIT, selected=0, grow=1)
             files = Table(["Name", "Size", "Modified"], FILES, grow=2)
@@ -44,7 +53,7 @@ with Window("Widgets", size=(640, 520)):
 def update_status():
     chosen = ", ".join(row[0] for row in files.selected_rows) or "none"
     status.text = (
-        f"Priority {priority.text} | sort by {sort_by.text} | volume {volume.value:.0f} | "
+        f"Notifications {'on' if notify.checked else 'off'} | accent {accent.value} | priority {priority.text} | sort by {sort_by.text} | volume {volume.value:.0f} | "
         f"fruit {fruit.text} | files {chosen}"
     )
 
@@ -70,7 +79,7 @@ def start():
     threading.Thread(target=work, daemon=True).start()
 
 
-for control in (priority, sort_by, volume):
+for control in (priority, sort_by, volume, notify, accent):
     control.on_change(update_status)
 fruit.on_select(update_status)
 files.on_select(update_status)
@@ -78,5 +87,7 @@ files.on_double_click(
     lambda: files.selected_rows and show_info(" / ".join(files.selected_rows[0]), "Selected file")
 )
 run.on_click(start)
+copy.on_click(lambda: setattr(clipboard, "text", status.text))
 update_status()
-app.run()
+if __name__ == "__main__":
+    app.run()

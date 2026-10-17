@@ -202,3 +202,17 @@ def test_setting_checks_and_plain_value():
         with pytest.raises(ValueError):
             o.check_setting_key(bad)
     assert o.plain_value({"k": [1, True, "s"]}) == {"k": [1, True, "s"]}
+
+
+def test_color_parse_and_format():
+    assert o.parse_color("#FF0000") == (1.0, 0.0, 0.0, 1.0)
+    assert o.parse_color("0f0") == (0.0, 1.0, 0.0, 1.0)
+    assert o.parse_color("#00000080")[3] == pytest.approx(128 / 255)
+    assert o.format_color(1, 0.2, 0) == "#FF3300"
+    assert o.format_color(0, 0, 0, 0.5) == "#00000080"
+    assert o.format_color(*o.parse_color("#3366FF")) == "#3366FF"
+    for bad in ("", "#12", "#GGGGGG", "#1234567"):
+        with pytest.raises(ValueError):
+            o.parse_color(bad)
+    with pytest.raises(TypeError):
+        o.parse_color(0xFF0000)

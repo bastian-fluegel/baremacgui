@@ -10,6 +10,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 ### Added
 - `Settings`: values that survive between runs (NSUserDefaults, one domain per app name). Example 02 uses it.
 - `Window(autosave="name")`: the window remembers its position and size (NSWindow frame autosave).
+- `Switch` (NSSwitch), `ColorWell` (NSColorWell, hex string value) and `clipboard` (NSPasteboard text). Example 03 shows them.
 
 ## [0.1.0a1] - unreleased
 

@@ -358,3 +358,24 @@ def plain_value(value):
     if hasattr(value, "items"):
         return {str(k): plain_value(v) for k, v in value.items()}
     return value
+
+
+def parse_color(value):
+    """'#RRGGBB', '#RGB' or '#RRGGBBAA' (the # is optional) -> (r, g, b, a) floats 0..1."""
+    if not isinstance(value, str):
+        raise TypeError(f"a color is a string like '#3366FF', got {value!r}")
+    text = value.strip().lstrip("#")
+    if len(text) == 3:
+        text = "".join(ch * 2 for ch in text)
+    if len(text) not in (6, 8) or any(ch not in "0123456789abcdefABCDEF" for ch in text):
+        raise ValueError(f"not a color: {value!r} (use #RGB, #RRGGBB or #RRGGBBAA)")
+    parts = [int(text[i:i + 2], 16) / 255.0 for i in range(0, len(text), 2)]
+    return (*parts[:3], parts[3] if len(parts) == 4 else 1.0)
+
+
+def format_color(r, g, b, a=1.0):
+    """Floats 0..1 -> '#RRGGBB' (or '#RRGGBBAA' when not opaque)."""
+    channels = [max(0, min(255, int(round(c * 255)))) for c in (r, g, b)]
+    text = "#" + "".join(f"{c:02X}" for c in channels)
+    alpha = max(0, min(255, int(round(a * 255))))
+    return text if alpha == 255 else text + f"{alpha:02X}"

@@ -539,6 +539,43 @@ Properties:
 - `value`
 - `visible`: False hides the control; a box closes the gap it leaves.
 
+### `Switch(checked=False, grow=0, **size)`
+
+```text
+The on/off switch (native NSSwitch, macOS 10.15+). `checked` is a bool.
+
+Native NSSwitch has no label; put a Label next to it (the usual System Settings look).
+Assigning .checked never calls on_change; only the user does.
+```
+
+Events: `on_change`
+
+Properties:
+
+- `checked`
+- `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
+- `enabled`
+- `visible`: False hides the control; a box closes the gap it leaves.
+
+### `ColorWell(value='#3366FF', grow=0, **size)`
+
+```text
+A color swatch that opens the system color panel when clicked (native NSColorWell).
+
+`value` is a string '#RRGGBB' (or '#RRGGBBAA'). on_change fires while the user picks a color.
+Assigning .value never calls on_change. The color panel is the one shared panel of the app and
+is not modal; that is how macOS works.
+```
+
+Events: `on_change`
+
+Properties:
+
+- `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
+- `enabled`
+- `value`
+- `visible`: False hides the control; a box closes the gap it leaves.
+
 ### `ListBox(items=(), selected=None, multiple=False, striped=False, grow=0, **size)`
 
 ```text
@@ -737,7 +774,7 @@ Methods:
 
 - `popup()`: Show the menu at the mouse pointer.
 
-## Timer
+## Timer, settings and clipboard
 
 ### `Timer(interval, handler=None, repeat=True, start=True, **options)`
 
@@ -763,6 +800,50 @@ Methods:
 
 - `start()`: (Re)start the timer; the first tick comes after one interval.
 - `stop()`
+
+### `Settings(name=None, defaults=None, domain=None)`
+
+```text
+A small persistent dictionary.
+
+    prefs = Settings("my-tool", defaults={"theme": "System", "recent": 10})
+    prefs["theme"]                 # "System" until something else was stored
+    prefs["recent"] = 20           # written to ~/Library/Preferences/baremacgui.my-tool.plist
+    del prefs["recent"]            # back to the default
+
+Values may be bool, int, float, str and lists or dicts of those (what a property list holds).
+`name` becomes the preferences domain "baremacgui.<name>". A packaged .app would normally use
+its own bundle identifier instead; pass `domain="com.example.app"` for that.
+
+Native counterpart: NSUserDefaults (a custom suite). Difference: the domain is not the
+script's bundle, because a plain Python process has none of its own.
+```
+
+Methods:
+
+- `clear()`: Forget everything stored (defaults stay).
+- `get(key, default=None)`
+- `keys()`: Names of all stored values and defaults.
+- `save()`: Write to disk now. Done automatically in the background; call it before a hard exit.
+- `to_dict()`
+
+### `Clipboard()`
+
+```text
+The general pasteboard (NSPasteboard). Use the ready-made object `clipboard`.
+
+clipboard.text = "copied"
+clipboard.text            # "copied", or "" when the clipboard holds no text
+clipboard.clear()
+```
+
+Properties:
+
+- `text`
+
+Methods:
+
+- `clear()`
 
 ## Dialogs
 

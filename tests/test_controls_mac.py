@@ -16,7 +16,7 @@ if sys.platform == "darwin":
     )
     from baremacgui import Custom, IconGrid, Page, Popover, Sheet, Sidebar, Tree
     from baremacgui import show_info
-    from baremacgui import Settings
+    from baremacgui import Settings, Switch, ColorWell, clipboard
     from baremacgui import ContextMenu, DatePicker, Menu, MenuBar, MenuItem, MenuSeparator, Timer, TimePicker
     from baremacgui import _core
 
@@ -768,3 +768,30 @@ def test_window_autosave_remembers_frame():
     NSWindow.removeFrameUsingName_(name)
     with pytest.raises(ValueError):
         Window("c", visible=False, autosave="")
+
+
+# -- switch, color well, clipboard --------------------------------------------
+def test_switch_checked_and_event():
+    calls = []
+    sw = build(("s", lambda: Switch(True, on_change=lambda: calls.append(1))))["s"]
+    assert sw.checked
+    sw.checked = False
+    assert not sw.checked and calls == []
+    sw.on_change.emit()
+    assert calls == [1]
+
+
+def test_color_well_roundtrip():
+    well = build(("c", lambda: ColorWell("#336699")))["c"]
+    assert well.value == "#336699"
+    well.value = "#ff000080"
+    assert well.value == "#FF000080"
+    with pytest.raises(ValueError):
+        well.value = "red"
+
+
+def test_clipboard_text_roundtrip():
+    clipboard.text = "bmc test \u00e4\u00f6\u00fc"
+    assert clipboard.text == "bmc test \u00e4\u00f6\u00fc"
+    clipboard.clear()
+    assert clipboard.text == ""
