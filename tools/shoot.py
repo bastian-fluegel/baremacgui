@@ -75,6 +75,20 @@ SCENARIOS = {
         (lambda g: setattr(g["sidebar"], "index", 1), 0.8, "sidebar-appearance"),
         (lambda g: setattr(g["sidebar"], "index", 3), 0.8, "sidebar-about"),
     ]),
+    "editor": ("07_editor.py", [
+        (None, 1.0, "editor-empty"),
+        (lambda g: (setattr(g["editor"], "text", "Dear diary,\n\ntoday I wrote a text editor in twenty lines."), g["changed"]()), 0.8, "editor-text"),
+    ]),
+    "form": ("08_form.py", [
+        (None, 1.0, "form-empty"),
+        (lambda g: (setattr(g["name"], "text", "Ada Lovelace"), setattr(g["email"], "text", "ada@example"), g["refresh"]()), 0.8, "form-invalid"),
+        (lambda g: (setattr(g["email"], "text", "ada@example.com"), setattr(g["password"], "text", "analytical"), setattr(g["terms"], "checked", True), g["refresh"]()), 0.8, "form-valid"),
+    ]),
+    "progress": ("09_progress.py", [
+        (None, 1.0, "progress-ready"),
+        (lambda g: g["begin"](), 2.0, "progress-running"),
+        (lambda g: g["cancel"].on_click.emit(), 1.0, "progress-cancelled"),
+    ]),
     "everything": ("06_everything.py", [
         (None, 1.0, "everything-list"),
         (lambda g: (setattr(g["view"], "index", 0), g["set_view"]()), 1.0, "everything-icons"),
