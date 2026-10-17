@@ -1,0 +1,164 @@
+"""Generate the data of the documentation web app (docs/site) and, optionally, a single-file copy.
+
+    python tools/make_site.py            write docs/site/data.js
+    python tools/make_site.py --check    fail if data.js is out of date or a guide snippet is wrong
+    python tools/make_site.py --bundle OUT.html   one self-contained HTML file (screenshots inlined)
+                                       add --fragment to leave out the document wrapper
+
+Runs on any OS: baremacgui imports without AppKit. The guide is written in tools/site_content.py;
+the reference comes from the docstrings (same source as docs/REFERENCE.md).
+"""
+import ast
+import base64
+import inspect
+import json
+import re
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "tools"))
+
+import baremacgui  # noqa: E402
+import make_reference as ref  # noqa: E402
+import site_content as content  # noqa: E402
+
+SITE = ROOT / "docs" / "site"
+TARGET = SITE / "data.js"
+SHOTS = ROOT / "docs" / "screenshots"
+SIZE_NAMES = {"width", "height", "min_width", "max_width", "min_height", "max_height"}
+
+
+def kind_of(obj):
+    return "class" if inspect.isclass(obj) else "function"
+
+
+def reference():
+    groups = []
+    for title, names in ref.GROUPS:
+        items = []
+        for name in names:
+            obj = getattr(baremacgui, name)
+            item = {"name": name, "kind": kind_of(obj), "signature": ref.signature(obj),
+                    "doc": inspect.getdoc(obj) or "", "summary": ref.first_line(obj)}
+            if inspect.isclass(obj):
+                events, props, methods = ref.members(obj)
+                item["events"] = events
+                item["props"] = [{"name": n, "doc": d, "rw": rw} for n, d, rw in props]
+                item["methods"] = [{"name": n, "signature": s, "doc": d} for n, s, d in methods]
+            items.append(item)
+        groups.append({"title": title, "items": items})
+    return groups
+
+
+def examples():
+    out = []
+    for path in sorted((ROOT / "examples").glob("[0-9]*.py")):
+        source = path.read_text(encoding="utf-8")
+        doc = ast.get_docstring(ast.parse(source)) or ""
+        shot = content.SCREENSHOTS.get(path.stem)
+        out.append({"id": path.stem, "title": path.stem.split("_", 1)[1].replace("_", " "),
+                    "doc": doc, "source": source, "lines": source.count("\n") + 1,
+                    "screenshot": f"../screenshots/{shot}" if shot else None})
+    return out
+
+
+def check_snippets():
+    """Compile every guide snippet and check names and keyword options against the real API."""
+    problems = []
+    names = set(dir(baremacgui))
+    for topic in content.GUIDE:
+        for kind, text in topic["blocks"]:
+            if kind != "code":
+                continue
+            where = topic["id"]
+            try:
+                tree = ast.parse(text)
+            except SyntaxError as exc:
+                problems.append(f"{where}: syntax error {exc}")
+                continue
+            for node in ast.walk(tree):
+                if isinstance(node, ast.ImportFrom) and node.module == "baremacgui":
+                    problems += [f"{where}: baremacgui has no {a.name}" for a in node.names if a.name not in names]
+                if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id in names:
+                    try:
+                        params = inspect.signature(getattr(baremacgui, node.func.id)).parameters
+                    except (TypeError, ValueError):
+                        continue
+                    open_ended = any(p.kind is p.VAR_KEYWORD for p in params.values())
+                    for kw in node.keywords:
+                        if kw.arg is None or kw.arg in params:
+                            continue
+                        if open_ended and (kw.arg.startswith("on_") or kw.arg in SIZE_NAMES
+                                           or kw.arg in ("tooltip", "accessibility_label")):
+                            continue
+                        problems.append(f"{where}: {node.func.id}() has no option {kw.arg}")
+    for _, controls in content.NEEDS:
+        problems += [f"needs: {c} is not in baremacgui" for c in controls if c not in names]
+    return problems
+
+
+def build():
+    return {
+        "version": baremacgui.__version__,
+        "reference": reference(),
+        "examples": examples(),
+        "guide": [{"id": t["id"], "title": t["title"], "summary": t["summary"],
+                   "blocks": [{"type": k, "text": v} for k, v in t["blocks"]]} for t in content.GUIDE],
+        "needs": [{"need": n, "controls": c} for n, c in content.NEEDS],
+        "differences": [dict(zip(("topic", "mac", "win", "why"), row)) for row in content.DIFFERENCES],
+    }
+
+
+def render():
+    body = json.dumps(build(), indent=1, ensure_ascii=False, sort_keys=False)
+    return ("// Generated by tools/make_site.py from the docstrings and examples. Do not edit by hand.\n"
+            f"window.BMC = {body};\n")
+
+
+def bundle(out_path):
+    html = (SITE / "index.html").read_text(encoding="utf-8")
+    css = (SITE / "style.css").read_text(encoding="utf-8")
+    js = (SITE / "app.js").read_text(encoding="utf-8")
+    data = render()
+
+    def inline_shots(text):
+        def repl(match):
+            path = SHOTS / match.group(1)
+            raw = base64.b64encode(path.read_bytes()).decode("ascii")
+            return f"data:image/png;base64,{raw}"
+        return re.sub(r"(?:\.\./)?screenshots/([A-Za-z0-9_.-]+\.png)", repl, text)
+
+    html = html.replace('<link rel="stylesheet" href="style.css">', f"<style>\n{css}\n</style>")
+    html = html.replace('<script src="data.js"></script>', f"<script>\n{inline_shots(data)}\n</script>")
+    html = html.replace('<script src="app.js"></script>', f"<script>\n{js}\n</script>")
+    if "--fragment" in sys.argv:  # for hosts that wrap the page in their own document skeleton
+        html = re.sub(r"(?is)^\s*<!doctype html>\s*<html[^>]*>\s*<head>.*?(?=<title>)", '<meta name="claude:viewport-fit-sides" content="cover">\n', html)
+        html = re.sub(r"(?is)<meta charset[^>]*>|<meta name=\"viewport\"[^>]*>", "", html)
+        html = re.sub(r"(?is)</head>\s*<body>", "", html)
+        html = re.sub(r"(?is)</body>\s*</html>\s*$", "", html)
+    Path(out_path).write_text(html, encoding="utf-8")
+    print(f"wrote {out_path} ({len(html) // 1024} KB)")
+
+
+def main():
+    problems = check_snippets()
+    if problems:
+        sys.exit("guide snippets are wrong:\n  " + "\n  ".join(problems))
+    if "--bundle" in sys.argv:
+        bundle(sys.argv[sys.argv.index("--bundle") + 1])
+        return
+    text = render()
+    if "--check" in sys.argv:
+        if not TARGET.exists() or TARGET.read_text(encoding="utf-8") != text:
+            sys.exit("docs/site/data.js is out of date: run python tools/make_site.py")
+        print("site data is up to date, snippets are consistent with the API")
+        return
+    SITE.mkdir(parents=True, exist_ok=True)
+    TARGET.write_text(text, encoding="utf-8")
+    print(f"wrote {TARGET} ({len(text) // 1024} KB)")
+
+
+if __name__ == "__main__":
+    main()

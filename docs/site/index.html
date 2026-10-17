@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>BareMacGUI Guide</title>
+<meta name="description" content="Guide, API reference and examples for BareMacGUI, native macOS windows from Python.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open navigation" aria-expanded="false">
+      <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M3 6h14M3 10h14M3 14h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="#overview"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><b>BareMacGUI</b><span class="ver" id="ver"></span></a>
+    <button class="search-btn" id="searchBtn" aria-label="Search">
+      <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><circle cx="9" cy="9" r="5.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span class="search-label">Search the docs</span><kbd>⌘K</kbd>
+    </button>
+    <button class="icon-btn" id="themeBtn" aria-label="Switch theme" title="Theme: system"></button>
+  </div>
+</header>
+<div class="shell">
+  <nav class="side" id="side" aria-label="Documentation"></nav>
+  <div class="scrim" id="scrim"></div>
+  <main id="main" tabindex="-1"></main>
+</div>
+<div class="palette" id="palette" hidden>
+  <div class="palette-box" role="dialog" aria-label="Search">
+    <input id="q" type="text" placeholder="Search guide, reference and examples" autocomplete="off" spellcheck="false">
+    <ul id="results" role="listbox"></ul>
+    <div class="palette-foot"><span><kbd>↑</kbd><kbd>↓</kbd> move</span><span><kbd>↵</kbd> open</span><span><kbd>esc</kbd> close</span></div>
+  </div>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

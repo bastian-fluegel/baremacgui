@@ -67,6 +67,7 @@ Needs macOS and Python 3.10 or newer. The one dependency is PyObjC (`pyobjc-fram
 | Other | `StatusItem` (menu-bar item), `App(background=True)`, `Settings` (NSUserDefaults), `Window(autosave=...)`, `clipboard`, `Timer`, `Event`, `Custom(view)` for any AppKit view, errors `BareMacGUIError`, `PlatformError`, `LayoutError` |
 
 The full list with signatures is in [`docs/REFERENCE.md`](docs/REFERENCE.md), generated from the docstrings.
+The same reference, a guide and the examples are also a searchable web app: open `docs/site/index.html` in a browser (no server needed).
 
 ### Events
 

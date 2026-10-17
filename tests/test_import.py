@@ -45,3 +45,11 @@ def test_reference_is_up_to_date():
     tool = pathlib.Path(__file__).parent.parent / "tools" / "make_reference.py"
     result = subprocess.run([sys.executable, str(tool), "--check"], capture_output=True, text=True)
     assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_site_data_is_up_to_date():
+    import pathlib
+
+    tool = pathlib.Path(__file__).parent.parent / "tools" / "make_site.py"
+    result = subprocess.run([sys.executable, str(tool), "--check"], capture_output=True, text=True)
+    assert result.returncode == 0, result.stdout + result.stderr
