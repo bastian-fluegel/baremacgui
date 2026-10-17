@@ -17,10 +17,33 @@ ROOT = os.path.dirname(HERE)
 sys.path.insert(0, ROOT)
 
 # name -> (example file, steps). A step is (action(globals) or None, seconds to wait, screenshot name or None).
+def dump_tree(view, depth=0, limit=7):
+    """Print class, frame and vertical hugging priority of a view and its subviews."""
+    frame = view.frame()
+    try:
+        hug = view.contentHuggingPriorityForOrientation_(1)
+    except Exception:  # noqa: BLE001
+        hug = "?"
+    print("  " * depth + f"{view.className()} y={frame.origin.y:.0f} h={frame.size.height:.0f} "
+          f"w={frame.size.width:.0f} hugV={hug}", flush=True)
+    if depth < limit:
+        for sub in view.subviews():
+            dump_tree(sub, depth + 1, limit)
+
+
+def dump_window(g):
+    import AppKit
+
+    for window in AppKit.NSApp.windows():
+        if window.isVisible():
+            print(f"window {window.title()!r} content {window.contentView().frame().size.height:.0f}", flush=True)
+            dump_tree(window.contentView())
+
+
 SCENARIOS = {
     "hello": ("00_hello.py", [(None, 1.0, "hello")]),
     "settings": ("02_settings.py", [(None, 1.0, "settings")]),
-    "widgets": ("03_widgets.py", [(None, 1.0, "widgets")]),
+    "widgets": ("03_widgets.py", [(None, 1.0, "widgets"), (dump_window, 0.2, None)]),
     "finder": ("04_finder.py", [
         (None, 1.0, "finder-start"),
         (lambda g: g["go"]("Documents"), 0.8, "finder-documents"),
