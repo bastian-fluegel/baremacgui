@@ -9,12 +9,14 @@ from __future__ import annotations
 import functools
 import sys
 
+from .errors import PlatformError
+
 _NEEDS_PYOBJC = "baremacgui needs PyObjC: pip install pyobjc-framework-Cocoa"
 
 
 def require_macos():
     if sys.platform != "darwin":
-        raise RuntimeError(f"baremacgui only runs on macOS (this is {sys.platform}).")
+        raise PlatformError(f"baremacgui only runs on macOS (this is {sys.platform}).")
 
 
 def _load(name):
@@ -22,7 +24,7 @@ def _load(name):
     try:
         return __import__(name)
     except ImportError as exc:
-        raise RuntimeError(_NEEDS_PYOBJC) from exc
+        raise PlatformError(_NEEDS_PYOBJC) from exc
 
 
 @functools.lru_cache(maxsize=None)
@@ -101,6 +103,22 @@ def delegate_class():
 
 
 @functools.lru_cache(maxsize=None)
+def window_class():
+    """NSWindow subclass that offers key events to the Python Window's shortcuts first."""
+    objc = OBJC()
+    NSWindow = AK().NSWindow
+
+    class BareMacWindow(NSWindow):
+        def performKeyEquivalent_(self, event):
+            owner = getattr(self, "_bmc_owner", None)
+            if owner is not None and safe_call(owner._shortcut_event, event):
+                return True
+            return objc.super(BareMacWindow, self).performKeyEquivalent_(event)
+
+    return BareMacWindow
+
+
+@functools.lru_cache(maxsize=None)
 def window_delegate_class():
     """NSWindow delegate: forwards close, resize and destroy to the Python Window."""
     objc = OBJC()
@@ -122,7 +140,10 @@ def window_delegate_class():
             safe_call(self._owner.on_resize.emit)
 
         def windowWillClose_(self, notification):
-            safe_call(self._owner.on_destroy.emit)
+            safe_call(self._owner._will_close)
+
+        def windowDidBecomeKey_(self, notification):
+            safe_call(self._owner._became_key)
 
     return BareMacWindowDelegate
 

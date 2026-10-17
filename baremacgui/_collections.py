@@ -88,6 +88,9 @@ class IconGrid(Control):
         if not self._muted:
             self.on_select.emit()
 
+    def _menu_view(self):
+        return self._view
+
     # -- items -------------------------------------------------------------
     @property
     def items(self):
@@ -240,6 +243,9 @@ class Tree(Control):
     def _selection_changed(self):
         if not self._muted:
             self.on_select.emit()
+
+    def _menu_view(self):
+        return self._view
 
     def _double_clicked(self):
         if int(self._view.clickedRow()) >= 0:

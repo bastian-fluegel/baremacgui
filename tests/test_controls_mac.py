@@ -16,6 +16,7 @@ if sys.platform == "darwin":
     )
     from baremacgui import Custom, IconGrid, Page, Popover, Sheet, Sidebar, Tree
     from baremacgui import show_info
+    from baremacgui import ContextMenu, DatePicker, Menu, MenuBar, MenuItem, MenuSeparator, Timer, TimePicker
     from baremacgui import _core
 
 
@@ -580,3 +581,125 @@ def test_app_on_error_and_call():
     assert isinstance(seen[0], ZeroDivisionError)
     assert app.call(lambda a, b=1: a + b, 1, b=2) == 3  # on the main thread: runs directly
     assert _events._error_hook[0] is None
+
+
+# -- menus, shortcuts, timer, pickers, justify ---------------------------------
+def test_menubar_items_shortcuts_and_clicks():
+    calls = []
+    with Window("w", visible=False) as win:
+        with MenuBar() as bar:
+            with Menu("&File"):
+                new = MenuItem("&New", shortcut="Cmd+N", on_click=lambda: calls.append("new"))
+                MenuSeparator()
+                flag = MenuItem("Flag", checkable=True)
+                with Menu("Sub"):
+                    MenuItem("Deep")
+        with VBox():
+            Label("x")
+    assert new.text == "New"
+    assert str(new.ns.keyEquivalent()) == "n"
+    new.click()
+    assert calls == ["new"]
+    assert not flag.checked
+    flag.click()
+    assert flag.checked
+    flag.enabled = False
+    assert not flag.enabled
+    assert [menu.title for menu in bar.menus] == ["File"]
+    assert bar.ns is not None and win._menubar is bar
+    titles = [str(item.title()) for item in bar.ns.itemArray()]
+    assert titles[1] == "File" and titles[-1] == "Window"
+
+
+def test_menu_item_outside_menu_and_bad_shortcut():
+    with pytest.raises(RuntimeError):
+        MenuItem("x")
+    with Window("w", visible=False):
+        with MenuBar():
+            with Menu("M"):
+                with pytest.raises(ValueError):
+                    MenuItem("bad", shortcut="S")
+        with VBox():
+            Label("x")
+
+
+def test_context_menu_attaches_to_controls():
+    with ContextMenu() as menu:
+        MenuItem("Delete")
+        MenuSeparator()
+    r = build(("table", lambda: Table(["a"], [["1"]])), ("text", lambda: TextBox("t", multiline=True)),
+              ("grid", lambda: IconGrid(["a"])), ("tree", lambda: Tree(["a"])), ("button", lambda: Button("b")))
+    for name in ("table", "text", "grid", "tree", "button"):
+        r[name].context_menu = menu
+        assert r[name].context_menu is menu
+    assert [item.text for item in menu.items] == ["Delete"]
+    r["table"].context_menu = None
+    assert r["table"].context_menu is None
+
+
+def test_window_shortcuts_and_buttons():
+    calls = []
+    with Window("w", visible=False) as win:
+        with VBox():
+            ok = Button("OK")
+            cancel = Button("Cancel")
+    win.add_shortcut("Cmd+K", lambda: calls.append("k"))
+    win._shortcuts[("k", frozenset({"cmd"}))].emit()
+    assert calls == ["k"]
+    with pytest.raises(ValueError):
+        win.add_shortcut("K", print)
+    win.default_button = ok
+    win.cancel_button = cancel
+    assert str(ok.ns.keyEquivalent()) == "\r" and str(cancel.ns.keyEquivalent()) == "\x1b"
+    win.default_button = None
+    assert str(ok.ns.keyEquivalent()) == ""
+
+
+def test_timer_ticks_and_stops():
+    from Foundation import NSDate, NSRunLoop
+
+    ticks = []
+    timer = Timer(0.05, lambda: ticks.append(1))
+    assert timer.running
+    NSRunLoop.currentRunLoop().runUntilDate_(NSDate.dateWithTimeIntervalSinceNow_(0.4))
+    timer.stop()
+    count = len(ticks)
+    assert count >= 2 and not timer.running
+    NSRunLoop.currentRunLoop().runUntilDate_(NSDate.dateWithTimeIntervalSinceNow_(0.2))
+    assert len(ticks) == count
+    once = []
+    Timer(0.05, lambda: once.append(1), repeat=False)
+    NSRunLoop.currentRunLoop().runUntilDate_(NSDate.dateWithTimeIntervalSinceNow_(0.4))
+    assert once == [1]
+    with pytest.raises(ValueError):
+        Timer(0)
+
+
+def test_date_and_time_picker_roundtrip():
+    import datetime as dt
+
+    r = build(("date", lambda: DatePicker(dt.date(2026, 3, 9))), ("time", lambda: TimePicker(dt.time(14, 30))),
+              ("cal", lambda: DatePicker(calendar=True)))
+    assert r["date"].value == dt.date(2026, 3, 9)
+    r["date"].value = dt.date(2027, 1, 31)
+    assert r["date"].value == dt.date(2027, 1, 31)
+    assert r["time"].value == dt.time(14, 30)
+    r["time"].value = dt.time(7, 5, 9)
+    assert r["time"].value.hour == 7 and r["time"].value.minute == 5
+    assert r["cal"].value == dt.date.today()
+    with pytest.raises(TypeError):
+        r["date"].value = "2026-01-01"
+    with pytest.raises(TypeError):
+        r["time"].value = dt.datetime.now()
+
+
+def test_box_justify_builds_for_all_modes():
+    for mode in ("start", "center", "end", "space_between"):
+        with Window("w", visible=False):
+            with HBox(justify=mode) as row:
+                Label("a")
+                Label("b")
+                Label("c")
+        assert row.ns.fittingSize().width > 0
+    with pytest.raises(ValueError):
+        HBox(justify="middle")

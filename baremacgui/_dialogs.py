@@ -91,6 +91,43 @@ def ask_yes_no(text, title="", parent=None, then=None):
     return _alert("NSAlertStyleWarning", text, title, ["Yes", "No"], parent, then, lambda code: code == first)
 
 
+def ask_ok_cancel(text, title="", parent=None, then=None):
+    """Return True for OK, False for Cancel (with then=..., it is passed to then instead)."""
+    first = int(AK().NSAlertFirstButtonReturn)
+    return _alert("NSAlertStyleInformational", text, title, ["OK", "Cancel"], parent, then, lambda code: code == first)
+
+
+def input_box(text, title="", default="", password=False, parent=None, then=None):
+    """Ask for one line of text. Returns the text, or None if the user cancelled."""
+    ak = AK()
+    ensure_app()
+    window = _parent_window(parent, then)
+    alert = ak.NSAlert.alloc().init()
+    if title:
+        alert.setMessageText_(str(title))
+        alert.setInformativeText_(str(text))
+    else:
+        alert.setMessageText_(str(text))
+    field = (ak.NSSecureTextField if password else ak.NSTextField).alloc().initWithFrame_(((0, 0), (260, 24)))
+    field.setStringValue_(str(default))
+    alert.setAccessoryView_(field)
+    alert.addButtonWithTitle_("OK")
+    alert.addButtonWithTitle_("Cancel")
+    alert.window().setInitialFirstResponder_(field)
+    first = int(ak.NSAlertFirstButtonReturn)
+
+    def convert(code):
+        return str(field.stringValue()) if code == first else None
+
+    if window is None:
+        return convert(int(alert.runModal()))
+    return _run_sheet(
+        window, alert.window(),
+        lambda handler: alert.beginSheetModalForWindow_completionHandler_(window, handler),
+        then, convert,
+    )
+
+
 def _paths(panel):
     return [str(url.path()) for url in panel.URLs()]
 

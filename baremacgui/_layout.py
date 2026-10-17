@@ -2,10 +2,10 @@
 from __future__ import annotations
 
 from . import _core
-from ._bridge import AK, FN, ensure_app, window_delegate_class
+from ._bridge import AK, FN, ensure_app, window_class, window_delegate_class
 from ._events import connect_options, event, split_options
 from ._options import (
-    check_align, check_grow, check_padding, check_size, check_window_size, check_window_style,
+    check_align, check_grow, check_justify, event_shortcut, parse_shortcut, check_padding, check_size, check_window_size, check_window_style,
 )
 
 _ALIGN_ATTR = {
@@ -61,9 +61,15 @@ class Window:
             style |= ak.NSWindowStyleMaskResizable
         if self.style in ("unified", "sidebar"):
             style |= ak.NSWindowStyleMaskFullSizeContentView
-        self.ns = ak.NSWindow.alloc().initWithContentRect_styleMask_backing_defer_(
+        self._menubar = None
+        self._shortcuts = {}
+        self._modal = False
+        self._default_button = None
+        self._cancel_button = None
+        self.ns = window_class().alloc().initWithContentRect_styleMask_backing_defer_(
             FN().NSMakeRect(0, 0, *self._size), style, ak.NSBackingStoreBuffered, False
         )
+        self.ns._bmc_owner = self
         # Python owns the reference; without this AppKit over-releases on close.
         self.ns.setReleasedWhenClosed_(False)
         self._delegate = window_delegate_class().alloc().initWithOwner_(self)  # held weakly by the window
@@ -95,6 +101,70 @@ class Window:
         if self.on_close is None:
             return True
         return self.on_close() is not False
+
+    def _will_close(self):
+        if self._modal:
+            self._modal = False
+            AK().NSApplication.sharedApplication().stopModal()
+        self.on_destroy.emit()
+
+    def _became_key(self):
+        if self._menubar is not None:
+            self._menubar.activate()
+
+    def _shortcut_event(self, event):
+        key, mods = event_shortcut(event.charactersIgnoringModifiers(), event.keyCode(), event.modifierFlags())
+        handler = self._shortcuts.get((key, mods))
+        if handler is None:
+            return False
+        handler.emit()
+        return True
+
+    def add_shortcut(self, keys, handler):
+        """Call handler() when `keys` ("Cmd+K", "F5", "Escape") is pressed while this window is key."""
+        key = parse_shortcut(keys)
+        if not callable(handler):
+            raise TypeError("handler must be callable")
+        if key not in self._shortcuts:
+            from ._events import Event
+
+            self._shortcuts[key] = Event()
+        self._shortcuts[key].connect(handler)
+
+    @property
+    def default_button(self):
+        """The button Return clicks (also while typing in a text box)."""
+        return self._default_button
+
+    @default_button.setter
+    def default_button(self, button):
+        if self._default_button is not None:
+            self._default_button.ns.setKeyEquivalent_("")
+        self._default_button = button
+        if button is not None:
+            button.ns.setKeyEquivalent_("\r")
+
+    @property
+    def cancel_button(self):
+        """The button Escape clicks."""
+        return self._cancel_button
+
+    @cancel_button.setter
+    def cancel_button(self, button):
+        if self._cancel_button is not None:
+            self._cancel_button.ns.setKeyEquivalent_("")
+        self._cancel_button = button
+        if button is not None:
+            button.ns.setKeyEquivalent_("\x1b")
+
+    def show_modal(self):
+        """Show the window and wait until it is closed; other windows of the app are blocked."""
+        app = AK().NSApplication.sharedApplication()
+        self.ns.center()
+        self._modal = True
+        self.ns.makeKeyAndOrderFront_(None)
+        app.runModalForWindow_(self.ns)
+        self._modal = False
 
     def close(self):
         """Close the window (like the red button: on_close may veto)."""
@@ -151,6 +221,7 @@ class Window:
         self.ns.center()
         if self._visible:
             self.ns.makeKeyAndOrderFront_(None)
+            self._became_key()
         return False
 
 
@@ -161,6 +232,8 @@ class _Box:
     gap      space between children
     align    cross-axis alignment: start, center, end, or stretch (children fill
              the cross axis: the full width in a VBox, the full height in an HBox)
+    justify  where the children sit along the main axis when none of them grows:
+             start (default), center, end, or space_between
     grow     flex weight of the box itself inside its parent
 
     A box packs its children at the start. If none of them has grow > 0, an
@@ -171,7 +244,8 @@ class _Box:
 
     KIND = ""
 
-    def __init__(self, padding=0, gap=8, align=None, grow=0, **size):
+    def __init__(self, padding=0, gap=8, align=None, grow=0, justify="start", **size):
+        self.justify = check_justify(justify)
         self.padding = check_padding(padding)
         self.gap = check_padding(gap)
         self.align = check_align(self.KIND, align)
@@ -203,10 +277,29 @@ class _Box:
         views = [item.view for item in items]
         growers = [item for item in items if item.grow > 0]
 
-        filler = None
+        fillers = []
         if items and not growers:
-            filler = ak.NSView.alloc().init()
-            views.append(filler)
+            def new_filler():
+                filler = ak.NSView.alloc().init()
+                fillers.append(filler)
+                return filler
+
+            if self.justify == "start":
+                views.append(new_filler())
+            elif self.justify == "end":
+                views.insert(0, new_filler())
+            elif self.justify == "center":
+                views.insert(0, new_filler())
+                views.append(new_filler())
+            elif len(views) > 1:  # space_between
+                spaced = []
+                for position, view in enumerate(views):
+                    if position:
+                        spaced.append(new_filler())
+                    spaced.append(view)
+                views = spaced
+            else:
+                views.append(new_filler())
 
         pad = self.padding
         stack = ak.NSStackView.stackViewWithViews_(views)
@@ -216,9 +309,17 @@ class _Box:
         stack.setEdgeInsets_((pad, pad, pad, pad))
         stack.setAlignment_(getattr(ak, _ALIGN_ATTR[(self.KIND, self.align)]))
 
-        if filler is not None:
-            stack.setCustomSpacing_afterView_(0.0, items[-1].view)  # no extra gap before the filler
+        for position, filler in enumerate(fillers):
             filler.setContentHuggingPriority_forOrientation_(1, orientation)
+            stack.setCustomSpacing_afterView_(0.0, filler)
+            before = views[views.index(filler) - 1] if views.index(filler) > 0 else None
+            if before is not None:
+                stack.setCustomSpacing_afterView_(0.0, before)  # no extra gap next to a filler
+        if self.justify == "space_between" and len(fillers) > 0 and len(items) > 1:
+            for filler in fillers:  # keep at least the normal gap between neighbours
+                _main_anchor(filler, vertical).constraintGreaterThanOrEqualToConstant_(self.gap).setActive_(True)
+        for other in fillers[1:]:  # several fillers share the free space equally
+            _main_anchor(other, vertical).constraintEqualToAnchor_(_main_anchor(fillers[0], vertical)).setActive_(True)
 
         for item in growers:
             item.view.setContentHuggingPriority_forOrientation_(1, orientation)

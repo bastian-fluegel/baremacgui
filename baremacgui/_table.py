@@ -60,6 +60,9 @@ class Table(Control):
         super().__init__(scroll, grow, **size)
         self._bind_double(table)
 
+    def _menu_view(self):
+        return self._table
+
     def _bind_double(self, table):
         target = make_target(self._double_clicked)
         self._targets["double"] = target

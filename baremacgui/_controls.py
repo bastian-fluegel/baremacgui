@@ -48,6 +48,20 @@ class Control:
     def visible(self, value):
         self.ns.setHidden_(not value)
 
+    @property
+    def context_menu(self):
+        """A ContextMenu shown on right-click (Control-click), or None."""
+        return getattr(self, "_context_menu", None)
+
+    @context_menu.setter
+    def context_menu(self, menu):
+        self._context_menu = menu
+        self._menu_view().setMenu_(None if menu is None else menu.ns)
+
+    def _menu_view(self):
+        """The view that receives the right-click (the inner view for scroll-view based controls)."""
+        return self.ns
+
     def _bind(self, ns, handler):
         """Route the action of `ns` to `handler` (a function without arguments)."""
         if not callable(handler):
@@ -116,6 +130,9 @@ class TextBox(Control):
         if not self.multiline:
             self._bind(ns, self.on_enter.emit)  # Return in a single-line field
         self._watch_typing(self._tv if self.multiline else ns)
+
+    def _menu_view(self):
+        return self._tv if self.multiline else self.ns
 
     def _watch_typing(self, view):
         """Call on_change on every edit of the user (not for changes made from code)."""

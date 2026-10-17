@@ -157,3 +157,36 @@ def test_check_popover_edge():
     assert o.check_popover_edge("top") == "top"
     with pytest.raises(ValueError):
         o.check_popover_edge("middle")
+
+
+def test_parse_shortcut():
+    assert o.parse_shortcut("Cmd+S") == ("s", frozenset({"cmd"}))
+    assert o.parse_shortcut("Ctrl+Shift+S") == ("s", frozenset({"cmd", "shift"}))
+    assert o.parse_shortcut("Control+Option+Q") == ("q", frozenset({"ctrl", "alt"}))
+    assert o.parse_shortcut("F5") == ("f5", frozenset())
+    assert o.parse_shortcut("Cmd+Enter") == ("return", frozenset({"cmd"}))
+    assert o.parse_shortcut("Escape") == ("escape", frozenset())
+    assert o.parse_shortcut("Cmd++") == ("+", frozenset({"cmd"}))
+    for bad in ("", "S", "Hyper+S", "Cmd+Foo", "Cmd+F13", 3):
+        with pytest.raises(ValueError):
+            o.parse_shortcut(bad)
+
+
+def test_check_justify_and_interval():
+    assert o.check_justify("center") == "center"
+    with pytest.raises(ValueError):
+        o.check_justify("middle")
+    assert o.check_interval(1) == 1.0
+    for bad in (0, -1, True, "1"):
+        with pytest.raises(ValueError):
+            o.check_interval(bad)
+
+
+def test_key_mapping():
+    assert o.menu_key_equivalent("s") == "s"
+    assert o.menu_key_equivalent("return") == "\r"
+    assert o.menu_key_equivalent("f1") == ""
+    assert o.menu_key_equivalent("f12") == ""
+    assert o.event_shortcut("S", 1, (1 << 20) | (1 << 17)) == ("s", frozenset({"cmd", "shift"}))
+    assert o.event_shortcut("", 36, 0) == ("return", frozenset())
+    assert o.event_shortcut("", 96, 0) == ("f5", frozenset())
