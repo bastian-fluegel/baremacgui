@@ -122,6 +122,7 @@ Run them with `python examples/<file>.py`:
 - `12_menubar.py`: menu-bar clock without a Dock icon
 - `13_drop.py`: drop files from Finder onto a `DropZone`
 - `14_checklist.py`: table with a checkbox column and SF Symbols (`Table(kinds=...)`)
+- `15_windows.py`: several windows, each with its own menus; Cmd+N opens another one
 
 `tests/test_examples_mac.py` builds every example on macOS CI and tests the helper functions they define.
 
@@ -154,6 +155,7 @@ Not yet checked on real hardware:
 - `Settings` across real app restarts (CI only checks that a second object sees the values), `Window(autosave=)` restoring the position after a real quit.
 - `ColorWell` with the real color panel, `Switch` by mouse, `clipboard` pasting into other apps.
 - `Table(kinds=...)`: CI toggles the checkbox with `performClick`; clicking it by mouse, and how the checkbox and symbol cells look in light and dark, are unchecked.
+- Several windows: CI checks which menu bar is installed when each window becomes key (own `MenuBar`, standard menus, sheets and modal windows leave it alone). Switching by really clicking between windows, and the list of windows in the Window menu, are unchecked.
 - `.app` bundles: CI builds one, starts its launcher and checks that the script sees the app name, its folder and its icon. Double-clicking in Finder, the Finder icon, the name in the Dock, and `--background` (no Dock icon) are unchecked.
 - `DropZone` with a real drag from Finder (CI feeds it a pasteboard with file URLs and calls the drag methods; the mouse drag itself, the highlight and the cursor are unchecked).
 - `Table` and `Tree` `on_double_click` ignoring double-clicks on the header or empty space (uses `clickedRow`).

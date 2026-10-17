@@ -8,6 +8,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 ## [Unreleased]
 
 ### Added
+- Example 15: several windows, each with its own menus.
 - `Settings`: values that survive between runs (NSUserDefaults, one domain per app name). Example 02 uses it.
 - `Window(autosave="name")`: the window remembers its position and size (NSWindow frame autosave).
 - `python -m baremacgui build script.py` / `build_app()`: wraps a script in a double-clickable `.app` (Info.plist, launcher, icon from .icns or .png). Unsigned and tied to the Python that built it. `App(icon=...)` sets the Dock icon.
@@ -17,6 +18,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - `Table(editable=..., sortable=True)`: edit cells in place (`on_edit`, `.edited`), sort by clicking a header (`on_sort`, `.sorted_by`, `.sort(column)`). Example 10.
 - `SplitView`: panes with draggable dividers (NSSplitView), `fixed=`, `min_pane=`, `autosave=`, `set_position`. Example 11 (notes).
 - `StatusItem` (NSStatusItem with a menu) and `App(background=True)` for menu-bar apps without Dock icon. Example 12.
+
+### Fixed
+- A window without its own `MenuBar` kept the menus of the window before it; the standard menus now come back when it becomes key. Sheets and modal windows leave the menu bar alone.
 
 ## [0.1.0a1] - unreleased
 

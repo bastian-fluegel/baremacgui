@@ -802,6 +802,69 @@ def test_clipboard_text_roundtrip():
     assert clipboard.text == ""
 
 
+# -- several windows -----------------------------------------------------------
+def test_menu_bar_follows_the_key_window():
+    from AppKit import NSApplication
+
+    from baremacgui import App
+
+    App("multi")  # installs the standard menus as the default bar
+    app = NSApplication.sharedApplication()
+    default = app.mainMenu()
+    with Window("a", visible=False) as a:
+        with MenuBar() as bar_a:
+            with Menu("Only A"):
+                MenuItem("x")
+        with VBox():
+            Label("a")
+    with Window("b", visible=False) as b:
+        with VBox():
+            Label("b")
+    with Window("c", visible=False) as c:
+        with MenuBar() as bar_c:
+            with Menu("Only C"):
+                MenuItem("y")
+        with VBox():
+            Label("c")
+    a._became_key()
+    assert app.mainMenu() == bar_a.ns and app.windowsMenu() == bar_a._window_menu
+    b._became_key()  # no MenuBar of its own: the standard menus come back, A's menus are gone
+    assert app.mainMenu() == default
+    assert "Only A" not in [str(i.submenu().title()) for i in app.mainMenu().itemArray() if i.submenu()]
+    c._became_key()
+    assert app.mainMenu() == bar_c.ns
+    sheet = Sheet(c, size=(200, 100))
+    with sheet:
+        with VBox():
+            Label("s")
+    sheet._became_key()  # a sheet leaves the bar of its parent alone
+    assert app.mainMenu() == bar_c.ns
+    b._modal = True
+    a._became_key()
+    b._became_key()  # a modal window without a MenuBar leaves the bar alone as well
+    assert app.mainMenu() == bar_a.ns
+    b._modal = False
+
+
+def test_menu_bar_without_default_menus_is_left_alone():
+    from AppKit import NSApplication
+
+    from baremacgui import App, _menu
+
+    App("nomenu", menu=False)
+    saved = _menu._state["default"]
+    _menu._state["default"] = None
+    try:
+        before = NSApplication.sharedApplication().mainMenu()
+        with Window("w", visible=False) as w:
+            with VBox():
+                Label("w")
+        w._became_key()
+        assert NSApplication.sharedApplication().mainMenu() == before
+    finally:
+        _menu._state["default"] = saved
+
+
 # -- table cell kinds ---------------------------------------------------------
 def test_table_check_and_icon_columns():
     calls = []

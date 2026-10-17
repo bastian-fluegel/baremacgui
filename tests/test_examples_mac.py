@@ -38,7 +38,7 @@ def run_example(path):
 
 
 def test_there_are_examples():
-    assert len(EXAMPLES) >= 15
+    assert len(EXAMPLES) >= 16
 
 
 @pytest.mark.parametrize("path", EXAMPLES, ids=lambda p: p.stem)
@@ -106,3 +106,13 @@ def test_checklist_example(headless):
     assert ns["status"].text == "2 of 5 done"
     ns["table"]._table.viewAtColumn_row_makeIfNecessary_(0, 1, True).subviews()[0].performClick_(None)
     assert ns["status"].text == "3 of 5 done"
+
+
+def test_windows_example_opens_more_documents(headless):
+    ns = run_example(example("15_windows"))
+    assert ns["counter"] == {"made": 1, "open": 1}
+    second = ns["new_document"]()
+    assert ns["counter"] == {"made": 2, "open": 2}
+    assert second.title == "Document 2" and second._menubar is not None
+    second.destroy()
+    assert ns["counter"]["open"] == 1

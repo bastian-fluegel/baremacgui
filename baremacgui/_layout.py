@@ -116,8 +116,19 @@ class Window:
         self.on_destroy.emit()
 
     def _became_key(self):
+        """The menu bar follows the key window: its own MenuBar, else the standard menus.
+
+        Helper windows (sheets, modal windows) leave the bar as it is, like dialogs in other Mac apps.
+        """
         if self._menubar is not None:
             self._menubar.activate()
+        elif not self._helper_window():
+            from ._menu import activate_default
+
+            activate_default()
+
+    def _helper_window(self):
+        return self._modal
 
     def _shortcut_event(self, event):
         key, mods = event_shortcut(event.charactersIgnoringModifiers(), event.keyCode(), event.modifierFlags())

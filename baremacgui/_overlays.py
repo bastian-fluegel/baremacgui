@@ -29,6 +29,9 @@ class Sheet(Window):
         self._parent = parent
         self._open = False
 
+    def _helper_window(self):
+        return True
+
     @property
     def is_open(self):
         return self._open

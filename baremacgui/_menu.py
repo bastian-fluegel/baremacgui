@@ -90,3 +90,9 @@ def install_menu(app, name):
     bar, window_menu = build_bar(name)
     _state["default"] = (bar, window_menu)
     activate(bar, window_menu)
+
+
+def activate_default():
+    """Back to the standard App / Edit / Window menus (a no-op for App(menu=False))."""
+    if _state["default"] is not None:
+        activate(*_state["default"])

@@ -22,6 +22,7 @@ it does not mean a person clicked it.
 - [ ] SplitView: drag the divider, minimum pane size, divider position remembered after restart (example 11)
 - [ ] Table: double-click edit, Return/Tab/Escape in the editor, header click sorting, selection kept after sorting
 - [ ] `Settings` values and `Window(autosave=)` position survive a real quit and restart
+- [ ] Several windows (example 15): clicking between windows swaps the menus, the Window menu lists the windows, a sheet or modal dialog keeps the menus of its window
 - [ ] Built `.app`: double-click in Finder starts the script, Finder shows the icon, Dock shows the name and icon, `--background` leaves no Dock icon
 - [ ] Table checkbox column: click toggles, selection and sorting by that column behave (example 14)
 - [ ] DropZone: drag files and folders from Finder onto it (example 13); highlight while hovering, "not allowed" cursor for refused items
@@ -32,6 +33,5 @@ it does not mean a person clicked it.
 
 ## Before beta
 - [ ] API names stable; experimental parts marked in the docs
-- [ ] Menu bar behaviour with several windows reviewed
+- [ ] Menu bar behaviour with several windows reviewed by hand (example 15: menus change when you click another window, the Window menu lists all windows, Cmd+N)
 - [ ] Accessibility (VoiceOver labels) reviewed
-- [ ] `.app` packaging documented
