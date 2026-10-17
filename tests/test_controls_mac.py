@@ -30,7 +30,7 @@ def build(*make):
         with VBox(padding=8) as box:
             for name, factory in make:
                 result[name] = factory()
-    result["box"] = box
+    result["vbox"] = box  # own key: a factory named "box" must not collide with it
     return result
 
 
@@ -148,7 +148,7 @@ def test_tabs_selection():
 
 def test_box_adds_filler_only_without_grow():
     r = build(("a", lambda: Label("a")), ("b", lambda: Button("b")))
-    assert r["box"].ns.arrangedSubviews().count() == 3  # two children + filler
+    assert r["vbox"].ns.arrangedSubviews().count() == 3  # two children + filler
     with Window("test", visible=False):
         with HBox() as row:
             Label("a")

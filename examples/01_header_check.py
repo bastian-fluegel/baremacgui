@@ -53,7 +53,9 @@ def report(url, status, headers):
             value, note = "-", "  (covered by CSP frame-ancestors)"
         if value:
             present += 1
-            lines.append(f"OK       {name}{note}" if note else f"OK       {name}: {value}")
+            # The CSP is listed directive by directive below, so no long inline value for it.
+            shown = "" if note or name == "Content-Security-Policy" else f": {value}"
+            lines.append(f"OK       {name}{note}{shown}")
         else:
             lines.append(f"MISSING  {name}")
     lines += ["", f"{present} of {len(CHECKED)} present"]

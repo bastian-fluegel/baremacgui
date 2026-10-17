@@ -48,12 +48,15 @@ Examples: `examples/` has a hello window, a security-header checker (a real smal
 
 ## What is verified
 
-Checked so far:
-- The layout, `TextBox`, `ComboBox`, `Button`, `on_click` and `App.invoke` of an early prototype, on an Intel Mac with Python 3.14 and PyObjC 12.2.2, in light and dark appearance.
+Checked by hand on an Intel Mac with Python 3.14 and PyObjC 12.2.2, in dark appearance (light appearance only with an early prototype):
+- All three examples start and render: boxes, `Spacer`, `TextBox`, `ComboBox`, `Button`, `CheckBox`, `SpinBox`, `GroupBox`, `TabControl` (General tab), `show_info`, `on_click` and `App.invoke`.
+- The control tests run on macOS (`python -m pytest`).
 
-Not yet checked on real hardware (written, but never run on a Mac):
-- `GroupBox`, `TabControl`, `SpinBox`, `CheckBox`, `Spacer`, the dialogs, the menu bar, the filler logic in boxes.
-- Apple Silicon, older and newer macOS versions, multiple displays.
+Not yet checked on real hardware:
+- The Advanced tab, `on_change` handlers, `ask_yes_no`, the file dialogs.
+- The menu bar shortcuts (Cmd+C, Cmd+V, Cmd+A, Cmd+Q).
+- Light appearance for the newer controls.
+- Apple Silicon, other macOS versions, multiple displays.
 - The CI workflow itself.
 
 ## Limits
