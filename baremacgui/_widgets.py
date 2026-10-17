@@ -1,4 +1,4 @@
-"""RadioGroup, DropDown, Slider, ProgressBar, Image and Separator."""
+"""RadioGroup, DropDown, Slider, ProgressBar, Image, Separator, SearchField and SegmentedControl."""
 from __future__ import annotations
 
 from . import _core
@@ -236,3 +236,74 @@ class Separator:
         _core.apply_size(box, {"height": 1.0})
         self.ns = box
         _core.add(box, 0, fill=True)
+
+
+class SearchField(Control):
+    """The standard search field. on_change fires while typing and on Enter."""
+
+    def __init__(self, text="", placeholder="Search", grow=0, **size):
+        size.setdefault("min_width", 160.0)
+        ns = AK().NSSearchField.alloc().init()
+        ns.setStringValue_(str(text))
+        ns.setPlaceholderString_(str(placeholder))
+        ns.setSendsSearchStringImmediately_(True)
+        super().__init__(ns, grow, **size)
+
+    @property
+    def text(self):
+        return str(self.ns.stringValue())
+
+    @text.setter
+    def text(self, value):
+        self.ns.setStringValue_(str(value))
+
+    def on_change(self, handler):
+        """Call handler() when the search text changes."""
+        self._bind(self.ns, handler)
+
+
+class SegmentedControl(Control):
+    """A row of connected buttons where one is selected (Finder's view switcher).
+
+    Give labels in `items`, or SF Symbol names in `symbols` (not both).
+    """
+
+    def __init__(self, items=None, symbols=None, selected=0, grow=0, **size):
+        if (items is None) == (symbols is None):
+            raise ValueError("give exactly one of items or symbols")
+        ak = AK()
+        self._symbols = symbols is not None
+        names = check_items(symbols if self._symbols else items, minimum=2, what="segments")
+        check_index(selected, len(names), "selected")
+        self._items = names
+        ns = ak.NSSegmentedControl.alloc().init()
+        ns.setSegmentCount_(len(names))
+        for position, name in enumerate(names):
+            if self._symbols:
+                image = ak.NSImage.imageWithSystemSymbolName_accessibilityDescription_(name, None)
+                if image is None:
+                    raise ValueError(f"unknown system symbol: {name!r}")
+                ns.setImage_forSegment_(image, position)
+            else:
+                ns.setLabel_forSegment_(name, position)
+        ns.setTrackingMode_(ak.NSSegmentSwitchTrackingSelectOne)
+        ns.setSelectedSegment_(selected)
+        super().__init__(ns, grow, **size)
+
+    @property
+    def index(self):
+        return int(self.ns.selectedSegment())
+
+    @index.setter
+    def index(self, value):
+        check_index(value, len(self._items), "index")
+        self.ns.setSelectedSegment_(value)
+
+    @property
+    def text(self):
+        """Label (or symbol name) of the selected segment."""
+        return self._items[self.index]
+
+    def on_change(self, handler):
+        """Call handler() when the user picks another segment."""
+        self._bind(self.ns, handler)

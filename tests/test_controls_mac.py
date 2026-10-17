@@ -11,7 +11,8 @@ pytestmark = pytest.mark.skipif(sys.platform != "darwin", reason="needs macOS an
 if sys.platform == "darwin":
     from baremacgui import (
         Button, CheckBox, ComboBox, DropDown, GroupBox, HBox, Image, Label, ListBox, ProgressBar, RadioGroup,
-        Separator, Slider, SpinBox, Spacer, Tab, TabControl, Table, TextBox, VBox, Window,
+        SearchField, SegmentedControl, Separator, Slider, SpinBox, Spacer, Tab, TabControl, Table, TextBox, Toolbar,
+        VBox, Window,
     )
     from baremacgui import _core
 
@@ -254,3 +255,66 @@ def test_hbox_stretch_builds():
             Label("a")
             Label("b")
     assert row.ns is not None
+
+
+def test_search_field_text():
+    field = build(("f", lambda: SearchField(placeholder="Find")))["f"]
+    field.text = "abc"
+    assert field.text == "abc"
+
+
+def test_segmented_control():
+    seg = build(("s", lambda: SegmentedControl(["A", "B", "C"], selected=1)))["s"]
+    assert seg.index == 1 and seg.text == "B"
+    seg.index = 2
+    assert seg.index == 2
+    with pytest.raises(ValueError):
+        seg.index = 3
+    with Window("test", visible=False):
+        with VBox():
+            with pytest.raises(ValueError):
+                SegmentedControl()
+            with pytest.raises(ValueError):
+                SegmentedControl(["a", "b"], symbols=["gear", "gear"])
+
+
+def test_button_symbol():
+    button = build(("b", lambda: Button("", symbol="chevron.left")))["b"]
+    assert button.title == ""
+    with Window("test", visible=False):
+        with VBox():
+            with pytest.raises(ValueError):
+                Button("x", symbol="no.such.symbol.at.all")
+
+
+def test_unified_window_with_toolbar():
+    with Window("test", style="unified", visible=False) as win:
+        with Toolbar() as bar:
+            Button("", symbol="chevron.left")
+            Spacer()
+            SearchField()
+        with VBox(padding=8):
+            Label("body")
+    assert bar.ns is not None and win.ns.toolbar() is not None
+    assert not _core._stack
+
+
+def test_toolbar_rules():
+    with pytest.raises(RuntimeError):
+        Toolbar()
+    with Window("test", visible=False):
+        with Toolbar():
+            Label("a")
+        with pytest.raises(ValueError, match="one Toolbar"):
+            Toolbar()
+        with VBox():
+            Label("x")
+    with Window("test", visible=False):
+        with VBox():
+            with pytest.raises(RuntimeError, match="directly inside"):
+                Toolbar()
+
+
+def test_window_style_validated():
+    with pytest.raises(ValueError):
+        Window("x", style="weird", visible=False)

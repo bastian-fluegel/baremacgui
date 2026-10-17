@@ -108,3 +108,10 @@ def test_check_columns_and_rows():
         o.check_rows([["a", "b"], ["c"]], 2)
     with pytest.raises(TypeError):
         o.check_rows(["ab"], 2)
+
+
+def test_check_window_style():
+    assert o.check_window_style("standard") == "standard"
+    assert o.check_window_style("unified") == "unified"
+    with pytest.raises(ValueError):
+        o.check_window_style("fancy")

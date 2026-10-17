@@ -36,7 +36,8 @@ Needs macOS and Python 3.10 or newer. The one dependency is PyObjC (`pyobjc-fram
 ## What it offers
 
 - **Layout:** `Window`, `VBox`, `HBox`, `Spacer`. Flexbox-like: `grow` weights, `padding`, `gap`, `align`, `width`/`height`/`min_*`/`max_*`. The minimum window size follows from the content.
-- **Controls:** `Label`, `TextBox` (single and multi-line), `ComboBox`, `DropDown` (the standard pop-up menu), `Button`, `CheckBox`, `RadioGroup`, `SpinBox`, `Slider`, `ProgressBar`, `Image` (file or system symbol), `Separator`, `ListBox` and `Table` (read-only text cells, single or multiple selection).
+- **Controls:** `Label`, `TextBox` (single and multi-line), `ComboBox`, `DropDown` (the standard pop-up menu), `Button`, `CheckBox`, `RadioGroup`, `SpinBox`, `Slider`, `ProgressBar`, `Image` (file or system symbol), `Separator`, `SearchField`, `SegmentedControl`, `ListBox` and `Table` (read-only text cells, single or multiple selection).
+- **Finder-style window:** `Window(..., style="unified")` hides the title text and lets the content start below a transparent title bar; `with Toolbar():` puts buttons (`Button("", symbol="chevron.left")`), `SegmentedControl`, `SearchField` and `Spacer` into that title bar. See `examples/04_finder.py`.
 - **Containers:** `GroupBox`, `TabControl` with `Tab`.
 - **Dialogs:** `show_info`, `show_warning`, `show_error`, `ask_yes_no`, `open_file`, `save_file`, `choose_folder`.
 - **Menu bar:** the standard App, Edit and Window menus, so Cmd+C, Cmd+V, Cmd+A and Cmd+Q work.
@@ -44,7 +45,7 @@ Needs macOS and Python 3.10 or newer. The one dependency is PyObjC (`pyobjc-fram
 
 Handlers are plain functions without arguments. Exceptions inside a handler are printed to the terminal; they do not crash the app.
 
-Examples: `examples/` has a hello window, a security-header checker (a real small tool), a settings window with tabs and a tour of the standard controls.
+Examples: `examples/` has a hello window, a security-header checker (a real small tool), a settings window with tabs, a tour of the standard controls and a Finder-style window.
 
 ## What is verified
 
@@ -54,6 +55,7 @@ Checked by hand on an Intel Mac (macOS 15.5) with Python 3.14 and PyObjC 12.2.2,
 - The test suite passes on macOS (`python -m pytest`: 42 passed, 3 skipped, the skipped ones are the non-macOS tests).
 
 Not yet checked on real hardware:
+- `Window(style="unified")`, `Toolbar`, `SearchField`, `SegmentedControl`, `Button(symbol=...)` and example 04 (written, never run on a Mac).
 - The Advanced tab, `ask_yes_no`, the file dialogs.
 - The menu bar shortcuts (Cmd+C, Cmd+V, Cmd+A, Cmd+Q).
 - Light appearance for the other examples.

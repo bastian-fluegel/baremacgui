@@ -143,3 +143,12 @@ def check_rows(rows, width):
             raise ValueError(f"row {number} has {len(cells)} cells, expected {width}")
         result.append(cells)
     return result
+
+
+WINDOW_STYLES = ("standard", "unified")
+
+
+def check_window_style(style):
+    if style not in WINDOW_STYLES:
+        raise ValueError(f"Window style must be one of {', '.join(WINDOW_STYLES)}; got {style!r}")
+    return style

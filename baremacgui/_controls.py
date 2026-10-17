@@ -197,8 +197,17 @@ class ComboBox(Control):
 
 
 class Button(Control):
-    def __init__(self, title, default=False, grow=0, **size):
-        ns = AK().NSButton.buttonWithTitle_target_action_(str(title), None, None)
+    def __init__(self, title, default=False, symbol=None, grow=0, **size):
+        ak = AK()
+        ns = ak.NSButton.buttonWithTitle_target_action_(str(title), None, None)
+        if symbol is not None:  # SF Symbol, macOS 11+; with an empty title: icon only
+            image = ak.NSImage.imageWithSystemSymbolName_accessibilityDescription_(str(symbol), None)
+            if image is None:
+                raise ValueError(f"unknown system symbol: {symbol!r}")
+            ns.setImage_(image)
+            if not str(title):
+                ns.setImagePosition_(ak.NSImageOnly)
+                ns.setBezelStyle_(ak.NSBezelStyleTexturedRounded)
         if default:
             ns.setKeyEquivalent_("\r")
         super().__init__(ns, grow, **size)

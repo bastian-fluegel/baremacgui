@@ -123,3 +123,35 @@ def table_source_class():
             safe_call(self._owner._selection_changed)
 
     return BareMacTableSource
+
+
+@functools.lru_cache(maxsize=None)
+def toolbar_delegate_class():
+    """NSToolbar delegate: hands out one NSToolbarItem per entry, each wrapping a view."""
+    objc = OBJC()
+    NSObject = FN().NSObject
+
+    class BareMacToolbarDelegate(NSObject):
+        def initWithEntries_(self, entries):
+            # entries: list of (identifier, view or None); view None = system space item
+            self = objc.super(BareMacToolbarDelegate, self).init()
+            if self is None:
+                return None
+            self._entries = list(entries)
+            return self
+
+        def toolbarAllowedItemIdentifiers_(self, toolbar):
+            return [identifier for identifier, _ in self._entries]
+
+        def toolbarDefaultItemIdentifiers_(self, toolbar):
+            return [identifier for identifier, _ in self._entries]
+
+        def toolbar_itemForItemIdentifier_willBeInsertedIntoToolbar_(self, toolbar, identifier, flag):
+            for entry_id, view in self._entries:
+                if entry_id == identifier and view is not None:
+                    item = AK().NSToolbarItem.alloc().initWithItemIdentifier_(identifier)
+                    item.setView_(view)
+                    return item
+            return None
+
+    return BareMacToolbarDelegate

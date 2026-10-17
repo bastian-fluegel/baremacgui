@@ -10,7 +10,8 @@ from ._controls import Button, CheckBox, ComboBox, Label, SpinBox, TextBox
 from ._dialogs import ask_yes_no, choose_folder, open_file, save_file, show_error, show_info, show_warning
 from ._layout import HBox, Spacer, VBox, Window
 from ._table import ListBox, Table
-from ._widgets import DropDown, Image, ProgressBar, RadioGroup, Separator, Slider
+from ._toolbar import Toolbar
+from ._widgets import DropDown, Image, ProgressBar, RadioGroup, SearchField, SegmentedControl, Separator, Slider
 
 __version__ = "0.0.1.dev0"
 
@@ -32,6 +33,9 @@ __all__ = [
     "ProgressBar",
     "Image",
     "Separator",
+    "SearchField",
+    "SegmentedControl",
+    "Toolbar",
     "ListBox",
     "Table",
     "GroupBox",

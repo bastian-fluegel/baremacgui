@@ -3,7 +3,9 @@ from __future__ import annotations
 
 from . import _core
 from ._bridge import AK, FN, ensure_app
-from ._options import check_align, check_grow, check_padding, check_size, check_window_size
+from ._options import (
+    check_align, check_grow, check_padding, check_size, check_window_size, check_window_style,
+)
 
 _ALIGN_ATTR = {
     ("VBox", "start"): "NSLayoutAttributeLeading",
@@ -22,11 +24,18 @@ class Window:
 
     size is the initial content size in points; the minimum size follows from
     the content. The window shows itself when its with-block ends.
+
+    style="standard"  the usual title bar
+    style="unified"   Finder-like: no title text, a transparent title bar, and the
+                      content starts below it. Put controls in the title bar with a
+                      `with Toolbar():` block directly inside the window.
     """
 
-    def __init__(self, title, size=(400, 300), resizable=True, visible=True):
+    def __init__(self, title, size=(400, 300), resizable=True, visible=True, style="standard"):
         ak = AK()
         ensure_app()
+        self.style = check_window_style(style)
+        self._toolbar = None
         self._size = check_window_size(size)
         self._visible = bool(visible)
         self._item = None
@@ -37,12 +46,19 @@ class Window:
         )
         if resizable:
             style |= ak.NSWindowStyleMaskResizable
+        if self.style == "unified":
+            style |= ak.NSWindowStyleMaskFullSizeContentView
         self.ns = ak.NSWindow.alloc().initWithContentRect_styleMask_backing_defer_(
             FN().NSMakeRect(0, 0, *self._size), style, ak.NSBackingStoreBuffered, False
         )
         # Python owns the reference; without this AppKit over-releases on close.
         self.ns.setReleasedWhenClosed_(False)
         self.ns.setTitle_(str(title))
+        if self.style == "unified":
+            self.ns.setTitlebarAppearsTransparent_(True)
+            self.ns.setTitleVisibility_(ak.NSWindowTitleHidden)
+            if hasattr(self.ns, "setToolbarStyle_"):  # macOS 11+
+                self.ns.setToolbarStyle_(ak.NSWindowToolbarStyleUnified)
 
     @property
     def title(self):
@@ -70,10 +86,30 @@ class Window:
             return False
         if self._item is not None:
             stack = self._item.view
-            self.ns.setContentView_(stack)
             fit = stack.fittingSize()  # minimum window size follows from the content
-            self.ns.setContentMinSize_(fit)
-            self.ns.setContentSize_((max(self._size[0], fit.width), max(self._size[1], fit.height)))
+            extra = 0.0
+            if self.style == "unified":
+                # The content view reaches under the title bar/toolbar; the stack is pinned
+                # below it (contentLayoutGuide), so the window must be that much taller.
+                container = AK().NSView.alloc().init()
+                container.addSubview_(stack)
+                self.ns.setContentView_(container)
+                stack.setTranslatesAutoresizingMaskIntoConstraints_(False)
+                guide = self.ns.contentLayoutGuide()
+                stack.topAnchor().constraintEqualToAnchor_(guide.topAnchor()).setActive_(True)
+                stack.leadingAnchor().constraintEqualToAnchor_(container.leadingAnchor()).setActive_(True)
+                stack.trailingAnchor().constraintEqualToAnchor_(container.trailingAnchor()).setActive_(True)
+                stack.bottomAnchor().constraintEqualToAnchor_(container.bottomAnchor()).setActive_(True)
+                layout = self.ns.contentLayoutRect()
+                extra = float(self.ns.contentView().frame().size.height - layout.size.height)
+                if extra <= 0:
+                    extra = 52.0 if self._toolbar is not None else 28.0
+            else:
+                self.ns.setContentView_(stack)
+            self.ns.setContentMinSize_((fit.width, fit.height + extra))
+            self.ns.setContentSize_(
+                (max(self._size[0], fit.width), max(self._size[1], fit.height + extra))
+            )
         self.ns.center()
         if self._visible:
             self.ns.makeKeyAndOrderFront_(None)
