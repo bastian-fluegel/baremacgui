@@ -5,6 +5,9 @@ name: Screenshots
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   shoot:
     runs-on: macos-latest
@@ -36,3 +39,13 @@ jobs:
           name: screenshots
           path: shots
           if-no-files-found: warn
+      - name: Publish the images to the ci-screenshots branch
+        if: always()
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git checkout --orphan ci-screenshots
+          git rm -rf -q . || true
+          git add -f shots
+          git commit -q -m "Screenshots from run ${{ github.run_id }}"
+          git push -f origin ci-screenshots
