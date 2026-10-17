@@ -379,3 +379,34 @@ def format_color(r, g, b, a=1.0):
     text = "#" + "".join(f"{c:02X}" for c in channels)
     alpha = max(0, min(255, int(round(a * 255))))
     return text if alpha == 255 else text + f"{alpha:02X}"
+
+
+def _sort_value(text):
+    try:
+        return (0, float(str(text).strip().replace(",", ".")), "")
+    except ValueError:
+        return (1, 0.0, str(text).casefold())
+
+
+def sort_order(rows, column, ascending=True):
+    """Row indexes in sorted order. A column of numbers sorts numerically, anything else as text
+    (case-insensitive); numbers come before text. Equal cells keep their order."""
+    if isinstance(column, bool) or not isinstance(column, int) or not 0 <= column < (len(rows[0]) if rows else column + 1):
+        raise ValueError(f"column {column!r} is outside the table")
+    return sorted(range(len(rows)), key=lambda i: _sort_value(rows[i][column]), reverse=not ascending)
+
+
+def check_editable(editable, count):
+    """True/False, or a list of column indexes -> a frozenset of editable columns."""
+    if editable is True:
+        return frozenset(range(count))
+    if editable is False or editable is None:
+        return frozenset()
+    try:
+        columns = frozenset(editable)
+    except TypeError:
+        raise TypeError(f"editable must be a bool or a list of column indexes, got {editable!r}") from None
+    for column in columns:
+        if isinstance(column, bool) or not isinstance(column, int) or not 0 <= column < count:
+            raise ValueError(f"editable column {column!r} is outside the {count} columns")
+    return columns

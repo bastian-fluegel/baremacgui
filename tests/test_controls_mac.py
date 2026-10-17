@@ -798,3 +798,46 @@ def test_clipboard_text_roundtrip():
     assert clipboard.text == "bmc test \u00e4\u00f6\u00fc"
     clipboard.clear()
     assert clipboard.text == ""
+
+
+# -- editable and sortable table ----------------------------------------------
+def test_table_sort_from_code_and_selection_kept():
+    calls = []
+    t = build(("t", lambda: Table(["a", "n"], [["b", "10"], ["a", "9"], ["c", "2"]], sortable=True,
+                                  on_sort=lambda: calls.append(1))))["t"]
+    t.index = 0  # the row ["b", "10"]
+    t.sort(1)
+    assert [r[1] for r in t.rows] == ["2", "9", "10"]
+    assert t.sorted_by == (1, True)
+    assert t.selected_rows == [["b", "10"]]
+    t.sort(0, ascending=False)
+    assert [r[0] for r in t.rows] == ["c", "b", "a"]
+    assert calls == []  # sorting from code does not call on_sort
+    t.rows = [["z", "1"], ["y", "2"]]  # new rows keep the sort order
+    assert [r[0] for r in t.rows] == ["z", "y"]
+    with pytest.raises(ValueError):
+        t.sort(5)
+
+
+def test_table_header_click_path_calls_on_sort():
+    calls = []
+    t = build(("t", lambda: Table(["a"], [["b"], ["a"]], sortable=True, on_sort=lambda: calls.append(1))))["t"]
+    from AppKit import NSSortDescriptor
+
+    t._table.setSortDescriptors_([NSSortDescriptor.sortDescriptorWithKey_ascending_("0", True)])
+    assert [r[0] for r in t.rows] == ["a", "b"] and calls == [1]
+
+
+def test_table_edit_updates_rows_and_fires_event():
+    calls = []
+    t = build(("t", lambda: Table(["a", "b"], [["x", "1"]], editable=[0], on_edit=lambda: calls.append(1))))["t"]
+    cell = t._table.viewAtColumn_row_makeIfNecessary_(0, 0, True)
+    assert cell.textField().isEditable()
+    assert not t._table.viewAtColumn_row_makeIfNecessary_(1, 0, True).textField().isEditable()
+    cell.textField().setStringValue_("changed")
+    t._edited(cell.textField())
+    assert t.rows == [["changed", "1"]] and t.edited == (0, 0) and calls == [1]
+    t._edited(cell.textField())  # unchanged text: no second event
+    assert calls == [1]
+    with pytest.raises(ValueError):
+        build(("t", lambda: Table(["a"], [], editable=[3])))

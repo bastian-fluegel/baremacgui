@@ -89,6 +89,10 @@ SCENARIOS = {
         (lambda g: g["begin"](), 2.0, "progress-running"),
         (lambda g: g["cancel"].on_click.emit(), 1.0, "progress-cancelled"),
     ]),
+    "tasks": ("10_tasks.py", [
+        (None, 1.0, "tasks-start"),
+        (lambda g: g["table"].sort(1), 0.8, "tasks-sorted"),
+    ]),
     "everything": ("06_everything.py", [
         (None, 1.0, "everything-list"),
         (lambda g: (setattr(g["view"], "index", 0), g["set_view"]()), 1.0, "everything-icons"),

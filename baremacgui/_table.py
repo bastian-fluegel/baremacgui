@@ -4,7 +4,7 @@ from __future__ import annotations
 from ._bridge import AK, FN, make_target, table_source_class
 from ._controls import Control
 from ._events import event
-from ._options import check_columns, check_index, check_items, check_rows
+from ._options import check_columns, check_editable, check_index, check_items, check_rows, sort_order
 
 
 class Table(Control):
@@ -16,24 +16,40 @@ class Table(Control):
     header    show the column titles
     striped   alternating row backgrounds (off by default; modern macOS lists are plain)
 
-    Cells are read-only. Setting .rows or the selection from code never calls
-    on_select; only user input does.
+    editable  True, or a list of column indexes: double-click a cell to edit it (on_edit fires; the
+              position is in .edited, the new text is in .rows)
+    sortable  clicking a column header sorts by it (numbers numerically, text case-insensitive)
+
+    Setting .rows, the selection or the sort order from code never calls the handlers; only user
+    input does.
+
+    Native counterpart: NSTableView with view-based cells. Difference: cells are always text.
     """
+
+    on_edit = event()
+    on_sort = event()
 
     on_select = event()
     on_double_click = event()
 
-    def __init__(self, columns, rows=(), multiple=False, header=True, striped=False, grow=0, **size):
+    def __init__(self, columns, rows=(), multiple=False, header=True, striped=False, grow=0,
+                 editable=False, sortable=False, **size):
         ak = AK()
         titles = check_columns(columns)
         self._rows = check_rows(rows, len(titles))
         self._muted = False
+        self._quiet = False
+        self._sorted_by = None
+        self.edited = None
+        self._editable = check_editable(editable, len(titles))
 
         table = ak.NSTableView.alloc().init()
         for position, title in enumerate(titles):
             column = ak.NSTableColumn.alloc().initWithIdentifier_(str(position))
             column.setTitle_(title)
             column.setEditable_(False)
+            if sortable:
+                column.setSortDescriptorPrototype_(ak.NSSortDescriptor.sortDescriptorWithKey_ascending_(str(position), True))
             table.addTableColumn_(column)
         if not header:
             table.setHeaderView_(None)
@@ -78,6 +94,61 @@ class Table(Control):
         if not self._muted:
             self.on_select.emit()
 
+    def _sort_changed(self):
+        if self._quiet:
+            return
+        descriptors = self._table.sortDescriptors()
+        if not len(descriptors):
+            return
+        first = descriptors[0]
+        self._apply_sort(int(str(first.key())), bool(first.ascending()))
+        self.on_sort.emit()
+
+    def _apply_sort(self, column, ascending):
+        chosen = [self._rows[i] for i in self.indexes]
+        order = sort_order(self._rows, column, ascending)
+        self._rows = [self._rows[i] for i in order]
+        self._sorted_by = (column, ascending)
+        self._muted = True
+        try:
+            self._table.reloadData()
+            keep = [i for i, row in enumerate(self._rows) if any(row is c for c in chosen)]
+            if keep:
+                indexes = FN().NSMutableIndexSet.indexSet()
+                for i in keep:
+                    indexes.addIndex_(i)
+                self._table.selectRowIndexes_byExtendingSelection_(indexes, False)
+        finally:
+            self._muted = False
+
+    def _edited(self, field):
+        row = int(self._table.rowForView_(field))
+        column = int(self._table.columnForView_(field))
+        if row < 0 or column < 0:
+            return
+        text = str(field.stringValue())
+        if text == self._rows[row][column]:
+            return
+        self._rows[row][column] = text
+        self.edited = (row, column)
+        self.on_edit.emit()
+
+    @property
+    def sorted_by(self):
+        """(column, ascending) of the current sort, or None."""
+        return self._sorted_by
+
+    def sort(self, column, ascending=True):
+        """Sort by a column from code (the header arrow follows). Does not call on_sort."""
+        sort_order(self._rows, column, ascending)  # validates the column
+        self._quiet = True
+        try:
+            descriptor = AK().NSSortDescriptor.sortDescriptorWithKey_ascending_(str(column), bool(ascending))
+            self._table.setSortDescriptors_([descriptor])
+            self._apply_sort(column, bool(ascending))
+        finally:
+            self._quiet = False
+
     # -- rows --------------------------------------------------------------
     @property
     def rows(self):
@@ -85,7 +156,10 @@ class Table(Control):
 
     @rows.setter
     def rows(self, values):
-        self._rows = check_rows(values, len(self._columns))
+        self._rows = [list(row) for row in check_rows(values, len(self._columns))]
+        if self._sorted_by is not None:
+            column, ascending = self._sorted_by
+            self._rows = [self._rows[i] for i in sort_order(self._rows, column, ascending)]
         self._muted = True
         try:
             self._table.reloadData()

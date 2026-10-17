@@ -585,7 +585,7 @@ Properties:
 A scrollable list of text entries (a Table with one column and no header).
 ```
 
-Events: `on_double_click`, `on_select`
+Events: `on_double_click`, `on_edit`, `on_select`, `on_sort`
 
 Properties:
 
@@ -596,11 +596,12 @@ Properties:
 - `items`
 - `rows`
 - `selected_rows` (read-only)
+- `sorted_by` (read-only): (column, ascending) of the current sort, or None.
 - `text` (read-only): Text of the selected entry, or None.
 - `texts` (read-only): Texts of all selected entries.
 - `visible`: False hides the control; a box closes the gap it leaves.
 
-### `Table(columns, rows=(), multiple=False, header=True, striped=False, grow=0, **size)`
+### `Table(columns, rows=(), multiple=False, header=True, striped=False, grow=0, editable=False, sortable=False, **size)`
 
 ```text
 A scrollable table of text cells with a header row.
@@ -611,11 +612,17 @@ multiple  allow several rows to be selected
 header    show the column titles
 striped   alternating row backgrounds (off by default; modern macOS lists are plain)
 
-Cells are read-only. Setting .rows or the selection from code never calls
-on_select; only user input does.
+editable  True, or a list of column indexes: double-click a cell to edit it (on_edit fires; the
+          position is in .edited, the new text is in .rows)
+sortable  clicking a column header sorts by it (numbers numerically, text case-insensitive)
+
+Setting .rows, the selection or the sort order from code never calls the handlers; only user
+input does.
+
+Native counterpart: NSTableView with view-based cells. Difference: cells are always text.
 ```
 
-Events: `on_double_click`, `on_select`
+Events: `on_double_click`, `on_edit`, `on_select`, `on_sort`
 
 Properties:
 
@@ -625,7 +632,12 @@ Properties:
 - `indexes` (read-only): Indexes of all selected rows, ascending.
 - `rows`
 - `selected_rows` (read-only)
+- `sorted_by` (read-only): (column, ascending) of the current sort, or None.
 - `visible`: False hides the control; a box closes the gap it leaves.
+
+Methods:
+
+- `sort(column, ascending=True)`: Sort by a column from code (the header arrow follows). Does not call on_sort.
 
 ### `IconGrid(items=(), symbol='doc', icon_size=64, multiple=False, selected=None, grow=0, **size)`
 

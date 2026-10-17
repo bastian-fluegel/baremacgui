@@ -216,3 +216,24 @@ def test_color_parse_and_format():
             o.parse_color(bad)
     with pytest.raises(TypeError):
         o.parse_color(0xFF0000)
+
+
+def test_sort_order_numbers_and_text():
+    rows = [["b", "10"], ["A", "9"], ["c", "x"], ["a", "2,5"]]
+    assert o.sort_order(rows, 1) == [3, 1, 0, 2]          # numbers first, then text
+    assert o.sort_order(rows, 1, False) == [2, 0, 1, 3]
+    assert o.sort_order(rows, 0) == [1, 3, 0, 2]          # case-insensitive, stable
+    assert o.sort_order([], 0) == []
+    for bad in (-1, 2, True, "0"):
+        with pytest.raises(ValueError):
+            o.sort_order(rows, bad)
+
+
+def test_check_editable():
+    assert o.check_editable(True, 3) == frozenset({0, 1, 2})
+    assert o.check_editable(False, 3) == frozenset()
+    assert o.check_editable([1], 3) == frozenset({1})
+    with pytest.raises(ValueError):
+        o.check_editable([3], 3)
+    with pytest.raises(TypeError):
+        o.check_editable(5, 3)

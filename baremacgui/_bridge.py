@@ -175,13 +175,25 @@ def table_source_class():
                 field = ak.NSTextField.labelWithString_("")
                 field.setTranslatesAutoresizingMaskIntoConstraints_(False)
                 field.setLineBreakMode_(ak.NSLineBreakByTruncatingTail)
+                field.setDelegate_(self)  # controlTextDidEndEditing_ reports edits
                 cell.addSubview_(field)
                 cell.setTextField_(field)
                 field.leadingAnchor().constraintEqualToAnchor_constant_(cell.leadingAnchor(), 2.0).setActive_(True)
                 field.trailingAnchor().constraintEqualToAnchor_constant_(cell.trailingAnchor(), -2.0).setActive_(True)
                 field.centerYAnchor().constraintEqualToAnchor_(cell.centerYAnchor()).setActive_(True)
-            cell.textField().setStringValue_(self._owner._rows[row][int(column.identifier())])
+            position = int(column.identifier())
+            field = cell.textField()
+            field.setStringValue_(self._owner._rows[row][position])
+            editable = position in self._owner._editable
+            field.setEditable_(editable)
+            field.setSelectable_(editable)
             return cell
+
+        def tableView_sortDescriptorsDidChange_(self, table, old):
+            safe_call(self._owner._sort_changed)
+
+        def controlTextDidEndEditing_(self, notification):
+            safe_call(self._owner._edited, notification.object())
 
         def tableViewSelectionDidChange_(self, notification):
             safe_call(self._owner._selection_changed)
