@@ -136,6 +136,7 @@ Run them with `python examples/<file>.py`:
 - `12_menubar.py`: menu-bar clock without a Dock icon
 - `13_drop.py`: drop files from Finder onto a `DropZone`
 - `14_checklist.py`: table with a checkbox column and SF Symbols (`Table(kinds=...)`)
+- `16_showcase.py`: the best-of window: sidebar, table with checkboxes and symbols, icon grid, switch, color well, tick-mark slider, calendar
 - `15_windows.py`: several windows, each with its own menus; Cmd+N opens another one
 
 `tests/test_examples_mac.py` builds every example on macOS CI and tests the helper functions they define.

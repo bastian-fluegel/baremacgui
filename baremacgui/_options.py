@@ -106,6 +106,17 @@ def check_float_range(value, minimum, maximum):
     return float(clamp(value, minimum, maximum))
 
 
+LABEL_STYLES = ("large_title", "title", "title2", "title3", "headline", "subheadline", "body", "callout",
+                "footnote", "caption")
+
+
+def check_label_style(style):
+    """A Label text style: None (the default body text) or one of LABEL_STYLES."""
+    if style is not None and style not in LABEL_STYLES:
+        raise ValueError(f"Label style must be None or one of {', '.join(LABEL_STYLES)}; got {style!r}")
+    return style
+
+
 def check_ticks(ticks):
     """Number of tick marks on a Slider: None (none) or an int >= 2."""
     if ticks is None:

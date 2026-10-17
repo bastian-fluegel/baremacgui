@@ -98,6 +98,11 @@ SCENARIOS = {
         (lambda g: g["new_note"](), 0.8, "notes-new"),
         (lambda g: g["split"].set_position(0, 260) if "split" in g else None, 0.8, "notes-wide"),
     ]),
+    "showcase": ("16_showcase.py", [
+        (None, 1.2, "showcase-today"),
+        (lambda g: setattr(g["sidebar"], "index", 1), 0.9, "showcase-library"),
+        (lambda g: setattr(g["sidebar"], "index", 2), 0.9, "showcase-appearance"),
+    ]),
     "checklist": ("14_checklist.py", [
         (None, 1.0, "checklist-start"),
         (lambda g: (g["table"]._table.viewAtColumn_row_makeIfNecessary_(0, 1, True).subviews()[0].performClick_(None)), 0.8, "checklist-ticked"),

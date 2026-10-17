@@ -4,7 +4,22 @@ from __future__ import annotations
 from . import _core
 from ._bridge import AK, FN, make_target
 from ._events import connect_options, event, split_options
-from ._options import check_grow, check_size, check_spin_range, clamp, parse_int
+from ._options import check_grow, check_label_style, check_size, check_spin_range, clamp, parse_int
+
+
+_FALLBACK_SIZES = {"large_title": 26.0, "title": 22.0, "title2": 17.0, "title3": 15.0, "headline": 13.0,
+                   "subheadline": 11.0, "body": 13.0, "callout": 12.0, "footnote": 10.0, "caption": 10.0}
+
+
+def _text_style_font(style):
+    ak = AK()
+    constant = "NSFontTextStyle" + "".join(part.capitalize() for part in style.split("_"))
+    constant = {"NSFontTextStyleTitle": "NSFontTextStyleTitle1"}.get(constant, constant)
+    name = getattr(ak, constant, None)
+    if name is not None and hasattr(ak.NSFont, "preferredFontForTextStyle_options_"):
+        return ak.NSFont.preferredFontForTextStyle_options_(name, {})
+    size = _FALLBACK_SIZES[style]
+    return ak.NSFont.boldSystemFontOfSize_(size) if style in ("headline", "large_title", "title") else ak.NSFont.systemFontOfSize_(size)
 
 
 def _text_of(field):
@@ -101,8 +116,25 @@ class Control:
 
 
 class Label(Control):
-    def __init__(self, text="", grow=0, **size):
-        super().__init__(AK().NSTextField.labelWithString_(str(text)), grow, **size)
+    """Static text.
+
+    style      None (normal text) or a system text style: "large_title", "title", "title2", "title3",
+               "headline", "subheadline", "body", "callout", "footnote", "caption"
+    secondary  True draws the text in the system's secondary (grey) color, for hints and captions
+
+    Native counterpart: NSTextField label with NSFont.preferredFont(forTextStyle:) and
+    NSColor.secondaryLabelColor (macOS 11+ for the styles; older systems get fixed sizes).
+    """
+
+    def __init__(self, text="", style=None, secondary=False, grow=0, **size):
+        style = check_label_style(style)
+        ak = AK()
+        ns = ak.NSTextField.labelWithString_(str(text))
+        if style is not None:
+            ns.setFont_(_text_style_font(style))
+        if secondary:
+            ns.setTextColor_(ak.NSColor.secondaryLabelColor())
+        super().__init__(ns, grow, **size)
 
     @property
     def text(self):

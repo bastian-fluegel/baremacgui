@@ -305,15 +305,17 @@ Methods:
 
 ## Controls
 
-### `Label(text='', grow=0, **size)`
+### `Label(text='', style=None, secondary=False, grow=0, **size)`
 
 ```text
-Base class: registers the view with the innermost open container.
+Static text.
 
-Every control accepts grow (flex weight) and width, height, min_width,
-max_width, min_height, max_height (points), tooltip (the yellow hint on hover) and
-accessibility_label (what VoiceOver reads; give it to every control that shows no text of its own,
-such as an icon button, an Image or a Slider).
+style      None (normal text) or a system text style: "large_title", "title", "title2", "title3",
+           "headline", "subheadline", "body", "callout", "footnote", "caption"
+secondary  True draws the text in the system's secondary (grey) color, for hints and captions
+
+Native counterpart: NSTextField label with NSFont.preferredFont(forTextStyle:) and
+NSColor.secondaryLabelColor (macOS 11+ for the styles; older systems get fixed sizes).
 ```
 
 Properties:

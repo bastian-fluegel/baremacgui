@@ -302,3 +302,10 @@ def test_check_ticks():
     for bad in (1, 0, -3, 2.5, True, "5"):
         with pytest.raises(ValueError):
             o.check_ticks(bad)
+
+
+def test_check_label_style():
+    assert o.check_label_style(None) is None and o.check_label_style("title") == "title"
+    for bad in ("huge", "Title", 3):
+        with pytest.raises(ValueError):
+            o.check_label_style(bad)

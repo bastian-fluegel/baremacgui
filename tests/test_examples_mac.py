@@ -38,7 +38,7 @@ def run_example(path):
 
 
 def test_there_are_examples():
-    assert len(EXAMPLES) >= 16
+    assert len(EXAMPLES) >= 17
 
 
 @pytest.mark.parametrize("path", EXAMPLES, ids=lambda p: p.stem)
@@ -116,3 +116,18 @@ def test_windows_example_opens_more_documents(headless):
     assert second.title == "Document 2" and second._menubar is not None
     second.destroy()
     assert ns["counter"]["open"] == 1
+
+
+def test_showcase_example(headless):
+    ns = run_example(example("16_showcase"))
+    assert ns["progress_text"]([[True], [False], [False]]) == "1 of 3 done"
+    assert ns["share_done"]([]) == 0.0 and ns["share_done"]([[True], [False]]) == 50.0
+    names = [item[0] for item in ns["filter_library"](ns["LIBRARY"], " MA")]
+    assert names == ["Maps", "Mail"]
+    assert ns["summary"].text == "2 of 6 done" and round(ns["bar"].value) == 33
+    ns["table"]._table.viewAtColumn_row_makeIfNecessary_(0, 2, True).subviews()[0].performClick_(None)
+    assert ns["summary"].text == "3 of 6 done" and round(ns["bar"].value) == 50
+    ns["search"].text = "ma"
+    ns["search"].on_change.emit()
+    assert ns["grid"].items == ["Maps", "Mail"]
+    assert [ns["sidebar"].index] == [0]

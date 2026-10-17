@@ -1148,3 +1148,21 @@ def test_choose_font_returns_a_font_choice():
     result = choose_font(FontChoice("Helvetica", 18.0, True, False))
     assert isinstance(result, FontChoice) and result.name and result.size > 0
     assert keep is not None
+
+
+def test_label_styles_change_font_and_color():
+    plain, big, grey = [
+        build(("l", lambda: Label("x")))["l"],
+        build(("l", lambda: Label("x", style="large_title")))["l"],
+        build(("l", lambda: Label("x", style="caption", secondary=True)))["l"],
+    ]
+    assert big.ns.font().pointSize() > plain.ns.font().pointSize() > grey.ns.font().pointSize() - 0.1
+    from AppKit import NSColor
+
+    assert grey.ns.textColor() == NSColor.secondaryLabelColor()
+    for name in ("large_title", "title", "title2", "title3", "headline", "subheadline", "body", "callout", "footnote", "caption"):
+        assert build(("l", lambda n=name: Label("x", style=n)))["l"].ns.font().pointSize() > 0
+    with Window("t", visible=False):
+        with VBox():
+            with pytest.raises(ValueError):
+                Label("x", style="huge")
