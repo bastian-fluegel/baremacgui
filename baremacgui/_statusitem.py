@@ -24,13 +24,13 @@ class StatusItem(_Container):
 
     def __init__(self, title="", symbol=None):
         ak = AK()
+        if not str(title) and symbol is None:
+            raise ValueError("a StatusItem needs a title or a symbol")
         self._init_container("")
         self._item = ak.NSStatusBar.systemStatusBar().statusItemWithLength_(ak.NSVariableStatusItemLength)
         self._item.setMenu_(self.ns)
         self.symbol = symbol
         self.title = title
-        if not str(title) and symbol is None:
-            raise ValueError("a StatusItem needs a title or a symbol")
 
     @property
     def title(self):
