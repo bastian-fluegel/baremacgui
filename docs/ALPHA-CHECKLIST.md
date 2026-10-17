@@ -1,0 +1,31 @@
+# Checklist: from alpha to beta
+
+Tick a box only when it is really done. "Checked by CI" means a test builds the object on a macOS runner;
+it does not mean a person clicked it.
+
+## Done
+- [x] Tests run automatically on Ubuntu, macOS (Apple Silicon) and macOS (Intel) for Python 3.10 and 3.14
+- [x] Pure logic is tested on Linux (`_options.py`, `_events.py`)
+- [x] Every control and container is built and its properties are exercised on macOS CI
+- [x] Wheel builds and installs into a clean environment; `import baremacgui` works without AppKit (CI job `package`)
+- [x] Changelog, contributing guide, security policy, issue forms
+- [x] Publishing workflow prepared (PyPI trusted publishing, TestPyPI by manual run)
+- [x] Screenshots of every example from a macOS runner (workflow "Screenshots")
+
+## To check by hand on a real Mac
+- [ ] Mouse: icon double-click, Tree and Table double-click, popover, sheets, delete button in example 06
+- [ ] Keyboard: menu shortcuts, `Window.add_shortcut`, `default_button` (Return) and `cancel_button` (Escape)
+- [ ] Right-click menus on Table, IconGrid, Tree, TextBox
+- [ ] `TextBox.on_change` while typing, in single-line and multi-line boxes
+- [ ] `Window.on_close` veto with the red button, `show_modal`
+- [ ] Blocking sheet dialogs (without `then=`), file dialogs, `input_box`
+- [ ] Light and dark appearance of every example
+- [ ] Sidebar window: divider drag, hide, minimum size
+- [ ] Apple Silicon, other macOS versions (the author uses an Intel Mac with macOS 15.5)
+
+## Before beta
+- [ ] API names stable; experimental parts marked in the docs
+- [ ] PyPI name checked and a test upload to TestPyPI done
+- [ ] Menu bar behaviour with several windows reviewed
+- [ ] Accessibility (VoiceOver labels) reviewed
+- [ ] `.app` packaging documented
