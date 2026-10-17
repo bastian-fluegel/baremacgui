@@ -194,6 +194,12 @@ class _Box:
 
         for item in growers:
             item.view.setContentHuggingPriority_forOrientation_(1, orientation)
+        if growers:
+            # Children without grow keep their natural size: a stretchable child (say a nested
+            # box with its own filler) must not compete with the growers for the free space.
+            for item in items:
+                if item.grow == 0 and not item.spacer and item.fixed is None:
+                    item.view.setContentHuggingPriority_forOrientation_(751, orientation)
         if len(growers) > 1:
             # Share extra space by weight. Priority 500 stays below the
             # compression resistance (750) so intrinsic minimum sizes still win.
