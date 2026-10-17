@@ -9,6 +9,7 @@ from .errors import BareMacGUIError, LayoutError, PlatformError
 from ._collections import IconGrid, Tree
 from ._containers import GroupBox, Tab, TabControl
 from ._controls import Button, CheckBox, ComboBox, Label, SpinBox, TextBox
+from ._drop import DropZone
 from ._events import Event
 from ._dialogs import ask_ok_cancel, ask_yes_no, choose_folder, input_box, open_file, save_file, show_error, show_info, show_warning
 from ._menus import ContextMenu, Menu, MenuBar, MenuItem, MenuSeparator
@@ -73,6 +74,7 @@ __all__ = [
     "StatusItem",
     "Timer",
     "Switch",
+    "DropZone",
     "ColorWell",
     "Clipboard",
     "clipboard",

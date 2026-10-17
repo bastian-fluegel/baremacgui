@@ -48,7 +48,7 @@ Needs macOS and Python 3.10 or newer. The one dependency is PyObjC (`pyobjc-fram
 | Windows | `App`, `Window` (styles `standard`, `unified`, `sidebar`; `on_close`, `on_resize`, `on_destroy`, `size`, `add_shortcut`, `default_button`, `cancel_button`, `show_modal`), `Sheet`, `Popover`, `Toolbar`, `Sidebar` / `Page` |
 | Layout | `VBox`, `HBox`, `Spacer`; options `padding`, `gap`, `align`, `justify`, `grow`, `width`/`height`/`min_*`/`max_*` |
 | Containers | `GroupBox`, `TabControl` / `Tab`, `SplitView` |
-| Controls | `Label`, `TextBox` (single line, multi line, password), `ComboBox`, `DropDown`, `Button` (SF Symbols), `CheckBox`, `RadioGroup`, `SpinBox`, `Slider`, `ProgressBar`, `Image`, `Separator`, `SearchField`, `SegmentedControl`, `DatePicker`, `TimePicker`, `Switch` (NSSwitch), `ColorWell` (NSColorWell) |
+| Controls | `Label`, `TextBox` (single line, multi line, password), `ComboBox`, `DropDown`, `Button` (SF Symbols), `CheckBox`, `RadioGroup`, `SpinBox`, `Slider`, `ProgressBar`, `Image`, `Separator`, `SearchField`, `SegmentedControl`, `DatePicker`, `TimePicker`, `Switch` (NSSwitch), `ColorWell` (NSColorWell), `DropZone` (files dragged from Finder) |
 | Lists | `ListBox`, `Table` (text cells; `editable=`, `sortable=True`), `IconGrid`, `Tree` |
 | Menus | `MenuBar`, `Menu`, `MenuItem` (shortcuts, check marks), `MenuSeparator`, `ContextMenu` (`context_menu=` on any control) |
 | Dialogs | `show_info`, `show_warning`, `show_error`, `ask_yes_no`, `ask_ok_cancel`, `input_box`, `open_file`, `save_file`, `choose_folder` (with `parent=` they become sheets; `then=` gets the answer) |
@@ -110,6 +110,7 @@ Run them with `python examples/<file>.py`:
 - `10_tasks.py`: editable, sortable table
 - `11_notes.py`: split view with list and editor, notes kept with `Settings`
 - `12_menubar.py`: menu-bar clock without a Dock icon
+- `13_drop.py`: drop files from Finder onto a `DropZone`
 
 `tests/test_examples_mac.py` builds every example on macOS CI and tests the helper functions they define.
 
@@ -141,6 +142,7 @@ Not yet checked on real hardware:
 - `SplitView`: dragging the dividers by mouse, remembering them across a restart (`autosave=`), window resizing with `fixed=` panes.
 - `Settings` across real app restarts (CI only checks that a second object sees the values), `Window(autosave=)` restoring the position after a real quit.
 - `ColorWell` with the real color panel, `Switch` by mouse, `clipboard` pasting into other apps.
+- `DropZone` with a real drag from Finder (CI feeds it a pasteboard with file URLs and calls the drag methods; the mouse drag itself, the highlight and the cursor are unchecked).
 - `Table` and `Tree` `on_double_click` ignoring double-clicks on the header or empty space (uses `clickedRow`).
 - Light appearance for the other examples.
 - Apple Silicon, other macOS versions, multiple displays.

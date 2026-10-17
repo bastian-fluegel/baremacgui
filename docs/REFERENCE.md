@@ -612,6 +612,30 @@ Properties:
 - `value`
 - `visible`: False hides the control; a box closes the gap it leaves.
 
+### `DropZone(text='Drop files here', extensions=None, multiple=True, grow=0, **size)`
+
+```text
+A framed area that accepts files dragged from Finder (native NSDraggingDestination).
+
+    zone = DropZone("Drop images here", extensions=["png", "jpg"], on_drop=lambda: print(zone.paths))
+
+`extensions` limits the accepted files (None accepts everything, folders included);
+multiple=False accepts exactly one item per drop. While the pointer is over the zone with items
+it would not accept, macOS shows the usual "not allowed" cursor; accepted items highlight the frame.
+`paths` holds the files of the last accepted drop. on_drop fires once per accepted drop.
+
+Native NSBox has no dashed border; the frame is a plain line (the look of a native custom box).
+```
+
+Events: `on_drop`
+
+Properties:
+
+- `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
+- `enabled`
+- `text`
+- `visible`: False hides the control; a box closes the gap it leaves.
+
 ### `ListBox(items=(), selected=None, multiple=False, striped=False, grow=0, **size)`
 
 ```text

@@ -22,6 +22,7 @@ it does not mean a person clicked it.
 - [ ] SplitView: drag the divider, minimum pane size, divider position remembered after restart (example 11)
 - [ ] Table: double-click edit, Return/Tab/Escape in the editor, header click sorting, selection kept after sorting
 - [ ] `Settings` values and `Window(autosave=)` position survive a real quit and restart
+- [ ] DropZone: drag files and folders from Finder onto it (example 13); highlight while hovering, "not allowed" cursor for refused items
 - [ ] ColorWell opens the color panel and reports picks; Switch by mouse; clipboard paste in another app
 - [ ] Light and dark appearance of every example
 - [ ] Sidebar window: divider drag, hide, minimum size

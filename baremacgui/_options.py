@@ -434,3 +434,41 @@ def check_fixed_panes(fixed, count):
     if len(set(result)) == count:
         raise LayoutError("at least one pane must be allowed to grow")
     return sorted(set(result))
+
+
+def check_extensions(extensions):
+    """File extensions a DropZone accepts: None (everything) or names like 'png' / '.PNG'.
+
+    Returns a tuple of lowercase names without the dot, or None.
+    """
+    if extensions is None:
+        return None
+    if isinstance(extensions, str) or not hasattr(extensions, "__iter__"):
+        raise LayoutError(f"extensions must be a list of names like ['png', 'jpg'], got {extensions!r}")
+    result = []
+    for name in extensions:
+        if not isinstance(name, str) or not name.strip(". "):
+            raise LayoutError(f"extension must be a non-empty string, got {name!r}")
+        result.append(name.strip().lstrip(".").lower())
+    if not result:
+        raise LayoutError("extensions must not be empty (use None to accept everything)")
+    return tuple(dict.fromkeys(result))
+
+
+def filter_dropped(paths, extensions=None, multiple=True):
+    """The dropped paths a DropZone accepts, in the order given.
+
+    With `extensions` only files with such an ending pass (folders never do); without, everything passes.
+    With multiple=False a drop of more than one item is refused as a whole (empty result).
+    """
+    import os
+
+    paths = [str(p) for p in paths]
+    if not multiple and len(paths) != 1:
+        return []
+    if extensions is not None:
+        paths = [p for p in paths if os.path.splitext(p)[1].lstrip(".").lower() in extensions
+                 and not os.path.isdir(p)]
+    if not multiple and len(paths) != 1:
+        return []
+    return paths

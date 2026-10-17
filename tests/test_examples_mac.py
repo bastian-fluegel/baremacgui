@@ -38,7 +38,7 @@ def run_example(path):
 
 
 def test_there_are_examples():
-    assert len(EXAMPLES) >= 10
+    assert len(EXAMPLES) >= 14
 
 
 @pytest.mark.parametrize("path", EXAMPLES, ids=lambda p: p.stem)
@@ -83,3 +83,18 @@ def test_progress_helper(headless):
     assert ns["format_elapsed"](0) == "0:00"
     assert ns["format_elapsed"](65.4) == "1:05"
     assert not ns["cancel"].enabled
+
+
+def test_drop_example_collects_files(headless, tmp_path):
+    ns = run_example(example("13_drop"))
+    assert ns["human_size"](0) == "0 bytes"
+    assert ns["human_size"](1536) == "1.5 KB"
+    assert ns["human_size"](5 * 1024 ** 2) == "5.0 MB"
+    note = tmp_path / "note.txt"
+    note.write_bytes(b"x" * 2048)
+    assert ns["zone"]._drop([str(note), str(tmp_path)])
+    rows = ns["table"].rows
+    assert [r[0] for r in rows] == ["note.txt", tmp_path.name] and rows[0][1] == "2.0 KB" and rows[1][1] == ""
+    assert ns["summary"].text == "2 item(s)"
+    ns["clear"].on_click.emit()
+    assert ns["table"].rows == [] and ns["summary"].text == "Nothing dropped yet"

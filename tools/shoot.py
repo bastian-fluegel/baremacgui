@@ -98,6 +98,10 @@ SCENARIOS = {
         (lambda g: g["new_note"](), 0.8, "notes-new"),
         (lambda g: g["split"].set_position(0, 260) if "split" in g else None, 0.8, "notes-wide"),
     ]),
+    "drop": ("13_drop.py", [
+        (None, 1.0, "drop-empty"),
+        (lambda g: g["zone"]._drop([os.path.abspath(f"examples/{n}") for n in ("00_hello.py", "06_everything.py", "../docs")]), 0.8, "drop-received"),
+    ]),
     "everything": ("06_everything.py", [
         (None, 1.0, "everything-list"),
         (lambda g: (setattr(g["view"], "index", 0), g["set_view"]()), 1.0, "everything-icons"),

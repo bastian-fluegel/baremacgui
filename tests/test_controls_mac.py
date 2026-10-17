@@ -2,6 +2,7 @@
 
 Windows are created with visible=False and never run an event loop.
 """
+import os
 import sys
 
 import pytest
@@ -17,7 +18,7 @@ if sys.platform == "darwin":
     from baremacgui import Custom, IconGrid, Page, Popover, Sheet, Sidebar, Tree
     from baremacgui import show_info
     from baremacgui import SplitView, StatusItem
-    from baremacgui import Settings, Switch, ColorWell, clipboard
+    from baremacgui import Settings, Switch, ColorWell, DropZone, clipboard
     from baremacgui import ContextMenu, DatePicker, Menu, MenuBar, MenuItem, MenuSeparator, Timer, TimePicker
     from baremacgui import _core
 
@@ -799,6 +800,63 @@ def test_clipboard_text_roundtrip():
     assert clipboard.text == "bmc test \u00e4\u00f6\u00fc"
     clipboard.clear()
     assert clipboard.text == ""
+
+
+# -- drag and drop ------------------------------------------------------------
+class _FakeDrag:
+    """Stands in for NSDraggingInfo: the pasteboard carries real file URLs, as Finder would put them."""
+
+    def __init__(self, paths):
+        from AppKit import NSPasteboard
+        from Foundation import NSURL
+
+        self.board = NSPasteboard.pasteboardWithUniqueName()
+        self.board.clearContents()
+        self.board.writeObjects_([NSURL.fileURLWithPath_(p) for p in paths])
+
+    def draggingPasteboard(self):
+        return self.board
+
+
+def test_drop_zone_registers_for_file_drags_and_filters(tmp_path):
+    from AppKit import NSDragOperationCopy, NSDragOperationNone, NSPasteboardTypeFileURL
+
+    png, txt = tmp_path / "a.png", tmp_path / "b.txt"
+    png.write_bytes(b"x")
+    txt.write_bytes(b"x")
+    calls = []
+    zone = build(("z", lambda: DropZone("Drop here", extensions=["png"], on_drop=lambda: calls.append(1))))["z"]
+    assert NSPasteboardTypeFileURL in list(zone.ns.registeredDraggedTypes())
+    assert zone.text == "Drop here"
+
+    bad = _FakeDrag([str(txt)])
+    assert zone.ns.draggingEntered_(bad) == NSDragOperationNone
+    assert not zone.ns.performDragOperation_(bad)
+    assert zone.paths == [] and calls == []
+
+    good = _FakeDrag([str(txt), str(png)])
+    assert zone.ns.draggingEntered_(good) == NSDragOperationCopy
+    assert zone.ns.performDragOperation_(good)
+    zone.ns.draggingExited_(good)
+    assert [os.path.realpath(p) for p in zone.paths] == [os.path.realpath(str(png))]
+    assert calls == [1]
+
+
+def test_drop_zone_single_item_only(tmp_path):
+    one, two = tmp_path / "1.txt", tmp_path / "2.txt"
+    one.write_bytes(b"x")
+    two.write_bytes(b"x")
+    zone = build(("z", lambda: DropZone(multiple=False)))["z"]
+    assert not zone.ns.performDragOperation_(_FakeDrag([str(one), str(two)]))
+    assert zone.ns.performDragOperation_(_FakeDrag([str(one)]))
+    assert len(zone.paths) == 1
+
+
+def test_drop_zone_rejects_bad_extensions():
+    with Window("t", visible=False):
+        with VBox():
+            with pytest.raises(ValueError):
+                DropZone(extensions="png")
 
 
 # -- editable and sortable table ----------------------------------------------

@@ -10,6 +10,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 ### Added
 - `Settings`: values that survive between runs (NSUserDefaults, one domain per app name). Example 02 uses it.
 - `Window(autosave="name")`: the window remembers its position and size (NSWindow frame autosave).
+- `DropZone`: accepts files dragged from Finder (NSDraggingDestination on an NSBox), optional extension filter, `on_drop`, `paths`. Example 13 shows it.
 - `Switch` (NSSwitch), `ColorWell` (NSColorWell, hex string value) and `clipboard` (NSPasteboard text). Example 03 shows them.
 - `Table(editable=..., sortable=True)`: edit cells in place (`on_edit`, `.edited`), sort by clicking a header (`on_sort`, `.sorted_by`, `.sort(column)`). Example 10.
 - `SplitView`: panes with draggable dividers (NSSplitView), `fixed=`, `min_pane=`, `autosave=`, `set_position`. Example 11 (notes).

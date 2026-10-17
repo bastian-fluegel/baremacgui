@@ -22,7 +22,7 @@ GROUPS = [
     ("Windows and layout", ["Window", "Sheet", "Popover", "VBox", "HBox", "Spacer", "GroupBox", "TabControl", "Tab",
                             "Sidebar", "Page", "Toolbar", "SplitView"]),
     ("Controls", ["Label", "TextBox", "ComboBox", "DropDown", "Button", "CheckBox", "RadioGroup", "SpinBox", "Slider",
-                  "ProgressBar", "Image", "Separator", "SearchField", "SegmentedControl", "DatePicker", "TimePicker", "Switch", "ColorWell",
+                  "ProgressBar", "Image", "Separator", "SearchField", "SegmentedControl", "DatePicker", "TimePicker", "Switch", "ColorWell", "DropZone",
                   "ListBox", "Table", "IconGrid", "Tree", "Custom"]),
     ("Menus", ["MenuBar", "Menu", "MenuItem", "MenuSeparator", "ContextMenu", "StatusItem"]),
     ("Timer, settings and clipboard", ["Timer", "Settings", "Clipboard"]),

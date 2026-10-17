@@ -248,3 +248,28 @@ def test_check_split_and_fixed_panes():
     for bad in ([3], [True], [0, 1]):
         with pytest.raises(ValueError):
             o.check_fixed_panes(bad, 2)
+
+
+# -- DropZone filter ----------------------------------------------------------
+def test_check_extensions():
+    from baremacgui._options import check_extensions
+
+    assert check_extensions(None) is None
+    assert check_extensions([".PNG", "jpg", "png"]) == ("png", "jpg")
+    for bad in ("png", [], [""], [3], 5):
+        with pytest.raises(ValueError):
+            check_extensions(bad)
+
+
+def test_filter_dropped(tmp_path):
+    from baremacgui._options import filter_dropped
+
+    folder = tmp_path / "pics.png"  # a folder whose name ends like a picture
+    folder.mkdir()
+    paths = ["/a/one.PNG", "/a/two.txt", str(folder)]
+    assert filter_dropped(paths) == paths
+    assert filter_dropped(paths, ("png",)) == ["/a/one.PNG"]
+    assert filter_dropped(paths, ("md",)) == []
+    assert filter_dropped(["/a/one.png"], ("png",), multiple=False) == ["/a/one.png"]
+    assert filter_dropped(["/a/one.png", "/a/two.png"], ("png",), multiple=False) == []
+    assert filter_dropped(["/a/one.png", "/a/two.txt"], ("png",), multiple=False) == []

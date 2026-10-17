@@ -444,3 +444,46 @@ def outline_source_class():
             safe_call(self._owner._selection_changed)
 
     return BareMacOutlineSource
+
+
+@functools.lru_cache(maxsize=None)
+def drop_zone_class():
+    """NSBox subclass that is an NSDraggingDestination for files and reports to its Python DropZone."""
+    objc = OBJC()
+    ak = AK()
+
+    class BareMacDropZone(ak.NSBox):
+        @objc.python_method
+        def _dropped_paths(self, info):
+            options = {ak.NSPasteboardURLReadingFileURLsOnlyKey: True}
+            urls = info.draggingPasteboard().readObjectsForClasses_options_([FN().NSURL], options)
+            return [str(url.path()) for url in (urls or [])]
+
+        def draggingEntered_(self, info):
+            owner = getattr(self, "_bmc_owner", None)
+            if owner is None:
+                return ak.NSDragOperationNone
+            ok = bool(safe_call(owner._can_accept, self._dropped_paths(info)))
+            safe_call(owner._highlight, ok)
+            return ak.NSDragOperationCopy if ok else ak.NSDragOperationNone
+
+        def draggingExited_(self, info):
+            owner = getattr(self, "_bmc_owner", None)
+            if owner is not None:
+                safe_call(owner._highlight, False)
+
+        def prepareForDragOperation_(self, info):
+            return True
+
+        def performDragOperation_(self, info):
+            owner = getattr(self, "_bmc_owner", None)
+            if owner is None:
+                return False
+            return bool(safe_call(owner._drop, self._dropped_paths(info)))
+
+        def concludeDragOperation_(self, info):
+            owner = getattr(self, "_bmc_owner", None)
+            if owner is not None:
+                safe_call(owner._highlight, False)
+
+    return BareMacDropZone
