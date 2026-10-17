@@ -6,6 +6,7 @@ Importing this package works on any OS; building windows needs macOS and PyObjC.
 """
 from ._app import App
 from .errors import BareMacGUIError, LayoutError, PlatformError
+from ._bundle import build_app
 from ._collections import IconGrid, Tree
 from ._containers import GroupBox, Tab, TabControl
 from ._controls import Button, CheckBox, ComboBox, Label, SpinBox, TextBox
@@ -79,6 +80,7 @@ __all__ = [
     "Clipboard",
     "clipboard",
     "Settings",
+    "build_app",
     "DatePicker",
     "TimePicker",
     "input_box",

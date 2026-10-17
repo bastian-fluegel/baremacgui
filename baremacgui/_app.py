@@ -20,14 +20,16 @@ class App:
     name  shown in the menu bar entries (best effort for a plain script; a
           packaged .app takes its name from its bundle)
     menu  install the standard App/Edit/Window menus (needed for Cmd+C/V/Q)
+    icon  path of an image (.icns or .png) for the Dock icon while the app runs. A script started from an
+          .app built with `python -m baremacgui build ... --icon` gets it without this argument.
     background  a menu-bar app: no Dock icon, no menu bar of its own, and it keeps running when the
           last window closes (use it with StatusItem; quit with app.quit() from a menu item).
           Native counterpart: activation policy "accessory" (LSUIElement in a packaged app).
     """
 
-    def __init__(self, name=None, menu=True, background=False):
+    def __init__(self, name=None, menu=True, background=False, icon=None):
         ak = AK()
-        self.name = str(name) if name else _default_name()
+        self.name = str(name) if name else os.environ.get("BAREMACGUI_APP_NAME") or _default_name()
         try:  # best effort: the menu bar title of a plain script comes from the bundle name
             bundle = FN().NSBundle.mainBundle()
             info = bundle.localizedInfoDictionary() or bundle.infoDictionary()
@@ -37,6 +39,12 @@ class App:
             pass
         self._on_error = None
         self.ns = ak.NSApplication.sharedApplication()
+        icon = icon or os.environ.get("BAREMACGUI_ICON")  # set by the launcher of a built .app
+        if icon:
+            image = ak.NSImage.alloc().initWithContentsOfFile_(os.path.abspath(str(icon)))
+            if image is None:
+                raise ValueError(f"cannot load the icon: {icon!r}")
+            self.ns.setApplicationIconImage_(image)
         self.background = bool(background)
         self.ns.setActivationPolicy_(
             ak.NSApplicationActivationPolicyAccessory if self.background else ak.NSApplicationActivationPolicyRegular

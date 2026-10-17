@@ -10,6 +10,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 ### Added
 - `Settings`: values that survive between runs (NSUserDefaults, one domain per app name). Example 02 uses it.
 - `Window(autosave="name")`: the window remembers its position and size (NSWindow frame autosave).
+- `python -m baremacgui build script.py` / `build_app()`: wraps a script in a double-clickable `.app` (Info.plist, launcher, icon from .icns or .png). Unsigned and tied to the Python that built it. `App(icon=...)` sets the Dock icon.
 - `Table(kinds=[...])`: a column of checkboxes (`"check"`, cells True/False, toggling calls `on_edit`) or of SF Symbols with text (`"icon"`, cells `(symbol, text)`). Example 14.
 - `DropZone`: accepts files dragged from Finder (NSDraggingDestination on an NSBox), optional extension filter, `on_drop`, `paths`. Example 13 shows it.
 - `Switch` (NSSwitch), `ColorWell` (NSColorWell, hex string value) and `clipboard` (NSPasteboard text). Example 03 shows them.

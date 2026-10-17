@@ -22,6 +22,7 @@ it does not mean a person clicked it.
 - [ ] SplitView: drag the divider, minimum pane size, divider position remembered after restart (example 11)
 - [ ] Table: double-click edit, Return/Tab/Escape in the editor, header click sorting, selection kept after sorting
 - [ ] `Settings` values and `Window(autosave=)` position survive a real quit and restart
+- [ ] Built `.app`: double-click in Finder starts the script, Finder shows the icon, Dock shows the name and icon, `--background` leaves no Dock icon
 - [ ] Table checkbox column: click toggles, selection and sorting by that column behave (example 14)
 - [ ] DropZone: drag files and folders from Finder onto it (example 13); highlight while hovering, "not allowed" cursor for refused items
 - [ ] ColorWell opens the color panel and reports picks; Switch by mouse; clipboard paste in another app

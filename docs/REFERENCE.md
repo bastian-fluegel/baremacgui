@@ -6,7 +6,7 @@ Handlers take no arguments. Every event can be given as an `on_*=` option, regis
 
 ## App and errors
 
-### `App(name=None, menu=True, background=False)`
+### `App(name=None, menu=True, background=False, icon=None)`
 
 ```text
 Create one App before any Window, then call run().
@@ -14,6 +14,8 @@ Create one App before any Window, then call run().
 name  shown in the menu bar entries (best effort for a plain script; a
       packaged .app takes its name from its bundle)
 menu  install the standard App/Edit/Window menus (needed for Cmd+C/V/Q)
+icon  path of an image (.icns or .png) for the Dock icon while the app runs. A script started from an
+      .app built with `python -m baremacgui build ... --icon` gets it without this argument.
 background  a menu-bar app: no Dock icon, no menu bar of its own, and it keeps running when the
       last window closes (use it with StatusItem; quit with app.quit() from a menu item).
       Native counterpart: activation policy "accessory" (LSUIElement in a packaged app).
@@ -951,6 +953,21 @@ Properties:
 Methods:
 
 - `clear()`
+
+## Packaging
+
+### `build_app(script, name=None, dest='.', identifier=None, version='1.0', icon=None, background=False, include=(), python=None)`
+
+```text
+Create `<dest>/<name>.app` around `script` and return its path.
+
+icon        an .icns file, or a .png (converted with sips and iconutil on macOS)
+background  a menu-bar app without Dock icon (LSUIElement), for use with StatusItem
+include     further files or folders copied next to the script (they are in the working directory)
+python      interpreter to start; default: the one running this code
+
+An existing bundle of the same name is replaced.
+```
 
 ## Dialogs
 

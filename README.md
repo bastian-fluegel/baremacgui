@@ -84,6 +84,16 @@ Run slow work in a thread and hand the result back with `app.invoke(function, *a
 
 A Mac has one menu bar for the whole app, so a `MenuBar` belongs to a window: while that window is the key window, its menus sit between the standard App menu and the Edit and Window menus. Shortcuts are written `Cmd+S`, `Cmd+Shift+N`, `F5` (`Ctrl+S` also means Cmd, so code written for BareWinGUI keeps working). `&` access-key markers in labels are removed.
 
+## Make it a double-clickable app
+
+```
+python -m baremacgui build my_script.py --name "My Tool" --icon icon.png
+```
+
+creates `My Tool.app` in the current folder: an `Info.plist`, the script in `Resources` and a small launcher that starts the Python that built it. The app has its own name and icon in Finder, and the script gets the same name and Dock icon through `App`. Options: `--dest`, `--identifier`, `--version`, `--background` (menu-bar app, no Dock icon), `--include` (extra files or folders next to the script). From code: `baremacgui.build_app(...)`.
+
+What it is not: the bundle is not self-contained (it needs the Python and the packages it was built with, at the same place), it is not signed or notarized, and it will not run on another Mac. Signing, notarization and a self-contained bundle need tools outside this library (for example py2app, or Apple's codesign and notarytool).
+
 ## Screenshots
 
 From GitHub's macOS runner (workflow "Screenshots", light appearance):
@@ -144,6 +154,7 @@ Not yet checked on real hardware:
 - `Settings` across real app restarts (CI only checks that a second object sees the values), `Window(autosave=)` restoring the position after a real quit.
 - `ColorWell` with the real color panel, `Switch` by mouse, `clipboard` pasting into other apps.
 - `Table(kinds=...)`: CI toggles the checkbox with `performClick`; clicking it by mouse, and how the checkbox and symbol cells look in light and dark, are unchecked.
+- `.app` bundles: CI builds one, starts its launcher and checks that the script sees the app name, its folder and its icon. Double-clicking in Finder, the Finder icon, the name in the Dock, and `--background` (no Dock icon) are unchecked.
 - `DropZone` with a real drag from Finder (CI feeds it a pasteboard with file URLs and calls the drag methods; the mouse drag itself, the highlight and the cursor are unchecked).
 - `Table` and `Tree` `on_double_click` ignoring double-clicks on the header or empty space (uses `clickedRow`).
 - Light appearance for the other examples.
