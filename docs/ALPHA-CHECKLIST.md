@@ -19,6 +19,7 @@ it does not mean a person clicked it.
 - [ ] `TextBox.on_change` while typing, in single-line and multi-line boxes
 - [ ] `Window.on_close` veto with the red button, `show_modal`
 - [ ] Blocking sheet dialogs (without `then=`), file dialogs, `input_box`
+- [ ] Table: double-click edit, Return/Tab/Escape in the editor, header click sorting, selection kept after sorting
 - [ ] `Settings` values and `Window(autosave=)` position survive a real quit and restart
 - [ ] ColorWell opens the color panel and reports picks; Switch by mouse; clipboard paste in another app
 - [ ] Light and dark appearance of every example
