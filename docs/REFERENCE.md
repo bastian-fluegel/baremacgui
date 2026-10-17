@@ -557,7 +557,7 @@ Properties:
 - `enabled`
 - `visible`: False hides the control; a box closes the gap it leaves.
 
-### `ColorWell(value='#3366FF', grow=0, **size)`
+### `ColorWell(value='#3366FF', alpha=False, grow=0, **size)`
 
 ```text
 A color swatch that opens the system color panel when clicked (native NSColorWell).
@@ -565,6 +565,9 @@ A color swatch that opens the system color panel when clicked (native NSColorWel
 `value` is a string '#RRGGBB' (or '#RRGGBBAA'). on_change fires while the user picks a color.
 Assigning .value never calls on_change. The color panel is the one shared panel of the app and
 is not modal; that is how macOS works.
+
+alpha=True lets the user pick transparency too (the shared panel then shows its opacity slider,
+for every ColorWell of the app); by default values are opaque.
 ```
 
 Events: `on_change`

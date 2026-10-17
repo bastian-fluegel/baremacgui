@@ -785,7 +785,10 @@ def test_color_well_roundtrip():
     well = build(("c", lambda: ColorWell("#336699")))["c"]
     assert well.value == "#336699"
     well.value = "#ff000080"
-    assert well.value == "#FF000080"
+    assert well.value == "#FF0000"  # opaque unless alpha=True
+    fancy = build(("c", lambda: ColorWell("#336699", alpha=True)))["c"]
+    fancy.value = "#ff000080"
+    assert fancy.value == "#FF000080"
     with pytest.raises(ValueError):
         well.value = "red"
 

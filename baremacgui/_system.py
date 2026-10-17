@@ -41,13 +41,19 @@ class ColorWell(Control):
     `value` is a string '#RRGGBB' (or '#RRGGBBAA'). on_change fires while the user picks a color.
     Assigning .value never calls on_change. The color panel is the one shared panel of the app and
     is not modal; that is how macOS works.
+
+    alpha=True lets the user pick transparency too (the shared panel then shows its opacity slider,
+    for every ColorWell of the app); by default values are opaque.
     """
 
     on_change = event()
 
-    def __init__(self, value="#3366FF", grow=0, **size):
+    def __init__(self, value="#3366FF", alpha=False, grow=0, **size):
         ak = AK()
         ns = ak.NSColorWell.alloc().init()
+        self.alpha = bool(alpha)
+        if self.alpha:
+            ak.NSColorPanel.sharedColorPanel().setShowsAlpha_(True)
         size.setdefault("width", 44)
         size.setdefault("height", 24)
         super().__init__(ns, grow, **size)
@@ -63,6 +69,8 @@ class ColorWell(Control):
     @value.setter
     def value(self, text):
         r, g, b, a = parse_color(text)
+        if not self.alpha:
+            a = 1.0
         self.ns.setColor_(AK().NSColor.colorWithSRGBRed_green_blue_alpha_(r, g, b, a))
 
 
