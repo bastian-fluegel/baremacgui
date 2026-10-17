@@ -1352,8 +1352,8 @@ window.BMC = {
     {
      "name": "Table",
      "kind": "class",
-     "signature": "(columns, rows=(), multi=False, header=True, striped=False, grow=0, editable=False, sortable=False, kinds=None, **size)",
-     "doc": "A scrollable table of text cells with a header row.\n\ncolumns   titles, e.g. [\"Name\", \"Size\"]\nrows      list of rows; every row has one cell per column (cells become strings)\nmulti     allow several rows to be selected\nheader    show the column titles\nstriped   alternating row backgrounds (off by default; modern macOS lists are plain)\n\neditable  True, or a list of column indexes: double-click a cell to edit it (on_edit fires; the\n          position is in .edited, the new text is in .rows)\nsortable  clicking a column header sorts by it (numbers numerically, text case-insensitive)\nkinds     one entry per column: \"text\" (default), \"check\" or \"icon\".\n          A \"check\" column shows a checkbox per row; its cells are True/False and the user toggles\n          them (on_edit fires, .edited holds the position). An \"icon\" column shows an SF Symbol\n          before the text; its cells are (symbol, text) tuples, or a plain string for no icon.\n\nSetting .rows, the selection or the sort order from code never calls the handlers; only user\ninput does.\n\nNative counterpart: NSTableView with view-based cells (NSTableCellView with a text field, an image\nview, or an NSButton checkbox). Difference: one cell kind per column, not per row.",
+     "signature": "(columns, rows=(), multi=False, header=True, striped=False, grow=0, editable=False, sortable=False, kinds=None, widths=None, **size)",
+     "doc": "A scrollable table of text cells with a header row.\n\ncolumns   titles, e.g. [\"Name\", \"Size\"]\nrows      list of rows; every row has one cell per column (cells become strings)\nmulti     allow several rows to be selected\nheader    show the column titles\nstriped   alternating row backgrounds (off by default; modern macOS lists are plain)\n\neditable  True, or a list of column indexes: double-click a cell to edit it (on_edit fires; the\n          position is in .edited, the new text is in .rows)\nsortable  clicking a column header sorts by it (numbers numerically, text case-insensitive)\nkinds     one entry per column: \"text\" (default), \"check\" or \"icon\".\n          A \"check\" column shows a checkbox per row; its cells are True/False and the user toggles\n          them (on_edit fires, .edited holds the position). An \"icon\" column shows an SF Symbol\n          before the text; its cells are (symbol, text) tuples, or a plain string for no icon.\n\nwidths    one width in points per column, None for the automatic width (columns stay resizable)\n\nSetting .rows, the selection or the sort order from code never calls the handlers; only user\ninput does.\n\nNative counterpart: NSTableView with view-based cells (NSTableCellView with a text field, an image\nview, or an NSButton checkbox). Difference: one cell kind per column, not per row.",
      "summary": "A scrollable table of text cells with a header row.",
      "events": [
       "on_activate",
@@ -1915,6 +1915,13 @@ window.BMC = {
      "summary": "Choose a folder. Returns a path or None."
     },
     {
+     "name": "notify",
+     "kind": "function",
+     "signature": "(text, title='', subtitle='', sound=None)",
+     "doc": "Show a banner in Notification Center and return at once.\n\ntitle, subtitle  optional lines above the text\nsound            name of a system sound, e.g. \"Glass\" or \"Ping\" (None for silence)\n\nWorks from a plain script: it asks the system's `osascript` to post it, so no bundle or\nentitlement is needed. The banner is attributed to Script Editor, not to your app, and it only\nshows if notifications are allowed for Script Editor in System Settings. Text is passed as\narguments, never pasted into the script, so quotes in it are safe.\n\nNative counterpart: UNUserNotificationCenter (needs a signed .app bundle; not used here).",
+     "summary": "Show a banner in Notification Center and return at once."
+    },
+    {
      "name": "choose_color",
      "kind": "function",
      "signature": "(initial='#FFFFFF', alpha=False)",
@@ -2250,7 +2257,7 @@ window.BMC = {
     },
     {
      "type": "p",
-     "text": "`editable=True` (or a list of column numbers) lets the user edit cells with a double-click; the position is in `table.edited`, the new text in `table.rows`. `sortable=True` sorts by a header click, numbers numerically and text case-insensitively. `table.sort(1)` sorts from code."
+     "text": "`editable=True` (or a list of column numbers) lets the user edit cells with a double-click; the position is in `table.edited`, the new text in `table.rows`. `sortable=True` sorts by a header click, numbers numerically and text case-insensitively. `table.sort(1)` sorts from code. `widths=[200, None, 80]` sets column widths in points (None is automatic)."
     },
     {
      "type": "p",
@@ -2285,6 +2292,10 @@ window.BMC = {
     },
     {
      "type": "p",
+     "text": "`notify(text, title=\"\", subtitle=\"\", sound=None)` posts a banner in Notification Center, for example when a background job is done. It is posted through the system's `osascript`, so it is attributed to Script Editor and only shows if notifications are allowed for it."
+    },
+    {
+     "type": "p",
      "text": "`DropZone` accepts files dragged from Finder, optionally limited by extension. `clipboard.text` reads and writes plain text."
     },
     {
@@ -2293,7 +2304,7 @@ window.BMC = {
     },
     {
      "type": "unverified",
-     "text": "Sheets, file panels, DropZone and the color and font panels are covered by CI through code. The real mouse drag from Finder and the look of the panels are still to be checked."
+     "text": "That a `notify` banner really appears on a Mac is not checked; CI only checks that the command starts. Sheets, file panels, DropZone and the color and font panels are covered by CI through code. The real mouse drag from Finder and the look of the panels are still to be checked."
     }
    ]
   },
@@ -2505,6 +2516,13 @@ window.BMC = {
     "MenuBar",
     "MenuItem",
     "ContextMenu",
+    "StatusItem"
+   ]
+  },
+  {
+   "need": "Tell the user in the background",
+   "controls": [
+    "notify",
     "StatusItem"
    ]
   },

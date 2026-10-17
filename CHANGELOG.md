@@ -8,6 +8,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 ## [Unreleased]
 
 ### Added
+- `notify(text, title, subtitle, sound)`: a Notification Center banner, posted through `osascript` (works from a plain script; attributed to Script Editor).
+- `Table(widths=[...])`: column widths in points.
 - Documentation web app in `docs/site` (guide, reference, examples, search): open `docs/site/index.html` in a browser. `tools/make_site.py` generates its data from the docstrings and checks the guide snippets against the API.
 - `Label(style=..., secondary=True)`: system text styles (large title, headline, caption, ...) and the secondary color.
 - Example 16: a showcase window.

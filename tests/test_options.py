@@ -309,3 +309,23 @@ def test_check_label_style():
     for bad in ("huge", "Title", 3):
         with pytest.raises(ValueError):
             o.check_label_style(bad)
+
+
+def test_check_widths():
+    assert o.check_widths(None, 2) == [None, None]
+    assert o.check_widths([120, None], 2) == [120, None]
+    for bad in ([1], [0, 1], [-5, 1], ["a", 1], [True, 1]):
+        with pytest.raises(ValueError):
+            o.check_widths(bad, 2)
+    with pytest.raises(TypeError):
+        o.check_widths(100, 2)
+
+
+def test_notification_command_passes_text_as_arguments():
+    from baremacgui._notify import notification_command
+
+    command = notification_command('He said "hi" \\ \'there\'', "T", sound="Glass")
+    assert command[0] == "osascript" and command[-4:] == ['He said "hi" \\ \'there\'', "T", "", "Glass"]
+    assert 'hi' not in command[2]  # the script itself never contains the text
+    with pytest.raises(ValueError):
+        notification_command("")

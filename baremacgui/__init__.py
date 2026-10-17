@@ -12,6 +12,7 @@ from ._containers import GroupBox, Tab, TabControl
 from ._controls import Button, CheckBox, ComboBox, Label, SpinBox, TextBox
 from ._drop import DropZone
 from ._events import Event
+from ._notify import notify
 from ._dialogs import ask_ok_cancel, ask_yes_no, pick_folder, input_box, open_file, save_file, show_error, show_info, show_warning
 from ._menus import ContextMenu, Menu, MenuBar, MenuItem, MenuSeparator
 from ._panels import FontChoice, choose_color, choose_font
@@ -93,6 +94,7 @@ __all__ = [
     "open_file",
     "save_file",
     "pick_folder",
+    "notify",
     "choose_color",
     "choose_font",
     "FontChoice",

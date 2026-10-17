@@ -711,7 +711,7 @@ Properties:
 - `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `visible`: False hides the control; a box closes the gap it leaves.
 
-### `Table(columns, rows=(), multi=False, header=True, striped=False, grow=0, editable=False, sortable=False, kinds=None, **size)`
+### `Table(columns, rows=(), multi=False, header=True, striped=False, grow=0, editable=False, sortable=False, kinds=None, widths=None, **size)`
 
 ```text
 A scrollable table of text cells with a header row.
@@ -729,6 +729,8 @@ kinds     one entry per column: "text" (default), "check" or "icon".
           A "check" column shows a checkbox per row; its cells are True/False and the user toggles
           them (on_edit fires, .edited holds the position). An "icon" column shows an SF Symbol
           before the text; its cells are (symbol, text) tuples, or a plain string for no icon.
+
+widths    one width in points per column, None for the automatic width (columns stay resizable)
 
 Setting .rows, the selection or the sort order from code never calls the handlers; only user
 input does.
@@ -1082,6 +1084,22 @@ Choose where to save. Returns a path or None.
 
 ```text
 Choose a folder. Returns a path or None.
+```
+
+### `notify(text, title='', subtitle='', sound=None)`
+
+```text
+Show a banner in Notification Center and return at once.
+
+title, subtitle  optional lines above the text
+sound            name of a system sound, e.g. "Glass" or "Ping" (None for silence)
+
+Works from a plain script: it asks the system's `osascript` to post it, so no bundle or
+entitlement is needed. The banner is attributed to Script Editor, not to your app, and it only
+shows if notifications are allowed for Script Editor in System Settings. Text is passed as
+arguments, never pasted into the script, so quotes in it are safe.
+
+Native counterpart: UNUserNotificationCenter (needs a signed .app bundle; not used here).
 ```
 
 ### `choose_color(initial='#FFFFFF', alpha=False)`

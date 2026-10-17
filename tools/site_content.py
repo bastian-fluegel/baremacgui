@@ -33,6 +33,7 @@ NEEDS = [
     ("Ask the user", ["show_info", "ask_yes_no", "input_box", "Sheet"]),
     ("Group and arrange", ["VBox", "HBox", "GroupBox", "TabControl", "SplitView", "Sidebar"]),
     ("Add menus and shortcuts", ["MenuBar", "MenuItem", "ContextMenu", "StatusItem"]),
+    ("Tell the user in the background", ["notify", "StatusItem"]),
     ("Run something later", ["Timer"]),
     ("Remember settings", ["Settings"]),
     ("Use any AppKit view", ["Custom"]),
@@ -277,7 +278,7 @@ def refresh():
 table.on_edit(refresh)       # a click on a checkbox counts as an edit
 refresh()
 app.run()'''),
-            ("p", "`editable=True` (or a list of column numbers) lets the user edit cells with a double-click; the position is in `table.edited`, the new text in `table.rows`. `sortable=True` sorts by a header click, numbers numerically and text case-insensitively. `table.sort(1)` sorts from code."),
+            ("p", "`editable=True` (or a list of column numbers) lets the user edit cells with a double-click; the position is in `table.edited`, the new text in `table.rows`. `sortable=True` sorts by a header click, numbers numerically and text case-insensitively. `table.sort(1)` sorts from code. `widths=[200, None, 80]` sets column widths in points (None is automatic)."),
             ("p", "Selection: `table.index` (first selected row or None), `table.indexes`, `table.selected_rows`. `on_select` fires when the user selects; `on_activate` when they double-click a row. Setting `rows` or `index` from code never fires them."),
             ("p", "`ListBox` is a one-column table with `items`, `Tree` an expandable outline (set `sidebar=True` for the translucent source-list look) and `IconGrid` a wrapping grid of icons with labels. All four take `multi=True` and share `on_select` and `on_activate`."),
             ("native", "NSTableView and NSOutlineView with view-based cells, NSCollectionView for the icon grid. One cell kind per column, not per cell."),
@@ -308,6 +309,7 @@ ask.on_click(lambda: ask_yes_no("Delete this item?", "Delete", parent=win, then=
 pick.on_click(lambda: print(open_file("Choose a file", filetypes=[("Text", ["txt", "md"])])))
 app.run()'''),
             ("p", "Also available: `show_warning`, `show_error`, `ask_ok_cancel`, `input_box`, `save_file`, `pick_folder`, `choose_color` and `choose_font`. The color and font panels have no Cancel button, so they return what is selected when the user closes them."),
+            ("p", "`notify(text, title=\"\", subtitle=\"\", sound=None)` posts a banner in Notification Center, for example when a background job is done. It is posted through the system's `osascript`, so it is attributed to Script Editor and only shows if notifications are allowed for it."),
             ("p", "`DropZone` accepts files dragged from Finder, optionally limited by extension. `clipboard.text` reads and writes plain text."),
             ("code", '''from baremacgui import App, DropZone, Label, VBox, Window
 
@@ -320,7 +322,7 @@ with Window("Drop", size=(360, 220)):
 
 zone.on_drop(lambda: setattr(names, "text", ", ".join(zone.paths)))
 app.run()'''),
-            ("unverified", "Sheets, file panels, DropZone and the color and font panels are covered by CI through code. The real mouse drag from Finder and the look of the panels are still to be checked."),
+            ("unverified", "That a `notify` banner really appears on a Mac is not checked; CI only checks that the command starts. Sheets, file panels, DropZone and the color and font panels are covered by CI through code. The real mouse drag from Finder and the look of the panels are still to be checked."),
         ],
     },
     {

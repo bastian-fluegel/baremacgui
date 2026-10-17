@@ -63,7 +63,7 @@ Needs macOS and Python 3.10 or newer. The one dependency is PyObjC (`pyobjc-fram
 | Controls | `Label`, `TextBox` (single line, multi line, password), `ComboBox`, `DropDown`, `Button` (SF Symbols), `CheckBox`, `RadioGroup`, `SpinBox`, `Slider`, `ProgressBar`, `Image`, `Separator`, `SearchField`, `SegmentedControl`, `DatePicker`, `TimePicker`, `Switch` (NSSwitch), `ColorWell` (NSColorWell), `DropZone` (files dragged from Finder) |
 | Lists | `ListBox`, `Table` (text cells; `editable=`, `sortable=True`), `IconGrid`, `Tree` |
 | Menus | `MenuBar`, `Menu`, `MenuItem` (shortcuts, check marks), `MenuSeparator`, `ContextMenu` (`context_menu=` on any control) |
-| Dialogs | `show_info`, `show_warning`, `show_error`, `ask_yes_no`, `ask_ok_cancel`, `input_box`, `open_file`, `save_file`, `pick_folder`, `choose_color`, `choose_font` (the first nine with `parent=` they become sheets; `then=` gets the answer) |
+| Dialogs | `show_info`, `show_warning`, `show_error`, `ask_yes_no`, `ask_ok_cancel`, `input_box`, `open_file`, `save_file`, `pick_folder`, `choose_color`, `choose_font`, `notify` (a banner; the first nine with `parent=` they become sheets; `then=` gets the answer) |
 | Other | `StatusItem` (menu-bar item), `App(background=True)`, `Settings` (NSUserDefaults), `Window(autosave=...)`, `clipboard`, `Timer`, `Event`, `Custom(view)` for any AppKit view, errors `BareMacGUIError`, `PlatformError`, `LayoutError` |
 
 The full list with signatures is in [`docs/REFERENCE.md`](docs/REFERENCE.md), generated from the docstrings.

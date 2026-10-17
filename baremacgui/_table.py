@@ -5,7 +5,9 @@ from ._bridge import AK, FN, make_target, table_source_class
 from ._collections import _symbol_image
 from ._controls import Control
 from ._events import event
-from ._options import check_columns, check_editable, check_index, check_items, check_kinds, check_rows, sort_order
+from ._options import (
+    check_columns, check_editable, check_index, check_items, check_kinds, check_rows, check_widths, sort_order,
+)
 
 
 class Table(Control):
@@ -25,6 +27,8 @@ class Table(Control):
               them (on_edit fires, .edited holds the position). An "icon" column shows an SF Symbol
               before the text; its cells are (symbol, text) tuples, or a plain string for no icon.
 
+    widths    one width in points per column, None for the automatic width (columns stay resizable)
+
     Setting .rows, the selection or the sort order from code never calls the handlers; only user
     input does.
 
@@ -39,7 +43,7 @@ class Table(Control):
     on_activate = event()
 
     def __init__(self, columns, rows=(), multi=False, header=True, striped=False, grow=0,
-                 editable=False, sortable=False, kinds=None, **size):
+                 editable=False, sortable=False, kinds=None, widths=None, **size):
         ak = AK()
         titles = check_columns(columns)
         self._kinds = check_kinds(kinds, len(titles))
@@ -49,6 +53,7 @@ class Table(Control):
         self._sorted_by = None
         self.edited = None
         self._editable = check_editable(editable, len(titles))
+        sizes = check_widths(widths, len(titles))
 
         table = ak.NSTableView.alloc().init()
         for position, title in enumerate(titles):
@@ -59,6 +64,8 @@ class Table(Control):
                 column.setMinWidth_(48.0)
                 column.setMaxWidth_(64.0)
                 column.setWidth_(56.0)
+            if sizes[position] is not None:
+                column.setWidth_(float(sizes[position]))
             if sortable:
                 column.setSortDescriptorPrototype_(ak.NSSortDescriptor.sortDescriptorWithKey_ascending_(str(position), True))
             table.addTableColumn_(column)

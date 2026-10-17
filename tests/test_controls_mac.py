@@ -1166,3 +1166,19 @@ def test_label_styles_change_font_and_color():
         with VBox():
             with pytest.raises(ValueError):
                 Label("x", style="huge")
+
+
+def test_table_column_widths():
+    t = build(("t", lambda: Table(["a", "b", "c"], [], widths=[200, None, 80])))["t"]
+    columns = list(t._table.tableColumns())
+    assert float(columns[0].width()) == 200.0 and float(columns[2].width()) == 80.0
+    with Window("w", visible=False):
+        with VBox():
+            with pytest.raises(ValueError):
+                Table(["a", "b"], [], widths=[100])
+
+
+def test_notify_starts_without_error():
+    from baremacgui import notify
+
+    notify("Build finished", "baremacgui test")

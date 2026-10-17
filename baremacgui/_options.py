@@ -172,6 +172,23 @@ def check_kinds(kinds, width):
     return result
 
 
+def check_widths(widths, width):
+    """Column widths of a Table in points: None, or one number (or None for automatic) per column."""
+    if widths is None:
+        return [None] * width
+    if isinstance(widths, (str, int, float)):
+        raise TypeError("widths must be a list with one entry per column")
+    result = list(widths)
+    if len(result) != width:
+        raise ValueError(f"widths has {len(result)} entries, expected {width} (one per column)")
+    for value in result:
+        if value is None:
+            continue
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or value <= 0:
+            raise ValueError(f"a column width must be a positive number or None; got {value!r}")
+    return result
+
+
 def _check_cell(kind, cell, where):
     if kind == "check":
         if not isinstance(cell, bool):

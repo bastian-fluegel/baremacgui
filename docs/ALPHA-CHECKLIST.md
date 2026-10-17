@@ -28,6 +28,7 @@ it does not mean a person clicked it.
 - [ ] DropZone: drag files and folders from Finder onto it (example 13); highlight while hovering, "not allowed" cursor for refused items
 - [ ] `choose_color` and `choose_font`: the panels open, picking by mouse works, closing returns the pick; vertical Slider with ticks
 - [ ] ColorWell opens the color panel and reports picks; Switch by mouse; clipboard paste in another app
+- [ ] `notify`: the banner appears (allow notifications for Script Editor in System Settings); `Table(widths=)` looks right
 - [ ] Light and dark appearance of every example
 - [ ] Sidebar window: divider drag, hide, minimum size
 - [ ] Apple Silicon, other macOS versions (the author uses an Intel Mac with macOS 15.5)
