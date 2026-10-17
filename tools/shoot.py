@@ -31,6 +31,26 @@ def dump_tree(view, depth=0, limit=7):
             dump_tree(sub, depth + 1, limit)
 
 
+def dump_stack_details(window):
+    """Intrinsic sizes, priorities and constraints of the top-level stack view and its children."""
+    top = window.contentView()
+    print("--- details of the top stack", flush=True)
+    print(f"fittingSize {top.fittingSize().height:.0f} intrinsic {top.intrinsicContentSize().height:.0f}", flush=True)
+    for child in top.arrangedSubviews():
+        print(f"{child.className()} h={child.frame().size.height:.0f} "
+              f"intrinsicH={child.intrinsicContentSize().height:.0f} fitH={child.fittingSize().height:.0f} "
+              f"hug={child.contentHuggingPriorityForOrientation_(1)} "
+              f"resist={child.contentCompressionResistancePriorityForOrientation_(1)}", flush=True)
+        for constraint in child.constraints():
+            if constraint.firstAttribute() in (7, 8) or constraint.secondAttribute() in (7, 8):
+                print(f"    constraint attr={constraint.firstAttribute()}/{constraint.secondAttribute()} "
+                      f"rel={constraint.relation()} const={constraint.constant():.0f} "
+                      f"mult={constraint.multiplier():.2f} prio={constraint.priority()}", flush=True)
+    for constraint in top.constraints():
+        print(f"  top constraint {constraint.firstAttribute()} {constraint.relation()} "
+              f"{constraint.secondAttribute()} const={constraint.constant():.0f} prio={constraint.priority()}", flush=True)
+
+
 def dump_window(g):
     import AppKit
 
@@ -38,6 +58,7 @@ def dump_window(g):
         if window.isVisible():
             print(f"window {window.title()!r} content {window.contentView().frame().size.height:.0f}", flush=True)
             dump_tree(window.contentView())
+            dump_stack_details(window)
 
 
 SCENARIOS = {
