@@ -195,11 +195,19 @@ class _Box:
         for item in growers:
             item.view.setContentHuggingPriority_forOrientation_(1, orientation)
         if growers:
-            # Children without grow keep their natural size: a stretchable child (say a nested
-            # box with its own filler) must not compete with the growers for the free space.
+            # Children without grow keep their natural size. Hugging priorities alone did not
+            # decide this on a newer macOS (a nested box took the free space instead of the
+            # growing row), so cap the main-axis size explicitly, below the 750 default
+            # compression resistance and above every hugging priority.
             for item in items:
                 if item.grow == 0 and not item.spacer and item.fixed is None:
-                    item.view.setContentHuggingPriority_forOrientation_(751, orientation)
+                    fit = item.view.fittingSize()
+                    natural = fit.height if vertical else fit.width
+                    if natural > 0:
+                        cap = _main_anchor(item.view, vertical).constraintLessThanOrEqualToConstant_(natural)
+                        cap.setPriority_(700)
+                        cap.setActive_(True)
+
         if len(growers) > 1:
             # Share extra space by weight. Priority 500 stays below the
             # compression resistance (750) so intrinsic minimum sizes still win.
