@@ -137,7 +137,7 @@ Not yet checked on real hardware:
 - `input_box`, `ask_ok_cancel`, the date and time pickers with the mouse, `Timer` while a menu is open.
 - Editing a `Table` cell by double-click and Return/Tab/Escape behaviour, clicking a header to sort (CI only drives it from code), and that an edit in a sorted table does not re-sort until the next click.
 - `StatusItem` and `App(background=True)`: the entry appears and updates, the menu works, no Dock icon, the app keeps running without windows. Example 12.
-- Everything added after the last green CI run (SplitView, StatusItem, example 11 and 12) has not been built on macOS at all yet.
+- `SplitView`, `StatusItem` and examples 11 and 12 are built and tested on the macOS runners (green CI); a screenshot of example 11 shows the divider moved from code. The menu-bar item itself is not visible in screenshots.
 - `SplitView`: dragging the dividers by mouse, remembering them across a restart (`autosave=`), window resizing with `fixed=` panes.
 - `Settings` across real app restarts (CI only checks that a second object sees the values), `Window(autosave=)` restoring the position after a real quit.
 - `ColorWell` with the real color panel, `Switch` by mouse, `clipboard` pasting into other apps.
