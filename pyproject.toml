@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "baremacgui"
+dynamic = ["version"]
+description = "Thin Python layer for native macOS GUIs on AppKit via PyObjC. Same API shape as BareWinGUI."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "bastian-fluegel" }]
+keywords = ["macos", "gui", "appkit", "pyobjc", "native", "desktop"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Operating System :: MacOS :: MacOS X",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: User Interfaces",
+]
+# PyObjC is only needed (and only installable) on macOS; the marker lets the
+# pure-Python tests run on Linux CI as well.
+dependencies = ["pyobjc-framework-Cocoa>=12; sys_platform == 'darwin'"]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+examples = ["certifi"]
+
+[project.urls]
+Homepage = "https://github.com/bastian-fluegel/baremacgui"
+Issues = "https://github.com/bastian-fluegel/baremacgui/issues"
+
+[tool.setuptools.dynamic]
+version = { attr = "baremacgui.__version__" }
+
+[tool.setuptools.packages.find]
+include = ["baremacgui*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
