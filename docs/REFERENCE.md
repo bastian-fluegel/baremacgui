@@ -311,14 +311,18 @@ Methods:
 Base class: registers the view with the innermost open container.
 
 Every control accepts grow (flex weight) and width, height, min_width,
-max_width, min_height, max_height (points).
+max_width, min_height, max_height (points), tooltip (the yellow hint on hover) and
+accessibility_label (what VoiceOver reads; give it to every control that shows no text of its own,
+such as an icon button, an Image or a Slider).
 ```
 
 Properties:
 
+- `accessibility_label`: The text VoiceOver reads for this control, or None (then AppKit uses the visible title).
 - `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
 - `enabled`
 - `text`
+- `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `visible`: False hides the control; a box closes the gap it leaves.
 
 ### `TextBox(text='', multiline=False, readonly=False, password=False, placeholder='', grow=0, **size)`
@@ -335,10 +339,12 @@ Events: `on_change`, `on_enter`
 
 Properties:
 
+- `accessibility_label`: The text VoiceOver reads for this control, or None (then AppKit uses the visible title).
 - `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
 - `enabled`
 - `readonly`
 - `text`
+- `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `visible`: False hides the control; a box closes the gap it leaves.
 
 Methods:
@@ -355,11 +361,13 @@ Events: `on_change`
 
 Properties:
 
+- `accessibility_label`: The text VoiceOver reads for this control, or None (then AppKit uses the visible title).
 - `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
 - `enabled`
 - `index`: Index of the selected list entry, or -1 for custom text.
 - `items`
 - `text`
+- `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `visible`: False hides the control; a box closes the gap it leaves.
 
 ### `DropDown(items=(), selected=0, grow=0, **size)`
@@ -372,11 +380,13 @@ Events: `on_change`
 
 Properties:
 
+- `accessibility_label`: The text VoiceOver reads for this control, or None (then AppKit uses the visible title).
 - `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
 - `enabled`
 - `index`: Index of the selected entry, or -1 if the list is empty.
 - `items`
 - `text` (read-only)
+- `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `visible`: False hides the control; a box closes the gap it leaves.
 
 ### `Button(title, default=False, symbol=None, grow=0, **size)`
@@ -385,16 +395,20 @@ Properties:
 Base class: registers the view with the innermost open container.
 
 Every control accepts grow (flex weight) and width, height, min_width,
-max_width, min_height, max_height (points).
+max_width, min_height, max_height (points), tooltip (the yellow hint on hover) and
+accessibility_label (what VoiceOver reads; give it to every control that shows no text of its own,
+such as an icon button, an Image or a Slider).
 ```
 
 Events: `on_click`
 
 Properties:
 
+- `accessibility_label`: The text VoiceOver reads for this control, or None (then AppKit uses the visible title).
 - `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
 - `enabled`
 - `title`
+- `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `visible`: False hides the control; a box closes the gap it leaves.
 
 ### `CheckBox(title, checked=False, grow=0, **size)`
@@ -403,16 +417,20 @@ Properties:
 Base class: registers the view with the innermost open container.
 
 Every control accepts grow (flex weight) and width, height, min_width,
-max_width, min_height, max_height (points).
+max_width, min_height, max_height (points), tooltip (the yellow hint on hover) and
+accessibility_label (what VoiceOver reads; give it to every control that shows no text of its own,
+such as an icon button, an Image or a Slider).
 ```
 
 Events: `on_change`
 
 Properties:
 
+- `accessibility_label`: The text VoiceOver reads for this control, or None (then AppKit uses the visible title).
 - `checked`
 - `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
 - `enabled`
+- `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `visible`: False hides the control; a box closes the gap it leaves.
 
 ### `RadioGroup(items, selected=0, vertical=True, gap=6, grow=0, **size)`
@@ -425,10 +443,12 @@ Events: `on_change`
 
 Properties:
 
+- `accessibility_label`: The text VoiceOver reads for this control, or None (then AppKit uses the visible title).
 - `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
 - `enabled`
 - `index`
 - `text` (read-only): Label of the selected choice.
+- `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `visible`: False hides the control; a box closes the gap it leaves.
 
 ### `SpinBox(value=0, minimum=0, maximum=100, step=1, grow=0, **size)`
@@ -444,8 +464,10 @@ Events: `on_change`
 
 Properties:
 
+- `accessibility_label`: The text VoiceOver reads for this control, or None (then AppKit uses the visible title).
 - `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
 - `enabled`
+- `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `value`
 - `visible`: False hides the control; a box closes the gap it leaves.
 
@@ -462,8 +484,10 @@ Events: `on_change`
 
 Properties:
 
+- `accessibility_label`: The text VoiceOver reads for this control, or None (then AppKit uses the visible title).
 - `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
 - `enabled`
+- `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `value`
 - `visible`: False hides the control; a box closes the gap it leaves.
 
@@ -477,9 +501,11 @@ Call .value from the UI thread only; from a worker use app.invoke(...).
 
 Properties:
 
+- `accessibility_label`: The text VoiceOver reads for this control, or None (then AppKit uses the visible title).
 - `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
 - `enabled`
 - `indeterminate`
+- `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `value`
 - `visible`: False hides the control; a box closes the gap it leaves.
 
@@ -488,19 +514,22 @@ Methods:
 - `start()`: Run the busy animation (indeterminate bars).
 - `stop()`
 
-### `Image(path=None, symbol=None, grow=0, **size)`
+### `Image(path=None, symbol=None, description=None, grow=0, **size)`
 
 ```text
 A picture from a file (path=...) or a system symbol (symbol="gear", macOS 11+).
 
 The image keeps its aspect ratio and is scaled into width/height if you give them;
-without them it shows at its natural size.
+without them it shows at its natural size. `description` is what VoiceOver reads (say what the
+picture means, e.g. "Warning"); without it a screen reader has nothing to say.
 ```
 
 Properties:
 
+- `accessibility_label`: The text VoiceOver reads for this control, or None (then AppKit uses the visible title).
 - `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
 - `enabled`
+- `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `visible`: False hides the control; a box closes the gap it leaves.
 
 ### `Separator()`
@@ -519,9 +548,11 @@ Events: `on_change`
 
 Properties:
 
+- `accessibility_label`: The text VoiceOver reads for this control, or None (then AppKit uses the visible title).
 - `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
 - `enabled`
 - `text`
+- `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `visible`: False hides the control; a box closes the gap it leaves.
 
 ### `SegmentedControl(items=None, symbols=None, selected=0, grow=0, **size)`
@@ -536,10 +567,12 @@ Events: `on_change`
 
 Properties:
 
+- `accessibility_label`: The text VoiceOver reads for this control, or None (then AppKit uses the visible title).
 - `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
 - `enabled`
 - `index`
 - `text` (read-only): Label (or symbol name) of the selected segment.
+- `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `visible`: False hides the control; a box closes the gap it leaves.
 
 ### `DatePicker(value=None, calendar=False, minimum=None, maximum=None, grow=0, **size)`
@@ -554,8 +587,10 @@ Events: `on_change`
 
 Properties:
 
+- `accessibility_label`: The text VoiceOver reads for this control, or None (then AppKit uses the visible title).
 - `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
 - `enabled`
+- `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `value`
 - `visible`: False hides the control; a box closes the gap it leaves.
 
@@ -569,8 +604,10 @@ Events: `on_change`
 
 Properties:
 
+- `accessibility_label`: The text VoiceOver reads for this control, or None (then AppKit uses the visible title).
 - `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
 - `enabled`
+- `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `value`
 - `visible`: False hides the control; a box closes the gap it leaves.
 
@@ -587,9 +624,11 @@ Events: `on_change`
 
 Properties:
 
+- `accessibility_label`: The text VoiceOver reads for this control, or None (then AppKit uses the visible title).
 - `checked`
 - `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
 - `enabled`
+- `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `visible`: False hides the control; a box closes the gap it leaves.
 
 ### `ColorWell(value='#3366FF', alpha=False, grow=0, **size)`
@@ -609,8 +648,10 @@ Events: `on_change`
 
 Properties:
 
+- `accessibility_label`: The text VoiceOver reads for this control, or None (then AppKit uses the visible title).
 - `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
 - `enabled`
+- `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `value`
 - `visible`: False hides the control; a box closes the gap it leaves.
 
@@ -633,9 +674,11 @@ Events: `on_drop`
 
 Properties:
 
+- `accessibility_label`: The text VoiceOver reads for this control, or None (then AppKit uses the visible title).
 - `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
 - `enabled`
 - `text`
+- `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `visible`: False hides the control; a box closes the gap it leaves.
 
 ### `ListBox(items=(), selected=None, multiple=False, striped=False, grow=0, **size)`
@@ -648,6 +691,7 @@ Events: `on_double_click`, `on_edit`, `on_select`, `on_sort`
 
 Properties:
 
+- `accessibility_label`: The text VoiceOver reads for this control, or None (then AppKit uses the visible title).
 - `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
 - `enabled`
 - `index`: Index of the selected row (the first one if several), or None.
@@ -658,6 +702,7 @@ Properties:
 - `sorted_by` (read-only): (column, ascending) of the current sort, or None.
 - `text` (read-only): Text of the selected entry, or None.
 - `texts` (read-only): Texts of all selected entries.
+- `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `visible`: False hides the control; a box closes the gap it leaves.
 
 ### `Table(columns, rows=(), multiple=False, header=True, striped=False, grow=0, editable=False, sortable=False, kinds=None, **size)`
@@ -690,6 +735,7 @@ Events: `on_double_click`, `on_edit`, `on_select`, `on_sort`
 
 Properties:
 
+- `accessibility_label`: The text VoiceOver reads for this control, or None (then AppKit uses the visible title).
 - `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
 - `enabled`
 - `index`: Index of the selected row (the first one if several), or None.
@@ -697,6 +743,7 @@ Properties:
 - `rows`
 - `selected_rows` (read-only)
 - `sorted_by` (read-only): (column, ascending) of the current sort, or None.
+- `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `visible`: False hides the control; a box closes the gap it leaves.
 
 Methods:
@@ -721,6 +768,7 @@ Events: `on_double_click`, `on_select`
 
 Properties:
 
+- `accessibility_label`: The text VoiceOver reads for this control, or None (then AppKit uses the visible title).
 - `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
 - `enabled`
 - `index`
@@ -728,6 +776,7 @@ Properties:
 - `items`
 - `text` (read-only): Label of the selected icon, or None.
 - `texts` (read-only)
+- `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `visible`: False hides the control; a box closes the gap it leaves.
 
 ### `Tree(nodes=(), sidebar=False, expanded=False, multiple=False, grow=0, **size)`
@@ -748,12 +797,14 @@ Events: `on_double_click`, `on_select`
 
 Properties:
 
+- `accessibility_label`: The text VoiceOver reads for this control, or None (then AppKit uses the visible title).
 - `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
 - `enabled`
 - `nodes`: The tree as normalized dicts (text, symbol, children).
 - `path`: Labels from the top down to the selected row, e.g. ["Home", "Documents"]; None if nothing is selected.
 - `paths` (read-only): Paths of all selected rows.
 - `text` (read-only): Label of the selected row, or None.
+- `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `visible`: False hides the control; a box closes the gap it leaves.
 
 Methods:
@@ -775,8 +826,10 @@ The view takes part in the layout like any other control; `.ns` is the view.
 
 Properties:
 
+- `accessibility_label`: The text VoiceOver reads for this control, or None (then AppKit uses the visible title).
 - `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
 - `enabled`
+- `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `visible`: False hides the control; a box closes the gap it leaves.
 
 ## Menus

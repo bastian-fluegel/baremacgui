@@ -8,6 +8,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 ## [Unreleased]
 
 ### Added
+- Every control accepts `tooltip=` and `accessibility_label=` (also as properties); `Image(description=...)`. The examples label their icon-only controls.
 - Example 15: several windows, each with its own menus.
 - `Settings`: values that survive between runs (NSUserDefaults, one domain per app name). Example 02 uses it.
 - `Window(autosave="name")`: the window remembers its position and size (NSWindow frame autosave).

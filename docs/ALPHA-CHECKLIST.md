@@ -34,4 +34,4 @@ it does not mean a person clicked it.
 ## Before beta
 - [ ] API names stable; experimental parts marked in the docs
 - [ ] Menu bar behaviour with several windows reviewed by hand (example 15: menus change when you click another window, the Window menu lists all windows, Cmd+N)
-- [ ] Accessibility (VoiceOver labels) reviewed
+- [ ] Accessibility: turn VoiceOver on (Cmd+F5) and walk through examples 04 and 06; tooltips appear on hover; keyboard-only use (Tab, Space) reaches every control

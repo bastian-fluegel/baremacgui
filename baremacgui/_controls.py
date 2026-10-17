@@ -17,11 +17,15 @@ class Control:
     """Base class: registers the view with the innermost open container.
 
     Every control accepts grow (flex weight) and width, height, min_width,
-    max_width, min_height, max_height (points).
+    max_width, min_height, max_height (points), tooltip (the yellow hint on hover) and
+    accessibility_label (what VoiceOver reads; give it to every control that shows no text of its own,
+    such as an icon button, an Image or a Slider).
     """
 
     def __init__(self, ns, grow=0, **size):
         handlers = split_options(size)
+        tooltip = size.pop("tooltip", None)
+        label = size.pop("accessibility_label", None)
         grow = check_grow(grow)
         size = check_size(size)
         self.ns = ns
@@ -30,6 +34,30 @@ class Control:
         _core.apply_size(ns, size)
         _core.add(ns, grow, fill=grow > 0)
         connect_options(self, handlers)
+        if tooltip is not None:
+            self.tooltip = tooltip
+        if label is not None:
+            self.accessibility_label = label
+
+    @property
+    def tooltip(self):
+        """The hint shown when the pointer rests on the control, or None."""
+        value = self.ns.toolTip()
+        return None if value is None else str(value)
+
+    @tooltip.setter
+    def tooltip(self, text):
+        self.ns.setToolTip_(None if text is None else str(text))
+
+    @property
+    def accessibility_label(self):
+        """The text VoiceOver reads for this control, or None (then AppKit uses the visible title)."""
+        value = self._menu_view().accessibilityLabel()
+        return None if value is None else str(value)
+
+    @accessibility_label.setter
+    def accessibility_label(self, text):
+        self._menu_view().setAccessibilityLabel_(None if text is None else str(text))
 
     @property
     def enabled(self):

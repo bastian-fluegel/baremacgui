@@ -27,12 +27,12 @@ app = App("Files")
 
 with Window("Files", size=(980, 600), style="unified") as win:
     with Toolbar():
-        view = SegmentedControl(symbols=["square.grid.2x2", "list.bullet"], selected=1)
+        view = SegmentedControl(symbols=["square.grid.2x2", "list.bullet"], selected=1, accessibility_label="View as icons or list")
         Spacer()
-        info_button = Button("", symbol="info.circle")
-        new_button = Button("", symbol="folder.badge.plus")
-        delete_button = Button("", symbol="trash")
-        search = SearchField(placeholder="Search", width=180)
+        info_button = Button("", symbol="info.circle", tooltip="Show info", accessibility_label="Show info")
+        new_button = Button("", symbol="folder.badge.plus", tooltip="New folder", accessibility_label="New folder")
+        delete_button = Button("", symbol="trash", tooltip="Delete", accessibility_label="Delete")
+        search = SearchField(placeholder="Search", width=180, accessibility_label="Search")
     with HBox(gap=0, align="stretch"):
         tree = Tree(
             [{"text": "Home", "symbol": "house", "children": [

@@ -21,7 +21,7 @@ app = App("Widgets")
 with Window("Widgets", size=(640, 520)):
     with VBox(padding=16, gap=12, align="stretch"):
         with HBox(gap=8):
-            Image(symbol="slider.horizontal.3", width=28, height=28)
+            Image(symbol="slider.horizontal.3", description="Settings", width=28, height=28)
             Label("Standard controls")
         Separator()
         with HBox(gap=32):
@@ -32,7 +32,7 @@ with Window("Widgets", size=(640, 520)):
                 Label("Sort by")
                 sort_by = DropDown(["Name", "Size", "Date"])
                 Label("Volume")
-                volume = Slider(40)
+                volume = Slider(40, accessibility_label="Volume")
         with HBox(gap=8):
             Label("Notifications")
             notify = Switch(True)

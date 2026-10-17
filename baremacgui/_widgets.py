@@ -199,10 +199,11 @@ class Image(Control):
     """A picture from a file (path=...) or a system symbol (symbol="gear", macOS 11+).
 
     The image keeps its aspect ratio and is scaled into width/height if you give them;
-    without them it shows at its natural size.
+    without them it shows at its natural size. `description` is what VoiceOver reads (say what the
+    picture means, e.g. "Warning"); without it a screen reader has nothing to say.
     """
 
-    def __init__(self, path=None, symbol=None, grow=0, **size):
+    def __init__(self, path=None, symbol=None, description=None, grow=0, **size):
         if (path is None) == (symbol is None):
             raise ValueError("give exactly one of path or symbol")
         ak = AK()
@@ -216,6 +217,8 @@ class Image(Control):
                 raise ValueError(f"unknown system symbol: {symbol!r}")
         ns = ak.NSImageView.imageViewWithImage_(image)
         ns.setImageScaling_(ak.NSImageScaleProportionallyUpOrDown)
+        if description is not None:
+            size["accessibility_label"] = str(description)
         super().__init__(ns, grow, **size)
 
 

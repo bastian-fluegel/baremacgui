@@ -19,7 +19,7 @@ with Window("Settings", size=(720, 480), style="sidebar"):
                 Label("Appearance")
                 RadioGroup(["Light", "Dark", "Automatic"], selected=2)
                 Label("Text size")
-                Slider(50, width=200)
+                Slider(50, width=200, accessibility_label="Brightness")
         with Page("Notifications", symbol="bell"):
             with VBox(padding=24, gap=12):
                 Label("Notifications")

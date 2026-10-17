@@ -26,11 +26,11 @@ app = App("Finder style")
 
 with Window("Files", size=(720, 460), style="unified"):
     with Toolbar():
-        back = Button("", symbol="chevron.left")
-        forward = Button("", symbol="chevron.right")
-        view = SegmentedControl(symbols=["square.grid.2x2", "list.bullet"], selected=1)
+        back = Button("", symbol="chevron.left", tooltip="Back", accessibility_label="Back")
+        forward = Button("", symbol="chevron.right", tooltip="Forward", accessibility_label="Forward")
+        view = SegmentedControl(symbols=["square.grid.2x2", "list.bullet"], selected=1, accessibility_label="View as icons or list")
         Spacer()
-        search = SearchField(placeholder="Search", width=200)
+        search = SearchField(placeholder="Search", width=200, accessibility_label="Search")
     with VBox(padding=0, gap=0, align="stretch"):
         table = Table(["Name", "Kind", "Modified"], [], grow=1)
         with VBox(padding=8):

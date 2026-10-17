@@ -1062,3 +1062,34 @@ def test_app_background_flag():
     assert app.background and app._delegate._quit_on_close is False
     app2 = App("fg", menu=False)
     assert not app2.background
+
+
+# -- accessibility and tooltips -------------------------------------------------
+def test_tooltip_and_accessibility_label_on_controls():
+    parts = build(
+        ("b", lambda: Button("", symbol="trash", tooltip="Delete", accessibility_label="Delete")),
+        ("s", lambda: Slider(10, accessibility_label="Volume")),
+        ("i", lambda: Image(symbol="gearshape", description="Settings")),
+        ("t", lambda: Table(["a"], [["x"]], accessibility_label="Files", tooltip="All files")),
+        ("tb", lambda: TextBox(multiline=True, accessibility_label="Notes")),
+        ("l", lambda: Label("plain")),
+    )
+    assert parts["b"].tooltip == "Delete" and parts["b"].accessibility_label == "Delete"
+    assert parts["s"].accessibility_label == "Volume" and parts["s"].tooltip is None
+    assert parts["i"].accessibility_label == "Settings"
+    assert parts["t"].accessibility_label == "Files" and parts["t"].tooltip == "All files"
+    assert parts["t"]._table.accessibilityLabel() == "Files"  # the inner table, not the scroll view
+    assert parts["tb"]._tv.accessibilityLabel() == "Notes"
+    parts["l"].tooltip = "A label"
+    assert parts["l"].tooltip == "A label"
+    parts["l"].tooltip = None
+    assert parts["l"].tooltip is None
+    parts["b"].accessibility_label = None
+    assert parts["b"].accessibility_label in (None, "")
+
+
+def test_unknown_control_option_is_still_an_error():
+    with Window("t", visible=False):
+        with VBox():
+            with pytest.raises(TypeError):
+                Button("x", tooltips="typo")

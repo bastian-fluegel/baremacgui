@@ -84,6 +84,10 @@ Run slow work in a thread and hand the result back with `app.invoke(function, *a
 
 A Mac has one menu bar for the whole app, so a `MenuBar` belongs to a window: while that window is the key window, its menus sit between the standard App menu and the Edit and Window menus. Shortcuts are written `Cmd+S`, `Cmd+Shift+N`, `F5` (`Ctrl+S` also means Cmd, so code written for BareWinGUI keeps working). `&` access-key markers in labels are removed.
 
+## Accessibility
+
+Every control takes `tooltip="..."` (the hint on hover) and `accessibility_label="..."` (what VoiceOver reads). Controls with visible text (a `Button("Save")`, a `CheckBox`) are read from their title by AppKit; give a label to everything without text of its own: icon buttons, `Image(..., description="Warning")`, `Slider`, `ProgressBar`, `SegmentedControl` with symbols, `SearchField`. The examples do this. Whether the labels read well with VoiceOver has not been checked by hand.
+
 ## Make it a double-clickable app
 
 ```
@@ -155,6 +159,7 @@ Not yet checked on real hardware:
 - `Settings` across real app restarts (CI only checks that a second object sees the values), `Window(autosave=)` restoring the position after a real quit.
 - `ColorWell` with the real color panel, `Switch` by mouse, `clipboard` pasting into other apps.
 - `Table(kinds=...)`: CI toggles the checkbox with `performClick`; clicking it by mouse, and how the checkbox and symbol cells look in light and dark, are unchecked.
+- `tooltip` and `accessibility_label` are set and read back on the real views (CI). How VoiceOver speaks them, and the tooltip appearing on hover, are unchecked.
 - Several windows: CI checks which menu bar is installed when each window becomes key (own `MenuBar`, standard menus, sheets and modal windows leave it alone). Switching by really clicking between windows, and the list of windows in the Window menu, are unchecked.
 - `.app` bundles: CI builds one, starts its launcher and checks that the script sees the app name, its folder and its icon. Double-clicking in Finder, the Finder icon, the name in the Dock, and `--background` (no Dock icon) are unchecked.
 - `DropZone` with a real drag from Finder (CI feeds it a pasteboard with file URLs and calls the drag methods; the mouse drag itself, the highlight and the cursor are unchecked).

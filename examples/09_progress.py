@@ -19,7 +19,7 @@ job = {"cancel": threading.Event(), "started": 0.0}
 with Window("Progress", size=(420, 200)) as win:
     with VBox(padding=20, gap=12):
         status = Label("Ready")
-        bar = ProgressBar(0, 0, STEPS)
+        bar = ProgressBar(0, 0, STEPS, accessibility_label="Progress")
         elapsed = Label("0:00")
         Spacer()
         with HBox(gap=8):
