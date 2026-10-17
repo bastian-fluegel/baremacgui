@@ -106,6 +106,15 @@ def check_float_range(value, minimum, maximum):
     return float(clamp(value, minimum, maximum))
 
 
+def check_ticks(ticks):
+    """Number of tick marks on a Slider: None (none) or an int >= 2."""
+    if ticks is None:
+        return None
+    if isinstance(ticks, bool) or not isinstance(ticks, int) or ticks < 2:
+        raise ValueError(f"ticks must be None or a whole number of at least 2 marks, got {ticks!r}")
+    return ticks
+
+
 def check_index(index, count, what="index"):
     if isinstance(index, bool) or not isinstance(index, int):
         raise TypeError(f"{what} must be an int, got {index!r}")

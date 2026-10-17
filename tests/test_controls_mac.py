@@ -1093,3 +1093,58 @@ def test_unknown_control_option_is_still_an_error():
         with VBox():
             with pytest.raises(TypeError):
                 Button("x", tooltips="typo")
+
+
+# -- slider options, color and font panels ----------------------------------------
+def test_slider_vertical_ticks_and_snap():
+    parts = build(
+        ("v", lambda: Slider(50, vertical=True, ticks=5, snap=True)),
+        ("h", lambda: Slider(10)),
+    )
+    assert parts["v"].ns.isVertical() and int(parts["v"].ns.numberOfTickMarks()) == 5
+    assert parts["v"].ns.allowsTickMarkValuesOnly()
+    assert not parts["h"].ns.isVertical() and int(parts["h"].ns.numberOfTickMarks()) == 0
+    with Window("t", visible=False):
+        with VBox():
+            with pytest.raises(ValueError):
+                Slider(snap=True)
+            with pytest.raises(ValueError):
+                Slider(ticks=1)
+
+
+def _close_panel_after(panel, delay, action):
+    """Run action() and close the panel from inside the modal loop, like a user who picks and closes."""
+    from baremacgui import Timer
+
+    def go():
+        action()
+        panel.close()
+
+    return Timer(delay, go, repeat=False)
+
+
+def test_choose_color_returns_the_color_selected_when_the_panel_closes():
+    from AppKit import NSColor, NSColorPanel
+
+    from baremacgui import choose_color
+
+    panel = NSColorPanel.sharedColorPanel()
+    keep = _close_panel_after(panel, 0.3, lambda: panel.setColor_(NSColor.colorWithSRGBRed_green_blue_alpha_(0.0, 1.0, 0.0, 1.0)))
+    assert choose_color("#FF0000") == "#00FF00"
+    assert keep is not None
+    keep = _close_panel_after(panel, 0.3, lambda: None)
+    assert choose_color("#336699") == "#336699"  # nothing picked: the initial color comes back
+    with pytest.raises(ValueError):
+        choose_color("red")
+
+
+def test_choose_font_returns_a_font_choice():
+    from AppKit import NSFontPanel
+
+    from baremacgui import FontChoice, choose_font
+
+    panel = NSFontPanel.sharedFontPanel()
+    keep = _close_panel_after(panel, 0.3, lambda: None)
+    result = choose_font(FontChoice("Helvetica", 18.0, True, False))
+    assert isinstance(result, FontChoice) and result.name and result.size > 0
+    assert keep is not None

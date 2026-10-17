@@ -51,7 +51,7 @@ Needs macOS and Python 3.10 or newer. The one dependency is PyObjC (`pyobjc-fram
 | Controls | `Label`, `TextBox` (single line, multi line, password), `ComboBox`, `DropDown`, `Button` (SF Symbols), `CheckBox`, `RadioGroup`, `SpinBox`, `Slider`, `ProgressBar`, `Image`, `Separator`, `SearchField`, `SegmentedControl`, `DatePicker`, `TimePicker`, `Switch` (NSSwitch), `ColorWell` (NSColorWell), `DropZone` (files dragged from Finder) |
 | Lists | `ListBox`, `Table` (text cells; `editable=`, `sortable=True`), `IconGrid`, `Tree` |
 | Menus | `MenuBar`, `Menu`, `MenuItem` (shortcuts, check marks), `MenuSeparator`, `ContextMenu` (`context_menu=` on any control) |
-| Dialogs | `show_info`, `show_warning`, `show_error`, `ask_yes_no`, `ask_ok_cancel`, `input_box`, `open_file`, `save_file`, `pick_folder` (with `parent=` they become sheets; `then=` gets the answer) |
+| Dialogs | `show_info`, `show_warning`, `show_error`, `ask_yes_no`, `ask_ok_cancel`, `input_box`, `open_file`, `save_file`, `pick_folder`, `choose_color`, `choose_font` (the first nine with `parent=` they become sheets; `then=` gets the answer) |
 | Other | `StatusItem` (menu-bar item), `App(background=True)`, `Settings` (NSUserDefaults), `Window(autosave=...)`, `clipboard`, `Timer`, `Event`, `Custom(view)` for any AppKit view, errors `BareMacGUIError`, `PlatformError`, `LayoutError` |
 
 The full list with signatures is in [`docs/REFERENCE.md`](docs/REFERENCE.md), generated from the docstrings.
@@ -90,8 +90,8 @@ Compared by reading the constructor signatures of both libraries (not by running
 
 - `Table`, `Tree`, `IconGrid`, `Sidebar`, `SplitView`, `Switch`, `ColorWell`, `DropZone`, `StatusItem`, `Settings` have no or different counterparts (BareWinGUI calls its table `ListView` and its tree `TreeView`).
 - `DatePicker(calendar=True)` shows the calendar style of NSDatePicker; BareWinGUI has `long=` for the long date format.
-- `Slider` has no `vertical=`/`ticks=` yet; `RadioGroup` is one control with `items`, not single radio buttons.
-- Dialogs take `parent=` and `then=` (macOS sheets); `choose_color` and `choose_font` do not exist yet.
+- `Slider(vertical=True, ticks=n, snap=True)` counts tick marks (the native way) instead of BareWinGUI's `ticks` bool and `tick_frequency`; `RadioGroup` is one control with `items`, not single radio buttons.
+- Dialogs take `parent=` and `then=` (macOS sheets). `choose_color` returns a hex string like `ColorWell` (BareWinGUI: an RGB tuple); `choose_color` and `choose_font` have no Cancel, because the system panels have none: they return what is selected when the user closes the panel.
 - `Cmd` is the shortcut modifier; "Ctrl" in a shortcut string also means Cmd, so one string works on both systems.
 
 ## Accessibility
@@ -185,7 +185,7 @@ Not yet checked on real hardware:
 - Dialogs without `parent` are application-modal. With `parent` and without `then`, the call waits through a nested modal loop (see the unverified list); `then=` is the dependable form.
 - Menu labels are English.
 - `App.run()` hands control to AppKit. When the last window closes the app terminates (so far the process ends there); put cleanup into `Window.on_destroy`, not after `app.run()`. Unverified.
-- `choose_color` and `choose_font` of BareWinGUI have no counterpart yet (NSColorPanel and NSFontPanel are not modal; use `Custom(NSColorWell...)`).
+- `choose_color` and `choose_font` run the shared system panels modally until they are closed; CI drives them with a timer that sets a value and closes the panel. Picking by mouse, and the look of the panels, are unchecked.
 - Running a script from a terminal gives a plain Python process: the menu bar title and Dock icon are Python's. A packaged `.app` is a separate step.
 
 ## Development

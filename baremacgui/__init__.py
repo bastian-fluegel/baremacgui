@@ -14,6 +14,7 @@ from ._drop import DropZone
 from ._events import Event
 from ._dialogs import ask_ok_cancel, ask_yes_no, pick_folder, input_box, open_file, save_file, show_error, show_info, show_warning
 from ._menus import ContextMenu, Menu, MenuBar, MenuItem, MenuSeparator
+from ._panels import FontChoice, choose_color, choose_font
 from ._pickers import DatePicker, TimePicker
 from ._timer import Timer
 from ._layout import HBox, Spacer, VBox, Window
@@ -92,4 +93,7 @@ __all__ = [
     "open_file",
     "save_file",
     "pick_folder",
+    "choose_color",
+    "choose_font",
+    "FontChoice",
 ]

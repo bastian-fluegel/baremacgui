@@ -295,3 +295,10 @@ def test_sort_order_check_and_icon_cells():
     assert o.sort_order(rows, 0) == [1, 0, 2]
     assert o.sort_order(rows, 0, False) == [0, 2, 1]
     assert o.sort_order(rows, 1) == [1, 0, 2]
+
+
+def test_check_ticks():
+    assert o.check_ticks(None) is None and o.check_ticks(5) == 5
+    for bad in (1, 0, -3, 2.5, True, "5"):
+        with pytest.raises(ValueError):
+            o.check_ticks(bad)

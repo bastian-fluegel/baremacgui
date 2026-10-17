@@ -26,6 +26,7 @@ it does not mean a person clicked it.
 - [ ] Built `.app`: double-click in Finder starts the script, Finder shows the icon, Dock shows the name and icon, `--background` leaves no Dock icon
 - [ ] Table checkbox column: click toggles, selection and sorting by that column behave (example 14)
 - [ ] DropZone: drag files and folders from Finder onto it (example 13); highlight while hovering, "not allowed" cursor for refused items
+- [ ] `choose_color` and `choose_font`: the panels open, picking by mouse works, closing returns the pick; vertical Slider with ticks
 - [ ] ColorWell opens the color panel and reports picks; Switch by mouse; clipboard paste in another app
 - [ ] Light and dark appearance of every example
 - [ ] Sidebar window: divider drag, hide, minimum size

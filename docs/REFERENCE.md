@@ -472,12 +472,15 @@ Properties:
 - `value`
 - `visible`: False hides the control; a box closes the gap it leaves.
 
-### `Slider(value=0, minimum=0, maximum=100, continuous=True, grow=0, **size)`
+### `Slider(value=0, minimum=0, maximum=100, continuous=True, vertical=False, ticks=None, snap=False, grow=0, **size)`
 
 ```text
-Horizontal slider with a float value between minimum and maximum.
+Slider with a float value between minimum and maximum.
 
 continuous=True calls the handler while dragging, False only on release.
+vertical=True stands the slider upright (give it a height).
+ticks=n draws n tick marks (n >= 2) from minimum to maximum; snap=True lets the knob rest only on
+the marks (BareWinGUI has `ticks` as a bool and `tick_frequency`; here the count is the native way).
 Assigning .value never calls the handler; only user input does.
 ```
 
@@ -1077,4 +1080,27 @@ Choose where to save. Returns a path or None.
 
 ```text
 Choose a folder. Returns a path or None.
+```
+
+### `choose_color(initial='#FFFFFF', alpha=False)`
+
+```text
+Open the system color panel; return the chosen color as '#RRGGBB' (or '#RRGGBBAA' with alpha=True).
+
+Blocks until the user closes the panel; the result is the color selected at that moment.
+```
+
+### `choose_font(initial=None)`
+
+```text
+Open the system font panel; return a FontChoice(name, size, bold, italic).
+
+`initial` is a FontChoice (default: the system font at 13 points). Blocks until the user closes
+the panel; the result is the font selected at that moment.
+```
+
+### `FontChoice(name: ForwardRef('str'), size: ForwardRef('float'), bold: ForwardRef('bool'), italic: ForwardRef('bool'))`
+
+```text
+FontChoice(name, size, bold, italic)
 ```

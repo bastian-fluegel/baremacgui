@@ -5,7 +5,7 @@ from . import _core
 from ._bridge import AK, FN, make_target
 from ._controls import Control
 from ._events import event
-from ._options import check_float_range, check_index, check_items, clamp
+from ._options import check_float_range, check_index, check_items, check_ticks, clamp
 
 
 class RadioGroup(Control):
@@ -110,22 +110,36 @@ class DropDown(Control):
 
 
 class Slider(Control):
-    """Horizontal slider with a float value between minimum and maximum.
+    """Slider with a float value between minimum and maximum.
 
     continuous=True calls the handler while dragging, False only on release.
+    vertical=True stands the slider upright (give it a height).
+    ticks=n draws n tick marks (n >= 2) from minimum to maximum; snap=True lets the knob rest only on
+    the marks (BareWinGUI has `ticks` as a bool and `tick_frequency`; here the count is the native way).
     Assigning .value never calls the handler; only user input does.
     """
 
     on_change = event()
 
-    def __init__(self, value=0, minimum=0, maximum=100, continuous=True, grow=0, **size):
+    def __init__(self, value=0, minimum=0, maximum=100, continuous=True, vertical=False, ticks=None, snap=False,
+                 grow=0, **size):
         value = check_float_range(value, minimum, maximum)
+        ticks = check_ticks(ticks)
         self._min, self._max = float(minimum), float(maximum)
         ns = AK().NSSlider.sliderWithValue_minValue_maxValue_target_action_(
             value, self._min, self._max, None, None
         )
         ns.setContinuous_(bool(continuous))
-        size.setdefault("min_width", 120)
+        if vertical:
+            ns.setVertical_(True)
+            size.setdefault("min_height", 120)
+        else:
+            size.setdefault("min_width", 120)
+        if ticks is not None:
+            ns.setNumberOfTickMarks_(ticks)
+            ns.setAllowsTickMarkValuesOnly_(bool(snap))
+        elif snap:
+            raise ValueError("snap=True needs ticks=")
         super().__init__(ns, grow, **size)
         self._bind(ns, self.on_change.emit)
 
