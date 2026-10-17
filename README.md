@@ -58,10 +58,10 @@ Checked by hand on an Intel Mac (macOS 15.5) with Python 3.14 and PyObjC 12.2.2,
 - Example 03 also looked right in light appearance.
 - `Window(style="sidebar")` with `Sidebar` and `Page` (example 05: sidebar with symbols, page switching, window title following the page, `on_change`) in dark appearance.
 - `Window(style="unified")` with `Toolbar`, `SearchField`, `SegmentedControl` and icon `Button`s (example 04) in dark appearance; the view-based `Table` restyle and the navigation added to the example afterwards were not rechecked.
-- The test suite passes on macOS (`python -m pytest`: 53 passed, 3 skipped, the skipped ones are the non-macOS tests).
+- The test suite passes on macOS (`python -m pytest`: 68 passed, 3 skipped, the skipped ones are the non-macOS tests).
 
 Not yet checked on real hardware:
-- `IconGrid`, `Tree`, `Custom`, `Sheet`, `Popover`, sheet dialogs (`parent=`, `then=`), `Control.visible` and example 06 (written, never run on a Mac). The most fragile: the blocking sheet form (without `then`), the double-click on icons, and hiding/showing the table and icon grid in example 06.
+- `IconGrid`, `Tree`, `Custom`, `Sheet`, `Popover`, sheet dialogs (`parent=`, `then=`) and `Control.visible`: their tests pass on macOS and example 06 starts and shows the list view with toolbar, tree and table, but the icon view, double-click navigation, popover, sheet and delete dialog in example 06 have not been tried by hand. The most fragile: the blocking sheet form (without `then`), the double-click on icons, and hiding/showing the table and icon grid in example 06.
 - `Sidebar` details: dragging the divider, hiding it, the minimum window size, light appearance.
 - Example 04 after the `Table` restyle: back/forward navigation, double-click into folders, search filter, light appearance.
 - The Advanced tab, `ask_yes_no`, the file dialogs.
