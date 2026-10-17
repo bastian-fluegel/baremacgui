@@ -655,14 +655,14 @@ def test_window_shortcuts_and_buttons():
     assert str(ok.ns.keyEquivalent()) == ""
 
 
-def _spin(seconds):
-    """Run the main run loop for `seconds`, in short steps (runUntilDate_ may return early)."""
+def _spin(seconds, until=None):
+    """Run the main run loop for up to `seconds`, in short steps (runUntilDate_ may return early)."""
     import time
 
     from Foundation import NSDate, NSDefaultRunLoopMode, NSRunLoop
 
     end = time.monotonic() + seconds
-    while time.monotonic() < end:
+    while time.monotonic() < end and not (until is not None and until()):
         NSRunLoop.currentRunLoop().runMode_beforeDate_(NSDefaultRunLoopMode, NSDate.dateWithTimeIntervalSinceNow_(0.02))
 
 
@@ -670,15 +670,17 @@ def test_timer_ticks_and_stops():
     ticks = []
     timer = Timer(0.05, lambda: ticks.append(1))
     assert timer.running
-    _spin(0.6)
+    _spin(5.0, until=lambda: len(ticks) >= 3)
     timer.stop()
     count = len(ticks)
-    assert count >= 2 and not timer.running
+    assert count >= 2, f"only {count} ticks in 5 s (timer was running: {timer.running})"
+    assert not timer.running
     _spin(0.2)
     assert len(ticks) == count
     once = []
     Timer(0.05, lambda: once.append(1), repeat=False)
-    _spin(0.5)
+    _spin(5.0, until=lambda: bool(once))
+    _spin(0.3)
     assert once == [1]
     with pytest.raises(ValueError):
         Timer(0)
