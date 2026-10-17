@@ -281,8 +281,12 @@ def icon_classes():
             if selected:
                 self._box.setFillColor_(ak.NSColor.selectedContentBackgroundColor())
                 self._label.setTextColor_(ak.NSColor.alternateSelectedControlTextColor())
+                tint = ak.NSColor.alternateSelectedControlTextColor()  # accent blue would vanish on the accent fill
             else:
                 self._label.setTextColor_(ak.NSColor.labelColor())
+                tint = ak.NSColor.controlAccentColor()
+            if hasattr(self._icon, "setContentTintColor_"):
+                self._icon.setContentTintColor_(tint)
 
         @objc.python_method
         def configure(self, title, image, size):

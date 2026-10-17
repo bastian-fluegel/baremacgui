@@ -87,8 +87,7 @@ def main():
         def advance(index):
             if index >= len(steps):
                 print("scenario finished", flush=True)
-                self.ns.terminate_(None)
-                return
+                os._exit(1 if failures else 0)  # an open sheet would block a normal terminate
             action, wait, shot = steps[index]
             if action is not None:
                 try:
