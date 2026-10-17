@@ -170,3 +170,55 @@ def toolbar_delegate_class():
             return None
 
     return BareMacToolbarDelegate
+
+
+@functools.lru_cache(maxsize=None)
+def sidebar_source_class():
+    """Data source and delegate for the Sidebar list; reads the pages of its owner."""
+    objc = OBJC()
+    NSObject = FN().NSObject
+
+    class BareMacSidebarSource(NSObject):
+        def initWithOwner_(self, owner):
+            self = objc.super(BareMacSidebarSource, self).init()
+            if self is None:
+                return None
+            self._owner = owner
+            return self
+
+        def numberOfRowsInTableView_(self, table):
+            return len(self._owner._pages)
+
+        def tableView_viewForTableColumn_row_(self, table, column, row):
+            ak = AK()
+            cell = table.makeViewWithIdentifier_owner_("BareMacSide", self)
+            if cell is None:
+                cell = ak.NSTableCellView.alloc().init()
+                cell.setIdentifier_("BareMacSide")
+                icon = ak.NSImageView.alloc().init()
+                icon.setTranslatesAutoresizingMaskIntoConstraints_(False)
+                label = ak.NSTextField.labelWithString_("")
+                label.setTranslatesAutoresizingMaskIntoConstraints_(False)
+                label.setLineBreakMode_(ak.NSLineBreakByTruncatingTail)
+                cell.addSubview_(icon)
+                cell.addSubview_(label)
+                cell.setImageView_(icon)
+                cell.setTextField_(label)
+                icon.leadingAnchor().constraintEqualToAnchor_constant_(cell.leadingAnchor(), 2.0).setActive_(True)
+                icon.centerYAnchor().constraintEqualToAnchor_(cell.centerYAnchor()).setActive_(True)
+                icon.widthAnchor().constraintEqualToConstant_(20.0).setActive_(True)
+                label.leadingAnchor().constraintEqualToAnchor_constant_(icon.trailingAnchor(), 6.0).setActive_(True)
+                label.trailingAnchor().constraintEqualToAnchor_constant_(cell.trailingAnchor(), -2.0).setActive_(True)
+                label.centerYAnchor().constraintEqualToAnchor_(cell.centerYAnchor()).setActive_(True)
+            page = self._owner._pages[row]
+            cell.textField().setStringValue_(page.title)
+            image = None
+            if page.symbol:
+                image = ak.NSImage.imageWithSystemSymbolName_accessibilityDescription_(page.symbol, None)
+            cell.imageView().setImage_(image)
+            return cell
+
+        def tableViewSelectionDidChange_(self, notification):
+            safe_call(self._owner._selection_changed)
+
+    return BareMacSidebarSource

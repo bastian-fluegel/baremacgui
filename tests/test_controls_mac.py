@@ -14,6 +14,7 @@ if sys.platform == "darwin":
         SearchField, SegmentedControl, Separator, Slider, SpinBox, Spacer, Tab, TabControl, Table, TextBox, Toolbar,
         VBox, Window,
     )
+    from baremacgui import Page, Sidebar
     from baremacgui import _core
 
 
@@ -318,3 +319,59 @@ def test_toolbar_rules():
 def test_window_style_validated():
     with pytest.raises(ValueError):
         Window("x", style="weird", visible=False)
+
+
+def _sidebar_window(**kwargs):
+    with Window("test", style="sidebar", visible=False) as win:
+        with Sidebar(**kwargs) as side:
+            with Page("One", symbol="gearshape"):
+                with VBox(padding=8):
+                    Label("1")
+            with Page("Two"):
+                with VBox(padding=8):
+                    Label("2")
+    return win, side
+
+
+def test_sidebar_pages_and_selection():
+    win, side = _sidebar_window(selected=1)
+    assert side.index == 1 and side.text == "Two" and win.title == "Two"
+    side.index = 0
+    assert side.index == 0 and win.title == "One"
+    with pytest.raises(ValueError):
+        side.index = 2
+
+
+def test_sidebar_code_changes_do_not_call_handler():
+    calls = []
+    win, side = _sidebar_window()
+    side.on_change(lambda: calls.append(1))
+    side.index = 1
+    assert calls == []
+
+
+def test_sidebar_rules():
+    with pytest.raises(RuntimeError):
+        Sidebar()
+    with Window("test", visible=False):
+        with VBox():
+            with pytest.raises(RuntimeError, match="style"):
+                Sidebar()
+    with pytest.raises(ValueError, match="Sidebar"):
+        with Window("test", style="sidebar", visible=False):
+            pass
+    with pytest.raises(ValueError, match="at least one Page"):
+        with Window("test", style="sidebar", visible=False):
+            with Sidebar():
+                pass
+    with pytest.raises(ValueError, match="holds only"):
+        with Window("test", style="sidebar", visible=False):
+            Label("x")
+    assert not _core._stack
+
+
+def test_page_outside_sidebar_raises():
+    with Window("test", visible=False):
+        with VBox():
+            with pytest.raises(RuntimeError, match="Sidebar"):
+                Page("x")

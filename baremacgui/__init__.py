@@ -9,6 +9,7 @@ from ._containers import GroupBox, Tab, TabControl
 from ._controls import Button, CheckBox, ComboBox, Label, SpinBox, TextBox
 from ._dialogs import ask_yes_no, choose_folder, open_file, save_file, show_error, show_info, show_warning
 from ._layout import HBox, Spacer, VBox, Window
+from ._sidebar import Page, Sidebar
 from ._table import ListBox, Table
 from ._toolbar import Toolbar
 from ._widgets import DropDown, Image, ProgressBar, RadioGroup, SearchField, SegmentedControl, Separator, Slider
@@ -36,6 +37,8 @@ __all__ = [
     "SearchField",
     "SegmentedControl",
     "Toolbar",
+    "Sidebar",
+    "Page",
     "ListBox",
     "Table",
     "GroupBox",

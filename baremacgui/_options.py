@@ -145,7 +145,7 @@ def check_rows(rows, width):
     return result
 
 
-WINDOW_STYLES = ("standard", "unified")
+WINDOW_STYLES = ("standard", "unified", "sidebar")
 
 
 def check_window_style(style):

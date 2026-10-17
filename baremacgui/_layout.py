@@ -26,6 +26,9 @@ class Window:
     the content. The window shows itself when its with-block ends.
 
     style="standard"  the usual title bar
+    style="sidebar"   System-Settings-like: a Sidebar on the left lists pages, the chosen page
+                      shows on the right. The window then holds a `with Sidebar():` block
+                      and nothing else.
     style="unified"   Finder-like: no title text, a transparent title bar, and the
                       content starts below it. Put controls in the title bar with a
                       `with Toolbar():` block directly inside the window.
@@ -36,6 +39,7 @@ class Window:
         ensure_app()
         self.style = check_window_style(style)
         self._toolbar = None
+        self._sidebar = None
         self._size = check_window_size(size)
         self._visible = bool(visible)
         self._item = None
@@ -46,7 +50,7 @@ class Window:
         )
         if resizable:
             style |= ak.NSWindowStyleMaskResizable
-        if self.style == "unified":
+        if self.style in ("unified", "sidebar"):
             style |= ak.NSWindowStyleMaskFullSizeContentView
         self.ns = ak.NSWindow.alloc().initWithContentRect_styleMask_backing_defer_(
             FN().NSMakeRect(0, 0, *self._size), style, ak.NSBackingStoreBuffered, False
@@ -54,8 +58,9 @@ class Window:
         # Python owns the reference; without this AppKit over-releases on close.
         self.ns.setReleasedWhenClosed_(False)
         self.ns.setTitle_(str(title))
-        if self.style == "unified":
+        if self.style in ("unified", "sidebar"):
             self.ns.setTitlebarAppearsTransparent_(True)
+        if self.style == "unified":
             self.ns.setTitleVisibility_(ak.NSWindowTitleHidden)
             if hasattr(self.ns, "setToolbarStyle_"):  # macOS 11+
                 self.ns.setToolbarStyle_(ak.NSWindowToolbarStyleUnified)
@@ -72,6 +77,8 @@ class Window:
         self.ns.close()
 
     def accept(self, item):
+        if self.style == "sidebar":
+            raise ValueError("A sidebar window holds only a `with Sidebar():` block.")
         if self._item is not None:
             raise ValueError("A Window takes exactly one child. Wrap several controls in a VBox or HBox.")
         self._item = item
@@ -84,7 +91,10 @@ class Window:
         _core.pop(self)
         if exc_type is not None:
             return False
-        if self._item is not None:
+        if self.style == "sidebar":
+            if self._sidebar is None:
+                raise ValueError('Window(style="sidebar") needs a `with Sidebar():` block.')
+        elif self._item is not None:
             stack = self._item.view
             fit = stack.fittingSize()  # minimum window size follows from the content
             extra = 0.0
