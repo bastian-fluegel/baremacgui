@@ -70,7 +70,7 @@ def open_selected():
 
 back.on_click(lambda: step(-1))
 forward.on_click(lambda: step(1))
-table.on_double_click(open_selected)
+table.on_activate(open_selected)
 view.on_change(show)
 search.on_change(show)
 show()

@@ -44,7 +44,7 @@ class Window:
     on_resize = event()
     on_destroy = event()
 
-    def __init__(self, title, size=(400, 300), resizable=True, visible=True, style="standard", autosave=None, **options):
+    def __init__(self, title, size=(640, 480), resizable=True, visible=True, style="standard", autosave=None, **options):
         ak = AK()
         ensure_app()
         handlers = split_options(options)
@@ -428,11 +428,11 @@ class Spacer:
     """Flexible space (default) or a fixed gap.
 
     Spacer()          absorbs free space, e.g. to push buttons to the right
+    Spacer(24)        a fixed gap of 24 points along the box's main axis (same as size=24)
     Spacer(grow=2)    takes twice the share of a Spacer()
-    Spacer(size=24)   a fixed gap of 24 points along the box's main axis
     """
 
-    def __init__(self, grow=None, size=None):
+    def __init__(self, size=None, grow=None):
         if grow is not None and size is not None:
             raise ValueError("Spacer takes either grow or size, not both")
         fixed = None

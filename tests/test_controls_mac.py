@@ -97,9 +97,9 @@ def test_spinbox_clamps_and_reads_value():
 
 def test_button_title_and_enabled():
     r = build(("button", lambda: Button("go")))
-    r["button"].title = "stop"
+    r["button"].text = "stop"
     r["button"].enabled = False
-    assert r["button"].title == "stop" and not r["button"].enabled
+    assert r["button"].text == "stop" and not r["button"].enabled
 
 
 def test_control_outside_window_raises():
@@ -238,7 +238,7 @@ def test_listbox_selection_and_items():
 
 
 def test_table_rows_and_selection():
-    table = build(("t", lambda: Table(["A", "B"], [[1, 2], [3, 4]], multiple=True)))["t"]
+    table = build(("t", lambda: Table(["A", "B"], [[1, 2], [3, 4]], multi=True)))["t"]
     assert table.rows == [["1", "2"], ["3", "4"]]
     table.index = 1
     assert table.selected_rows == [["3", "4"]]
@@ -286,7 +286,7 @@ def test_segmented_control():
 
 def test_button_symbol():
     button = build(("b", lambda: Button("", symbol="chevron.left")))["b"]
-    assert button.title == ""
+    assert button.text == ""
     with Window("test", visible=False):
         with VBox():
             with pytest.raises(ValueError):
@@ -427,7 +427,7 @@ def test_icongrid_code_changes_do_not_call_handler():
     grid.index = 1
     grid.items = ["c"]
     assert calls == []
-    grid.on_double_click(lambda: None)
+    grid.on_activate(lambda: None)
 
 
 def test_tree_path_selection():
@@ -528,9 +528,9 @@ def test_every_control_event_can_be_emitted():
         ("drop", lambda: DropDown(["a", "b"], on_change=note)),
         ("slider", lambda: Slider(on_change=note)),
         ("spin", lambda: SpinBox(on_change=note)),
-        ("list", lambda: ListBox(["a"], on_select=note, on_double_click=note)),
-        ("grid", lambda: IconGrid(["a"], on_select=note, on_double_click=note)),
-        ("tree", lambda: Tree(["a"], on_select=note, on_double_click=note)),
+        ("list", lambda: ListBox(["a"], on_select=note, on_activate=note)),
+        ("grid", lambda: IconGrid(["a"], on_select=note, on_activate=note)),
+        ("tree", lambda: Tree(["a"], on_select=note, on_activate=note)),
         ("radio", lambda: RadioGroup(["a", "b"], on_change=note)),
         ("segments", lambda: SegmentedControl(["a", "b"], on_change=note)),
         ("search", lambda: SearchField(on_change=note)),
@@ -538,7 +538,7 @@ def test_every_control_event_can_be_emitted():
     for name, control in r.items():
         if name == "vbox":
             continue
-        for event_name in ("on_enter", "on_change", "on_select", "on_double_click"):
+        for event_name in ("on_enter", "on_change", "on_select", "on_activate"):
             if hasattr(type(control), event_name):
                 getattr(control, event_name).emit()
     assert len(calls) == 16

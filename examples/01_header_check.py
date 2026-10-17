@@ -71,7 +71,7 @@ with Window("Header Check", size=(560, 460)):
     with VBox(padding=16, gap=10):
         with HBox(gap=8):
             Label("Host")
-            host = ComboBox(["github.com", "pypi.org", "mozilla.org", "example.com"], selected=0, grow=1)
+            host = ComboBox(["github.com", "pypi.org", "mozilla.org", "example.com"], selected=0, editable=True, grow=1)
             go = Button("Check", default=True)
         output = TextBox(multiline=True, readonly=True, grow=1)
 

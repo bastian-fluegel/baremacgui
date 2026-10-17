@@ -83,7 +83,7 @@ for control in (priority, sort_by, volume, notify, accent):
     control.on_change(update_status)
 fruit.on_select(update_status)
 files.on_select(update_status)
-files.on_double_click(
+files.on_activate(
     lambda: files.selected_rows and show_info(" / ".join(files.selected_rows[0]), "Selected file")
 )
 run.on_click(start)

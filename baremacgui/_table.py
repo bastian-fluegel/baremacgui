@@ -13,7 +13,7 @@ class Table(Control):
 
     columns   titles, e.g. ["Name", "Size"]
     rows      list of rows; every row has one cell per column (cells become strings)
-    multiple  allow several rows to be selected
+    multi     allow several rows to be selected
     header    show the column titles
     striped   alternating row backgrounds (off by default; modern macOS lists are plain)
 
@@ -36,9 +36,9 @@ class Table(Control):
     on_sort = event()
 
     on_select = event()
-    on_double_click = event()
+    on_activate = event()
 
-    def __init__(self, columns, rows=(), multiple=False, header=True, striped=False, grow=0,
+    def __init__(self, columns, rows=(), multi=False, header=True, striped=False, grow=0,
                  editable=False, sortable=False, kinds=None, **size):
         ak = AK()
         titles = check_columns(columns)
@@ -64,7 +64,7 @@ class Table(Control):
             table.addTableColumn_(column)
         if not header:
             table.setHeaderView_(None)
-        table.setAllowsMultipleSelection_(bool(multiple))
+        table.setAllowsMultipleSelection_(bool(multi))
         table.setUsesAlternatingRowBackgroundColors_(bool(striped))
         if hasattr(table, "setStyle_"):  # macOS 11+: rounded selection and side margins
             table.setStyle_(ak.NSTableViewStyleInset)
@@ -107,7 +107,7 @@ class Table(Control):
 
     def _double_clicked(self):
         if int(self._table.clickedRow()) >= 0:  # not on the header or on empty space
-            self.on_double_click.emit()
+            self.on_activate.emit()
 
     # -- called by the data source ---------------------------------------
     def _selection_changed(self):
@@ -251,9 +251,9 @@ class Table(Control):
 class ListBox(Table):
     """A scrollable list of text entries (a Table with one column and no header)."""
 
-    def __init__(self, items=(), selected=None, multiple=False, striped=False, grow=0, **size):
+    def __init__(self, items=(), selected=None, multi=False, striped=False, grow=0, **size):
         entries = check_items(items)
-        super().__init__(["Items"], [[entry] for entry in entries], multiple=multiple,
+        super().__init__(["Items"], [[entry] for entry in entries], multi=multi,
                          header=False, striped=striped, grow=grow, **size)
         if selected is not None:
             check_index(selected, len(entries), "selected")

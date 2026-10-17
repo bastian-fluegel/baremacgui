@@ -214,11 +214,12 @@ class TextBox(Control):
 
 
 class ComboBox(Control):
-    """Drop-down list with a text field. editable=False restricts it to the list."""
+    """Drop-down list with a text field. By default the user can only pick from the list;
+    editable=True lets them type their own text as well."""
 
     on_change = event()
 
-    def __init__(self, items=(), selected=None, editable=True, grow=0, **size):
+    def __init__(self, items=(), selected=None, editable=False, grow=0, **size):
         ns = AK().NSComboBox.alloc().init()
         items = [str(item) for item in items]
         ns.addItemsWithObjectValues_(items)
@@ -265,15 +266,15 @@ class ComboBox(Control):
 class Button(Control):
     on_click = event()
 
-    def __init__(self, title, default=False, symbol=None, grow=0, **size):
+    def __init__(self, text, default=False, symbol=None, grow=0, **size):
         ak = AK()
-        ns = ak.NSButton.buttonWithTitle_target_action_(str(title), None, None)
+        ns = ak.NSButton.buttonWithTitle_target_action_(str(text), None, None)
         if symbol is not None:  # SF Symbol, macOS 11+; with an empty title: icon only
             image = ak.NSImage.imageWithSystemSymbolName_accessibilityDescription_(str(symbol), None)
             if image is None:
                 raise ValueError(f"unknown system symbol: {symbol!r}")
             ns.setImage_(image)
-            if not str(title):
+            if not str(text):
                 ns.setImagePosition_(ak.NSImageOnly)
                 ns.setBezelStyle_(ak.NSBezelStyleTexturedRounded)
         if default:
@@ -282,19 +283,19 @@ class Button(Control):
         self._bind(ns, self.on_click.emit)
 
     @property
-    def title(self):
+    def text(self):
         return str(self.ns.title())
 
-    @title.setter
-    def title(self, value):
+    @text.setter
+    def text(self, value):
         self.ns.setTitle_(str(value))
 
 
 class CheckBox(Control):
     on_change = event()
 
-    def __init__(self, title, checked=False, grow=0, **size):
-        ns = AK().NSButton.checkboxWithTitle_target_action_(str(title), None, None)
+    def __init__(self, text, checked=False, grow=0, **size):
+        ns = AK().NSButton.checkboxWithTitle_target_action_(str(text), None, None)
         super().__init__(ns, grow, **size)
         self._bind(ns, self.on_change.emit)
         self.checked = checked

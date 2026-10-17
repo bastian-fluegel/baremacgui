@@ -22,16 +22,16 @@ class IconGrid(Control):
     items        labels, or (label, symbol) pairs; symbol is an SF Symbol name
     symbol       the symbol for plain labels (default "doc")
     icon_size    icon edge in points
-    multiple     allow several icons to be selected
+    multi        allow several icons to be selected
     selected     index selected at the start
 
     Selecting from code never calls on_select; only user input does.
     """
 
     on_select = event()
-    on_double_click = event()
+    on_activate = event()
 
-    def __init__(self, items=(), symbol="doc", icon_size=64, multiple=False, selected=None, grow=0, **size):
+    def __init__(self, items=(), symbol="doc", icon_size=64, multi=False, selected=None, grow=0, **size):
         ak = AK()
         if isinstance(icon_size, bool) or not isinstance(icon_size, (int, float)) or icon_size < 16:
             raise ValueError(f"icon_size must be a number >= 16, got {icon_size!r}")
@@ -53,7 +53,7 @@ class IconGrid(Control):
         layout.setSectionInset_(self._insets(12.0))
         view.setCollectionViewLayout_(layout)
         view.setSelectable_(True)
-        view.setAllowsMultipleSelection_(bool(multiple))
+        view.setAllowsMultipleSelection_(bool(multi))
         view.setAutoresizingMask_(ak.NSViewWidthSizable)
         view.registerClass_forItemWithIdentifier_(item_class, "BareMacIcon")
         self._source = source_class.alloc().initWithOwner_(self)  # held weakly by the view
@@ -69,7 +69,7 @@ class IconGrid(Control):
         size.setdefault("min_height", 140)
         size.setdefault("min_width", 200)
         super().__init__(scroll, grow, **size)
-        view._double = self.on_double_click.emit
+        view._double = self.on_activate.emit
         if selected is not None:
             self.index = selected
 
@@ -178,15 +178,15 @@ class Tree(Control):
               {"text": ..., "symbol": SF Symbol name, "children": [...]}
     sidebar   use the translucent source-list look (for a left-hand navigation pane)
     expanded  open all branches at the start
-    multiple  allow several rows to be selected
+    multi     allow several rows to be selected
 
     Selecting from code (path = [...]) never calls on_select; only user input does.
     """
 
     on_select = event()
-    on_double_click = event()
+    on_activate = event()
 
-    def __init__(self, nodes=(), sidebar=False, expanded=False, multiple=False, grow=0, **size):
+    def __init__(self, nodes=(), sidebar=False, expanded=False, multi=False, grow=0, **size):
         ak = AK()
         self._specs = check_nodes(nodes)
         self._roots = [_Node(spec) for spec in self._specs]
@@ -204,7 +204,7 @@ class Tree(Control):
         elif sidebar:
             view.setSelectionHighlightStyle_(ak.NSTableViewSelectionHighlightStyleSourceList)
         view.setRowHeight_(24.0)
-        view.setAllowsMultipleSelection_(bool(multiple))
+        view.setAllowsMultipleSelection_(bool(multi))
         view.setColumnAutoresizingStyle_(ak.NSTableViewUniformColumnAutoresizingStyle)
         self._source = outline_source_class().alloc().initWithOwner_(self)  # held weakly by the view
         view.setDataSource_(self._source)
@@ -249,7 +249,7 @@ class Tree(Control):
 
     def _double_clicked(self):
         if int(self._view.clickedRow()) >= 0:
-            self.on_double_click.emit()
+            self.on_activate.emit()
 
     def _node_at(self, row):
         return self._view.itemAtRow_(row)

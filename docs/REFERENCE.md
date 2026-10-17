@@ -65,7 +65,7 @@ Raised for invalid layout configuration (bad option values, misuse of containers
 
 ## Windows and layout
 
-### `Window(title, size=(400, 300), resizable=True, visible=True, style='standard', autosave=None, **options)`
+### `Window(title, size=(640, 480), resizable=True, visible=True, style='standard', autosave=None, **options)`
 
 ```text
 A top-level window. Takes exactly one child, normally a VBox or HBox.
@@ -169,14 +169,14 @@ Stack children top to bottom.
 Stack children left to right.
 ```
 
-### `Spacer(grow=None, size=None)`
+### `Spacer(size=None, grow=None)`
 
 ```text
 Flexible space (default) or a fixed gap.
 
 Spacer()          absorbs free space, e.g. to push buttons to the right
+Spacer(24)        a fixed gap of 24 points along the box's main axis (same as size=24)
 Spacer(grow=2)    takes twice the share of a Spacer()
-Spacer(size=24)   a fixed gap of 24 points along the box's main axis
 ```
 
 ### `GroupBox(title, padding=8, grow=0, **size)`
@@ -351,10 +351,11 @@ Methods:
 
 - `append(text)`: Add text at the end and scroll to it (multi-line only).
 
-### `ComboBox(items=(), selected=None, editable=True, grow=0, **size)`
+### `ComboBox(items=(), selected=None, editable=False, grow=0, **size)`
 
 ```text
-Drop-down list with a text field. editable=False restricts it to the list.
+Drop-down list with a text field. By default the user can only pick from the list;
+editable=True lets them type their own text as well.
 ```
 
 Events: `on_change`
@@ -389,7 +390,7 @@ Properties:
 - `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `visible`: False hides the control; a box closes the gap it leaves.
 
-### `Button(title, default=False, symbol=None, grow=0, **size)`
+### `Button(text, default=False, symbol=None, grow=0, **size)`
 
 ```text
 Base class: registers the view with the innermost open container.
@@ -407,11 +408,11 @@ Properties:
 - `accessibility_label`: The text VoiceOver reads for this control, or None (then AppKit uses the visible title).
 - `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
 - `enabled`
-- `title`
+- `text`
 - `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `visible`: False hides the control; a box closes the gap it leaves.
 
-### `CheckBox(title, checked=False, grow=0, **size)`
+### `CheckBox(text, checked=False, grow=0, **size)`
 
 ```text
 Base class: registers the view with the innermost open container.
@@ -681,13 +682,13 @@ Properties:
 - `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `visible`: False hides the control; a box closes the gap it leaves.
 
-### `ListBox(items=(), selected=None, multiple=False, striped=False, grow=0, **size)`
+### `ListBox(items=(), selected=None, multi=False, striped=False, grow=0, **size)`
 
 ```text
 A scrollable list of text entries (a Table with one column and no header).
 ```
 
-Events: `on_double_click`, `on_edit`, `on_select`, `on_sort`
+Events: `on_activate`, `on_edit`, `on_select`, `on_sort`
 
 Properties:
 
@@ -705,14 +706,14 @@ Properties:
 - `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `visible`: False hides the control; a box closes the gap it leaves.
 
-### `Table(columns, rows=(), multiple=False, header=True, striped=False, grow=0, editable=False, sortable=False, kinds=None, **size)`
+### `Table(columns, rows=(), multi=False, header=True, striped=False, grow=0, editable=False, sortable=False, kinds=None, **size)`
 
 ```text
 A scrollable table of text cells with a header row.
 
 columns   titles, e.g. ["Name", "Size"]
 rows      list of rows; every row has one cell per column (cells become strings)
-multiple  allow several rows to be selected
+multi     allow several rows to be selected
 header    show the column titles
 striped   alternating row backgrounds (off by default; modern macOS lists are plain)
 
@@ -731,7 +732,7 @@ Native counterpart: NSTableView with view-based cells (NSTableCellView with a te
 view, or an NSButton checkbox). Difference: one cell kind per column, not per row.
 ```
 
-Events: `on_double_click`, `on_edit`, `on_select`, `on_sort`
+Events: `on_activate`, `on_edit`, `on_select`, `on_sort`
 
 Properties:
 
@@ -750,7 +751,7 @@ Methods:
 
 - `sort(column, ascending=True)`: Sort by a column from code (the header arrow follows). Does not call on_sort.
 
-### `IconGrid(items=(), symbol='doc', icon_size=64, multiple=False, selected=None, grow=0, **size)`
+### `IconGrid(items=(), symbol='doc', icon_size=64, multi=False, selected=None, grow=0, **size)`
 
 ```text
 Icons with a label underneath in a wrapping grid, like Finder's icon view.
@@ -758,13 +759,13 @@ Icons with a label underneath in a wrapping grid, like Finder's icon view.
 items        labels, or (label, symbol) pairs; symbol is an SF Symbol name
 symbol       the symbol for plain labels (default "doc")
 icon_size    icon edge in points
-multiple     allow several icons to be selected
+multi        allow several icons to be selected
 selected     index selected at the start
 
 Selecting from code never calls on_select; only user input does.
 ```
 
-Events: `on_double_click`, `on_select`
+Events: `on_activate`, `on_select`
 
 Properties:
 
@@ -779,7 +780,7 @@ Properties:
 - `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `visible`: False hides the control; a box closes the gap it leaves.
 
-### `Tree(nodes=(), sidebar=False, expanded=False, multiple=False, grow=0, **size)`
+### `Tree(nodes=(), sidebar=False, expanded=False, multi=False, grow=0, **size)`
 
 ```text
 An expandable tree (outline view), e.g. a folder tree.
@@ -788,12 +789,12 @@ nodes     list of "Label", ("Label", [children]) or
           {"text": ..., "symbol": SF Symbol name, "children": [...]}
 sidebar   use the translucent source-list look (for a left-hand navigation pane)
 expanded  open all branches at the start
-multiple  allow several rows to be selected
+multi     allow several rows to be selected
 
 Selecting from code (path = [...]) never calls on_select; only user input does.
 ```
 
-Events: `on_double_click`, `on_select`
+Events: `on_activate`, `on_select`
 
 Properties:
 
@@ -1072,7 +1073,7 @@ Choose existing file(s). Returns a path (a list if multiple=True) or None.
 Choose where to save. Returns a path or None.
 ```
 
-### `choose_folder(title='', parent=None, then=None)`
+### `pick_folder(title='', parent=None, then=None)`
 
 ```text
 Choose a folder. Returns a path or None.

@@ -20,6 +20,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - `SplitView`: panes with draggable dividers (NSSplitView), `fixed=`, `min_pane=`, `autosave=`, `set_position`. Example 11 (notes).
 - `StatusItem` (NSStatusItem with a menu) and `App(background=True)` for menu-bar apps without Dock icon. Example 12.
 
+### Changed
+Names and defaults aligned with BareWinGUI, so code moves between the two with fewer edits. The package is still unreleased, so these are plain renames without aliases.
+- `Spacer(size=None, grow=None)`: `Spacer(16)` is a fixed gap of 16 points (before, the first argument was `grow`).
+- `Button(text)` and `CheckBox(text)` (was `title`); `Button.text` (was `.title`).
+- `multi=` instead of `multiple=` on `ListBox`, `Table`, `IconGrid` and `Tree` (file dialogs keep `multiple=`, as in BareWinGUI).
+- `on_activate` instead of `on_double_click` (a double-click on macOS).
+- `pick_folder` instead of `choose_folder`.
+- `ComboBox(editable=False)` is the default; `editable=True` lets the user type.
+- `Window(size=)` defaults to (640, 480).
+
 ### Fixed
 - A window without its own `MenuBar` kept the menus of the window before it; the standard menus now come back when it becomes key. Sheets and modal windows leave the menu bar alone.
 

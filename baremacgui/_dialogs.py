@@ -181,7 +181,7 @@ def save_file(title="", default_name="", filetypes=None, parent=None, then=None)
     return _run_panel(panel, parent, then, lambda panel, ok: str(panel.URL().path()) if ok else None)
 
 
-def choose_folder(title="", parent=None, then=None):
+def pick_folder(title="", parent=None, then=None):
     """Choose a folder. Returns a path or None."""
     ak = AK()
     ensure_app()

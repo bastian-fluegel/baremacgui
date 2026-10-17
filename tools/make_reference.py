@@ -28,7 +28,7 @@ GROUPS = [
     ("Timer, settings and clipboard", ["Timer", "Settings", "Clipboard"]),
     ("Packaging", ["build_app"]),
     ("Dialogs", ["show_info", "show_warning", "show_error", "ask_yes_no", "ask_ok_cancel", "input_box", "open_file",
-                 "save_file", "choose_folder"]),
+                 "save_file", "pick_folder"]),
 ]
 
 
