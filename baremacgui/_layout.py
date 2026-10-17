@@ -26,6 +26,10 @@ class Window:
     size is the initial content size in points; the minimum size follows from
     the content. The window shows itself when its with-block ends.
 
+    on_close          a function: return False to keep the window open (also set as `on_close=`)
+    on_resize         event, fired while the window is resized (read `win.size`)
+    on_destroy        event, fired when the window closes
+
     style="standard"  the usual title bar
     style="sidebar"   System-Settings-like: a Sidebar on the left lists pages, the chosen page
                       shows on the right. The window then holds a `with Sidebar():` block

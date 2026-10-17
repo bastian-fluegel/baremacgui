@@ -37,3 +37,11 @@ def test_changelog_mentions_current_version():
 
     text = (pathlib.Path(__file__).parent.parent / "CHANGELOG.md").read_text(encoding="utf-8")
     assert f"[{baremacgui.__version__}]" in text
+
+
+def test_reference_is_up_to_date():
+    import pathlib
+
+    tool = pathlib.Path(__file__).parent.parent / "tools" / "make_reference.py"
+    result = subprocess.run([sys.executable, str(tool), "--check"], capture_output=True, text=True)
+    assert result.returncode == 0, result.stdout + result.stderr
