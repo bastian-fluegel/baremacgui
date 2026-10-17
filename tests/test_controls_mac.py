@@ -16,6 +16,7 @@ if sys.platform == "darwin":
     )
     from baremacgui import Custom, IconGrid, Page, Popover, Sheet, Sidebar, Tree
     from baremacgui import show_info
+    from baremacgui import Settings
     from baremacgui import ContextMenu, DatePicker, Menu, MenuBar, MenuItem, MenuSeparator, Timer, TimePicker
     from baremacgui import _core
 
@@ -714,3 +715,56 @@ def test_box_justify_builds_for_all_modes():
         assert row.ns.fittingSize().width > 0
     with pytest.raises(ValueError):
         HBox(justify="middle")
+
+
+# -- settings and window autosave ---------------------------------------------
+def test_settings_roundtrip_defaults_and_clear():
+    prefs = Settings("bmc-test-settings", defaults={"theme": "System", "n": 3})
+    prefs.clear()
+    try:
+        assert prefs["theme"] == "System" and prefs.get("missing", "d") == "d"
+        assert "theme" in prefs and "missing" not in prefs
+        prefs["theme"] = "Dark"
+        prefs["flag"] = True
+        prefs["pi"] = 3.5
+        prefs["list"] = ["a", 1, False]
+        prefs["tree"] = {"x": {"y": [1, 2]}}
+        again = Settings("bmc-test-settings")  # a second object sees the same domain
+        assert again["theme"] == "Dark" and again["flag"] is True and again["pi"] == 3.5
+        assert again["list"] == ["a", 1, False] and again["tree"] == {"x": {"y": [1, 2]}}
+        assert isinstance(again["flag"], bool)
+        assert prefs.to_dict()["n"] == 3
+        del prefs["theme"]
+        assert prefs["theme"] == "System"
+        with pytest.raises(KeyError):
+            again["nothing"]
+        with pytest.raises(TypeError):
+            prefs["bad"] = object()
+    finally:
+        prefs.clear()
+    assert prefs.get("flag") is None
+    with pytest.raises(ValueError):
+        Settings()
+    with pytest.raises(ValueError):
+        Settings("a", domain="b")
+
+
+def test_window_autosave_remembers_frame():
+    name = "bmc-test-autosave"
+    with Window("a", size=(300, 200), visible=False, autosave=name) as first:
+        with VBox():
+            Label("x")
+    first.ns.setFrameOrigin_((123.0, 321.0))
+    first.ns.saveFrameUsingName_(name)
+    first.destroy()
+    with Window("b", size=(300, 200), visible=False, autosave=name) as second:
+        with VBox():
+            Label("x")
+    origin = second.ns.frame().origin
+    assert (round(origin.x), round(origin.y)) == (123, 321)
+    second.destroy()
+    from AppKit import NSWindow
+
+    NSWindow.removeFrameUsingName_(name)
+    with pytest.raises(ValueError):
+        Window("c", visible=False, autosave="")

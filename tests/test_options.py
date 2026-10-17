@@ -190,3 +190,15 @@ def test_key_mapping():
     assert o.event_shortcut("S", 1, (1 << 20) | (1 << 17)) == ("s", frozenset({"cmd", "shift"}))
     assert o.event_shortcut("", 36, 0) == ("return", frozenset())
     assert o.event_shortcut("", 96, 0) == ("f5", frozenset())
+
+
+def test_setting_checks_and_plain_value():
+    assert o.check_setting_value({"a": [1, 2.5, "x", True]}) == {"a": [1, 2.5, "x", True]}
+    assert o.check_setting_value((1, 2)) == [1, 2]
+    for bad in (None, {1: 2}, [object()], b"x"):
+        with pytest.raises(TypeError):
+            o.check_setting_value(bad)
+    for bad in ("", ".x", 3):
+        with pytest.raises(ValueError):
+            o.check_setting_key(bad)
+    assert o.plain_value({"k": [1, True, "s"]}) == {"k": [1, True, "s"]}

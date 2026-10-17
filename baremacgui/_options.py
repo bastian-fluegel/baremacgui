@@ -321,3 +321,40 @@ def event_shortcut(characters, keycode, flags):
         key = (characters or "").lower()
     mods = frozenset(name for bit, name in _FLAG_BITS if int(flags) & bit)
     return key, mods
+
+
+def check_setting_key(key):
+    if not isinstance(key, str) or not key or key.startswith("."):
+        raise ValueError(f"a setting name must be a non-empty string, got {key!r}")
+    return key
+
+
+def check_setting_value(value, _path="value"):
+    """Settings hold what a property list holds: bool, int, float, str, and lists/dicts of those."""
+    if isinstance(value, (bool, int, float, str)):
+        return value
+    if isinstance(value, (list, tuple)):
+        return [check_setting_value(item, f"{_path}[{i}]") for i, item in enumerate(value)]
+    if isinstance(value, dict):
+        for k in value:
+            if not isinstance(k, str):
+                raise TypeError(f"{_path}: dict keys must be strings, got {k!r}")
+        return {k: check_setting_value(v, f"{_path}[{k!r}]") for k, v in value.items()}
+    raise TypeError(f"{_path}: cannot store {type(value).__name__} (use bool, int, float, str, list or dict)")
+
+
+def plain_value(value):
+    """Turn what NSUserDefaults returns (NSArray, NSDictionary, NSNumber proxies) into plain Python."""
+    if isinstance(value, bool):
+        return bool(value)
+    if isinstance(value, str):
+        return str(value)
+    if isinstance(value, int):
+        return int(value)
+    if isinstance(value, float):
+        return float(value)
+    if isinstance(value, (list, tuple)):
+        return [plain_value(item) for item in value]
+    if hasattr(value, "items"):
+        return {str(k): plain_value(v) for k, v in value.items()}
+    return value

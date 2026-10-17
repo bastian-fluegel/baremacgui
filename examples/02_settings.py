@@ -1,12 +1,18 @@
-"""A settings window: tabs, group box, combo box, check boxes, spin box, button row."""
+"""A settings window: tabs, group box, combo box, check boxes, spin box, button row.
+
+The values are remembered between runs (Settings) and so is the window position (autosave).
+"""
 from baremacgui import (
     App, Button, CheckBox, ComboBox, GroupBox, HBox, Label, SpinBox, Spacer, Tab, TabControl, VBox,
-    Window, show_info,
+    Window, Settings, show_info,
 )
 
 app = App("Settings")
+prefs = Settings("example-settings", defaults={
+    "theme": "System", "mono_icons": False, "recent": 10, "logging": True, "days": 7,
+})
 
-with Window("Settings", size=(460, 380)) as win:
+with Window("Settings", size=(460, 380), autosave="example-settings") as win:
     with VBox(padding=16, gap=12):
         with TabControl(grow=1):
             with Tab("General"):
@@ -32,7 +38,21 @@ with Window("Settings", size=(460, 380)) as win:
             save = Button("Save", default=True)
 
 
+def load():
+    theme.text = prefs["theme"]
+    mono_icons.checked = prefs["mono_icons"]
+    recent.value = prefs["recent"]
+    logging.checked = prefs["logging"]
+    days.value = prefs["days"]
+    days.enabled = logging.checked
+
+
 def on_save():
+    prefs["theme"] = theme.text
+    prefs["mono_icons"] = mono_icons.checked
+    prefs["recent"] = recent.value
+    prefs["logging"] = logging.checked
+    prefs["days"] = days.value
     show_info(
         f"Theme: {theme.text}\nMonochrome icons: {mono_icons.checked}\nRecent items: {recent.value}\n"
         f"Logging: {logging.checked}\nKeep logs: {days.value} days",
@@ -41,7 +61,9 @@ def on_save():
     )
 
 
+load()
 logging.on_change(lambda: setattr(days, "enabled", logging.checked))
 save.on_click(on_save)
 cancel.on_click(win.close)
-app.run()
+if __name__ == "__main__":
+    app.run()

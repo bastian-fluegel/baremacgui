@@ -60,7 +60,7 @@ Raised for invalid layout configuration (bad option values, misuse of containers
 
 ## Windows and layout
 
-### `Window(title, size=(400, 300), resizable=True, visible=True, style='standard', **options)`
+### `Window(title, size=(400, 300), resizable=True, visible=True, style='standard', autosave=None, **options)`
 
 ```text
 A top-level window. Takes exactly one child, normally a VBox or HBox.
@@ -68,6 +68,8 @@ A top-level window. Takes exactly one child, normally a VBox or HBox.
 size is the initial content size in points; the minimum size follows from
 the content. The window shows itself when its with-block ends.
 
+autosave          a name: the window remembers its position and size between runs
+                  (NSWindow frame autosave; the frame is stored in the app's own preferences)
 on_close          a function: return False to keep the window open (also set as `on_close=`)
 on_resize         event, fired while the window is resized (read `win.size`)
 on_destroy        event, fired when the window closes

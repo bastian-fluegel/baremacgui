@@ -5,7 +5,7 @@ from . import _core
 from ._bridge import AK, FN, ensure_app, window_class, window_delegate_class
 from ._events import connect_options, event, split_options
 from ._options import (
-    check_align, check_grow, check_justify, event_shortcut, parse_shortcut, check_padding, check_size, check_window_size, check_window_style,
+    check_align, check_grow, check_justify, check_setting_key, event_shortcut, parse_shortcut, check_padding, check_size, check_window_size, check_window_style,
 )
 
 _ALIGN_ATTR = {
@@ -26,6 +26,8 @@ class Window:
     size is the initial content size in points; the minimum size follows from
     the content. The window shows itself when its with-block ends.
 
+    autosave          a name: the window remembers its position and size between runs
+                      (NSWindow frame autosave; the frame is stored in the app's own preferences)
     on_close          a function: return False to keep the window open (also set as `on_close=`)
     on_resize         event, fired while the window is resized (read `win.size`)
     on_destroy        event, fired when the window closes
@@ -42,7 +44,7 @@ class Window:
     on_resize = event()
     on_destroy = event()
 
-    def __init__(self, title, size=(400, 300), resizable=True, visible=True, style="standard", **options):
+    def __init__(self, title, size=(400, 300), resizable=True, visible=True, style="standard", autosave=None, **options):
         ak = AK()
         ensure_app()
         handlers = split_options(options)
@@ -65,6 +67,7 @@ class Window:
             style |= ak.NSWindowStyleMaskResizable
         if self.style in ("unified", "sidebar"):
             style |= ak.NSWindowStyleMaskFullSizeContentView
+        self.autosave = None if autosave is None else check_setting_key(autosave)
         self._menubar = None
         self._shortcuts = {}
         self._modal = False
@@ -222,7 +225,13 @@ class Window:
             self.ns.setContentSize_(
                 (max(self._size[0], fit.width), max(self._size[1], fit.height + extra))
             )
-        self.ns.center()
+        restored = False
+        if self.autosave:
+            # AppKit stores the frame under "NSWindow Frame <name>" in the app's preferences.
+            restored = bool(self.ns.setFrameUsingName_(self.autosave))
+            self.ns.setFrameAutosaveName_(self.autosave)
+        if not restored:
+            self.ns.center()
         if self._visible:
             self.ns.makeKeyAndOrderFront_(None)
             self._became_key()

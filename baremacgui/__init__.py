@@ -17,6 +17,7 @@ from ._timer import Timer
 from ._layout import HBox, Spacer, VBox, Window
 from ._overlays import Popover, Sheet
 from ._sidebar import Page, Sidebar
+from ._settings import Settings
 from ._table import ListBox, Table
 from ._toolbar import Toolbar
 from ._widgets import Custom, DropDown, Image, ProgressBar, RadioGroup, SearchField, SegmentedControl, Separator, Slider
@@ -66,6 +67,7 @@ __all__ = [
     "MenuSeparator",
     "ContextMenu",
     "Timer",
+    "Settings",
     "DatePicker",
     "TimePicker",
     "input_box",

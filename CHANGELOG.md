@@ -7,6 +7,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+### Added
+- `Settings`: values that survive between runs (NSUserDefaults, one domain per app name). Example 02 uses it.
+- `Window(autosave="name")`: the window remembers its position and size (NSWindow frame autosave).
+
 ## [0.1.0a1] - unreleased
 
 First tagged state of the project. Alpha: the automated tests build real AppKit views on macOS CI runners
