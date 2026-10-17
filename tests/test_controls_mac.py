@@ -607,8 +607,8 @@ def test_menubar_items_shortcuts_and_clicks():
     assert not flag.enabled
     assert [menu.title for menu in bar.menus] == ["File"]
     assert bar.ns is not None and win._menubar is bar
-    titles = [str(item.title()) for item in bar.ns.itemArray()]
-    assert titles[1] == "File" and titles[-1] == "Window"
+    titles = [str(item.submenu().title()) for item in bar.ns.itemArray()]
+    assert titles[1] == "File" and titles[-1] == "Window" and "Edit" in titles
 
 
 def test_menu_item_outside_menu_and_bad_shortcut():
@@ -655,21 +655,30 @@ def test_window_shortcuts_and_buttons():
     assert str(ok.ns.keyEquivalent()) == ""
 
 
-def test_timer_ticks_and_stops():
-    from Foundation import NSDate, NSRunLoop
+def _spin(seconds):
+    """Run the main run loop for `seconds`, in short steps (runUntilDate_ may return early)."""
+    import time
 
+    from Foundation import NSDate, NSDefaultRunLoopMode, NSRunLoop
+
+    end = time.monotonic() + seconds
+    while time.monotonic() < end:
+        NSRunLoop.currentRunLoop().runMode_beforeDate_(NSDefaultRunLoopMode, NSDate.dateWithTimeIntervalSinceNow_(0.02))
+
+
+def test_timer_ticks_and_stops():
     ticks = []
     timer = Timer(0.05, lambda: ticks.append(1))
     assert timer.running
-    NSRunLoop.currentRunLoop().runUntilDate_(NSDate.dateWithTimeIntervalSinceNow_(0.4))
+    _spin(0.6)
     timer.stop()
     count = len(ticks)
     assert count >= 2 and not timer.running
-    NSRunLoop.currentRunLoop().runUntilDate_(NSDate.dateWithTimeIntervalSinceNow_(0.2))
+    _spin(0.2)
     assert len(ticks) == count
     once = []
     Timer(0.05, lambda: once.append(1), repeat=False)
-    NSRunLoop.currentRunLoop().runUntilDate_(NSDate.dateWithTimeIntervalSinceNow_(0.4))
+    _spin(0.5)
     assert once == [1]
     with pytest.raises(ValueError):
         Timer(0)
