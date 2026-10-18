@@ -170,3 +170,18 @@ def test_standalone_app_builds_and_verifies(tmp_path):
         info = plistlib.load(handle)
     assert info["CFBundleName"] == "Probe Solo" and info["LSUIElement"] is True
     subprocess.run(["codesign", "--verify", "--deep", "--strict", app], check=True)
+
+
+def test_icon_copy_ignores_file_flags(tmp_path, monkeypatch):
+    """System icons carry protected file flags on macOS; copying their metadata fails there. Only content is copied."""
+    import shutil
+
+    calls = []
+    monkeypatch.setattr(shutil, "copy2", lambda *a, **k: calls.append(a))
+    icon = tmp_path / "i.icns"
+    icon.write_bytes(b"icns")
+    script = tmp_path / "s.py"
+    script.write_text("")
+    app = b.build_app(script, dest=tmp_path / "out", icon=icon)
+    assert (tmp_path / "out" / "S.app" / "Contents" / "Resources" / "AppIcon.icns").read_bytes() == b"icns"
+    assert all(str(icon) not in map(str, call) for call in calls)

@@ -208,7 +208,7 @@ def build_app(script, name=None, dest=".", identifier=None, version="1.0", icon=
         if str(icon).lower().endswith(".png"):
             _icns_from_png(os.path.abspath(str(icon)), os.path.join(resources, icon_file))
         else:
-            shutil.copy2(str(icon), os.path.join(resources, icon_file))
+            shutil.copyfile(str(icon), os.path.join(resources, icon_file))
 
     with open(os.path.join(bundle, "Contents", "Info.plist"), "wb") as handle:
         plistlib.dump(info_plist(name, identifier, version, icon_file, background), handle)
@@ -298,7 +298,7 @@ def build_standalone(script, name=None, dest=".", identifier=None, version="1.0"
         elif str(icon).lower().endswith(".png"):
             _icns_from_png(os.path.abspath(str(icon)), icns)
         else:
-            shutil.copy2(str(icon), icns)
+            shutil.copyfile(str(icon), icns)
         _run(pyinstaller_command(script, name, identifier, icns, work, include, hidden_imports=hidden_imports,
                                  collect_all=collect_all), log)
         built = os.path.join(work, "dist", name + ".app")
