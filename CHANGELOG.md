@@ -27,6 +27,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - `StatusItem` (NSStatusItem with a menu) and `App(background=True)` for menu-bar apps without Dock icon. Example 12.
 
 ### Changed
+- `build_app` / `python -m baremacgui build` without `--icon` now makes a plain default icon (blue rounded square with a small window) on macOS instead of leaving the blank one.
 Names and defaults aligned with BareWinGUI, so code moves between the two with fewer edits. The package is still unreleased, so these are plain renames without aliases.
 - `Spacer(size=None, grow=None)`: `Spacer(16)` is a fixed gap of 16 points (before, the first argument was `grow`).
 - `Button(text)` and `CheckBox(text)` (was `title`); `Button.text` (was `.title`).

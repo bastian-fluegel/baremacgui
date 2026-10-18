@@ -118,3 +118,22 @@ def test_png_icon_needs_macos(tmp_path):
     script.write_text("")
     with pytest.raises(RuntimeError):  # PlatformError
         b.build_app(script, dest=tmp_path, icon=png_file(tmp_path / "i.png"))
+
+
+def test_default_icon_png_is_a_valid_rounded_square(tmp_path):
+    target = tmp_path / "icon.png"
+    b.default_icon_png(str(target), size=256)
+    data = target.read_bytes()
+    assert data[:8] == b"\x89PNG\r\n\x1a\n"
+    width, height, depth, color = struct.unpack(">IIBB", data[16:26])
+    assert (width, height, depth, color) == (256, 256, 8, 6)
+    start = data.index(b"IDAT") + 4
+    raw = zlib.decompress(data[start:data.index(b"IEND") - 8])
+    stride = 256 * 4 + 1
+
+    def pixel(x, y):
+        offset = y * stride + 1 + x * 4
+        return tuple(raw[offset:offset + 4])
+
+    assert pixel(0, 0)[3] == 0  # the corner is transparent
+    assert pixel(128, 40)[3] == 255 and pixel(128, 90) != pixel(128, 40)  # body, then the window

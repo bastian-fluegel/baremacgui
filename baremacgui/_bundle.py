@@ -7,6 +7,7 @@ runs on the Mac that built it and stops working when that Python is removed. It 
 """
 from __future__ import annotations
 
+import math
 import os
 import plistlib
 import re
@@ -15,6 +16,8 @@ import shutil
 import stat
 import subprocess
 import sys
+import zlib
+import struct
 
 from .errors import BareMacGUIError, PlatformError
 
@@ -76,6 +79,63 @@ def launcher_script(python, script, icon_file=None, name=None):
     return "\n".join(lines) + "\n"
 
 
+def _rounded_span(y, top, bottom, left, right, radius):
+    """x range [x0, x1) that a rounded rectangle covers on pixel row y, or None."""
+    if y < top or y >= bottom:
+        return None
+    edge = min(y - top + 0.5, bottom - y - 0.5)
+    inset = 0.0 if edge >= radius else radius - math.sqrt(max(radius * radius - (radius - edge) ** 2, 0.0))
+    return int(round(left + inset)), int(round(right - inset))
+
+
+def default_icon_png(path, size=1024):
+    """Write the plain default icon (a blue rounded square with a small window) as a PNG.
+
+    Pure standard library: shapes are filled row by row, so no imaging library is needed.
+    """
+    unit = size / 1024.0
+
+    def u(value):
+        return int(round(value * unit))
+
+    margin, body = u(100), size - 2 * u(100)
+    win_left, win_right = u(250), size - u(250)
+    win_top, win_bottom, bar = u(330), u(700), u(430)
+    dots = [(u(320), (255, 95, 87)), (u(385), (254, 188, 46)), (u(450), (40, 200, 64))]
+    dot_y, dot_r = u(380), u(20)
+    lines = [(u(480), u(560)), (u(520), u(640)), (u(560), u(600))]  # (y, right edge) of text-like bars
+    rows = []
+    for y in range(size):
+        row = bytearray(size * 4)
+
+        def paint(span, color, alpha=255):
+            if span is not None and span[1] > span[0]:
+                row[span[0] * 4:span[1] * 4] = bytes((*color, alpha)) * (span[1] - span[0])
+
+        t = (y - margin) / body
+        shade = (int(79 - 48 * t), int(140 - 52 * t), int(255 - 25 * t))  # light blue at the top, deeper below
+        paint(_rounded_span(y, margin, margin + body, margin, margin + body, u(185)), shade)
+        paint(_rounded_span(y, win_top, win_bottom, win_left, win_right, u(40)), (250, 251, 255))
+        if win_top <= y < bar:
+            paint(_rounded_span(y, win_top, win_bottom, win_left, win_right, u(40)), (222, 227, 240))
+        for cx, color in dots:
+            if abs(y - dot_y) < dot_r:
+                half = int(math.sqrt(dot_r * dot_r - (y - dot_y) ** 2))
+                paint((cx - half, cx + half), color)
+        for line_y, right in lines:
+            if line_y <= y < line_y + u(22):
+                paint(_rounded_span(y, line_y, line_y + u(22), u(300), right, u(11)), (190, 198, 218))
+        rows.append(b"\x00" + bytes(row))
+
+    def chunk(kind, data):
+        return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data) & 0xFFFFFFFF)
+
+    png = (b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", size, size, 8, 6, 0, 0, 0))
+           + chunk(b"IDAT", zlib.compress(b"".join(rows), 6)) + chunk(b"IEND", b""))
+    with open(path, "wb") as handle:
+        handle.write(png)
+
+
 def _icns_from_png(png, target):
     if sys.platform != "darwin":
         raise PlatformError("converting a .png to .icns needs macOS (sips and iconutil); pass an .icns file instead")
@@ -96,7 +156,8 @@ def build_app(script, name=None, dest=".", identifier=None, version="1.0", icon=
               include=(), python=None):
     """Create `<dest>/<name>.app` around `script` and return its path.
 
-    icon        an .icns file, or a .png (converted with sips and iconutil on macOS)
+    icon        an .icns file, or a .png (converted with sips and iconutil on macOS). Without one, a plain
+                default icon (a blue square with a small window) is made on macOS.
     background  a menu-bar app without Dock icon (LSUIElement), for use with StatusItem
     include     further files or folders copied next to the script (they are in the working directory)
     python      interpreter to start; default: the one running this code
@@ -135,7 +196,14 @@ def build_app(script, name=None, dest=".", identifier=None, version="1.0", icon=
             raise FileNotFoundError(f"included path not found: {extra}")
 
     icon_file = None
-    if icon is not None:
+    if icon is None and sys.platform == "darwin":  # no icon given: the plain default, never the blank one
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            default_icon_png(os.path.join(tmp, "default.png"))
+            icon_file = "AppIcon.icns"
+            _icns_from_png(os.path.join(tmp, "default.png"), os.path.join(resources, icon_file))
+    elif icon is not None:
         icon_file = "AppIcon.icns"
         if str(icon).lower().endswith(".png"):
             _icns_from_png(os.path.abspath(str(icon)), os.path.join(resources, icon_file))
