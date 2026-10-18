@@ -117,3 +117,19 @@ def test_image_path_can_change_and_box_can_hide(tmp_path):
     inner.visible = True
     assert inner.visible
     _core._stack.clear()
+
+
+def test_wizard_stays_alive_when_the_caller_drops_it(tmp_path):
+    import gc
+
+    from baremacgui import App, _core
+    from baremacgui._creator import build
+
+    _core._stack.clear()
+    script = tmp_path / "s.py"
+    script.write_text("")
+    app = App("Keep")
+    build(app, str(script), window_args={"visible": False})  # the result is dropped on purpose
+    gc.collect()
+    assert app._wizard.pick_script.on_click is not None and len(app._wizard.pick_script.on_click) == 1
+    _core._stack.clear()

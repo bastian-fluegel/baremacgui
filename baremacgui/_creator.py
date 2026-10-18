@@ -430,11 +430,16 @@ def build(app=None, path=None, window_args=None):
         AppHelper.callLater(0.2, settle_layout)
     except ImportError:
         pass
-    return SimpleNamespace(**{k: v for k, v in locals().items() if not k.startswith("_")})
+    wizard = SimpleNamespace(**{k: v for k, v in locals().items() if not k.startswith("_")})
+    # AppKit holds button targets weakly: keep every control and handler alive as long as the app lives,
+    # even when the caller drops the return value (seen on a real Mac: "Choose" did nothing).
+    app._wizard = wizard
+    return wizard
 
 
 def run(path=None):
     """Open the wizard and run the app."""
     app = App("Install Creator")
-    build(app, path)
+    wizard = build(app, path)  # keep it: see build()
     app.run()
+    del wizard
