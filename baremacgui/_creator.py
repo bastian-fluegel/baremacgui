@@ -199,10 +199,12 @@ def build(app=None, path=None, window_args=None):
 
     # ---- step 1 -------------------------------------------------------------------------------------
     def choose_script():
-        chosen = open_file("Choose your script", filetypes=["py"], parent=win)
-        if chosen:
-            script.text = chosen
-            script_changed()
+        def chosen(path):
+            if path:
+                script.text = path
+                script_changed()
+
+        open_file("Choose your script", filetypes=["py"], parent=win, then=chosen)
 
     def script_changed():
         if state.name_is_auto:
@@ -243,16 +245,21 @@ def build(app=None, path=None, window_args=None):
         load_icon_choices()
 
     def choose_icon():
-        if icon_source.index == 1:
-            chosen = open_file("Choose an icon", filetypes=["png", "icns"], parent=win)
-            if chosen:
-                state.file_icon = chosen
-        else:
-            chosen = pick_folder("Choose a folder with icons", parent=win)
-            if chosen:
-                state.icon_folder = chosen
+        def got_file(path):
+            if path:
+                state.file_icon = path
+            show_icon()
+
+        def got_folder(path):
+            if path:
+                state.icon_folder = path
                 load_icon_choices()
-        show_icon()
+            show_icon()
+
+        if icon_source.index == 1:
+            open_file("Choose an icon", filetypes=["png", "icns"], parent=win, then=got_file)
+        else:
+            pick_folder("Choose a folder with icons", parent=win, then=got_folder)
 
     def show_icon():
         chosen = current_icon()
@@ -283,16 +290,20 @@ def build(app=None, path=None, window_args=None):
         found.text = "Found in your script: " + ", ".join(parts) + ". Installed ones are taken along by themselves."
 
     def add_files():
-        chosen = open_file("Add files", multiple=True, parent=win)
-        if chosen:
-            include_list.items = list(include_list.items) + [c for c in chosen if c not in include_list.items]
-        refresh()
+        def chosen(paths):
+            if paths:
+                include_list.items = list(include_list.items) + [c for c in paths if c not in include_list.items]
+            refresh()
+
+        open_file("Add files", multiple=True, parent=win, then=chosen)
 
     def add_folders():
-        chosen = pick_folder("Add a folder", parent=win)
-        if chosen and chosen not in include_list.items:
-            include_list.items = list(include_list.items) + [chosen]
-        refresh()
+        def chosen(path):
+            if path and path not in include_list.items:
+                include_list.items = list(include_list.items) + [path]
+            refresh()
+
+        pick_folder("Add a folder", parent=win, then=chosen)
 
     def remove_included():
         row = include_list.index
@@ -302,17 +313,21 @@ def build(app=None, path=None, window_args=None):
 
     # ---- step 4 -------------------------------------------------------------------------------------
     def choose_dest():
-        chosen = pick_folder("Where should the results go?", parent=win)
-        if chosen:
-            dest.text = chosen
-        refresh()
+        def chosen(path):
+            if path:
+                dest.text = path
+            refresh()
+
+        pick_folder("Where should the results go?", parent=win, then=chosen)
 
     def save_settings():
-        target = save_file("Save settings", default_name=(name.text.strip() or "app") + inst.SPEC_SUFFIX,
-                           parent=win)
-        if target:
-            inst.save_spec(spec(), target)
-            status.text = f"Settings saved: {os.path.basename(target)}"
+        def chosen(target):
+            if target:
+                inst.save_spec(spec(), target)
+                status.text = f"Settings saved: {os.path.basename(target)}"
+
+        save_file("Save settings", default_name=(name.text.strip() or "app") + inst.SPEC_SUFFIX, parent=win,
+                  then=chosen)
 
     def begin_build():
         reason = problem_for(3)
