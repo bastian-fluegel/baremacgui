@@ -1188,3 +1188,13 @@ def test_app_installs_interrupt_handler():
     from baremacgui import App
 
     assert App("t", menu=False)._install_interrupt() is True
+
+
+def test_alert_keyboard_buttons():
+    from baremacgui._dialogs import _make_alert
+
+    alert = _make_alert("NSAlertStyleWarning", "Sure?", "t", ["Yes", "No"])
+    first, last = alert.buttons()
+    assert str(first.keyEquivalent()) == "\r" and str(last.keyEquivalent()) == "\x1b"
+    single = _make_alert("NSAlertStyleInformational", "Done", "t", ["OK"])
+    assert str(single.buttons()[0].keyEquivalent()) == "\r"

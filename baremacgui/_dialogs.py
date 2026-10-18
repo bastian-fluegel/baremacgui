@@ -45,16 +45,16 @@ def _run_sheet(window, modal_window, begin, then, convert):
             app.stopModalWithCode_(int(code))
 
     begin(handler)
+    modal_window.makeKeyAndOrderFront_(None)  # the keyboard must go to the sheet, not to the window behind it
     if then is not None:
         return None
     app.runModalForWindow_(modal_window)
     return answer[0] if answer else None
 
 
-def _alert(style_name, text, title, buttons, parent=None, then=None, convert=lambda code: code):
+def _make_alert(style_name, text, title, buttons):
+    """An NSAlert; Return presses the first button and Escape the last one of two or more."""
     ak = AK()
-    ensure_app()
-    window = _parent_window(parent, then)
     alert = ak.NSAlert.alloc().init()
     if title:
         alert.setMessageText_(str(title))
@@ -64,6 +64,15 @@ def _alert(style_name, text, title, buttons, parent=None, then=None, convert=lam
     alert.setAlertStyle_(getattr(ak, style_name))
     for button in buttons:
         alert.addButtonWithTitle_(button)
+    if len(buttons) > 1:  # NSAlert only binds Escape to a button titled "Cancel"
+        alert.buttons()[-1].setKeyEquivalent_("\x1b")
+    return alert
+
+
+def _alert(style_name, text, title, buttons, parent=None, then=None, convert=lambda code: code):
+    ensure_app()
+    window = _parent_window(parent, then)
+    alert = _make_alert(style_name, text, title, buttons)
     if window is None:
         return convert(int(alert.runModal()))
     return _run_sheet(
