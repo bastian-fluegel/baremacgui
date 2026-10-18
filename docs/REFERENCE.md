@@ -1022,7 +1022,8 @@ Methods:
 ```text
 Create `<dest>/<name>.app` around `script` and return its path.
 
-icon        an .icns file, or a .png (converted with sips and iconutil on macOS)
+icon        an .icns file, or a .png (converted with sips and iconutil on macOS). Without one, a plain
+            default icon (a blue square with a small window) is made on macOS.
 background  a menu-bar app without Dock icon (LSUIElement), for use with StatusItem
 include     further files or folders copied next to the script (they are in the working directory)
 python      interpreter to start; default: the one running this code

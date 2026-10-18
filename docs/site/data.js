@@ -1843,7 +1843,7 @@ window.BMC = {
      "name": "build_app",
      "kind": "function",
      "signature": "(script, name=None, dest='.', identifier=None, version='1.0', icon=None, background=False, include=(), python=None)",
-     "doc": "Create `<dest>/<name>.app` around `script` and return its path.\n\nicon        an .icns file, or a .png (converted with sips and iconutil on macOS)\nbackground  a menu-bar app without Dock icon (LSUIElement), for use with StatusItem\ninclude     further files or folders copied next to the script (they are in the working directory)\npython      interpreter to start; default: the one running this code\n\nAn existing bundle of the same name is replaced.",
+     "doc": "Create `<dest>/<name>.app` around `script` and return its path.\n\nicon        an .icns file, or a .png (converted with sips and iconutil on macOS). Without one, a plain\n            default icon (a blue square with a small window) is made on macOS.\nbackground  a menu-bar app without Dock icon (LSUIElement), for use with StatusItem\ninclude     further files or folders copied next to the script (they are in the working directory)\npython      interpreter to start; default: the one running this code\n\nAn existing bundle of the same name is replaced.",
      "summary": "Create `<dest>/<name>.app` around `script` and return its path."
     }
    ]
