@@ -7,6 +7,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+### Fixed
+- Dialogs and sheets bring the app and the parent window to the front first; started from a terminal they could open behind other windows and look as if nothing happened.
+
 ### Added
 - Install creator: `python -m baremacgui installer` (wizard window, built with BareMacGUI, example 17) and `build --dmg --zip --spec --save-spec --system-icon --package --hidden-import`, `python -m baremacgui icons`, `BuildSpec` and `create_installer()`. `Image.path` can be set; boxes have `visible`. Not run on a real Mac yet.
 - `python -m baremacgui build --standalone` / `build_standalone()`: a self-contained `.app` (own interpreter and PyObjC via PyInstaller, optional extra `standalone`) that is signed ad hoc. Not verified on a real Mac yet.

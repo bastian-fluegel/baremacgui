@@ -31,6 +31,21 @@ def _parent_window(parent, then):
     return window
 
 
+def _front(window=None):
+    """Bring the app (and the window a sheet hangs on) to the front, so a dialog is not hidden behind other apps.
+
+    Started from a terminal, an app is easily left behind the terminal window; a dialog that opens there
+    looks as if nothing happened. Only the parent window is ordered front, never the sheet itself.
+    """
+    app = ensure_app()
+    try:
+        app.activate()  # macOS 14 and newer
+    except AttributeError:
+        app.activateIgnoringOtherApps_(True)
+    if window is not None:
+        window.makeKeyAndOrderFront_(None)
+
+
 def _wait_for(answer):
     """Dispatch events like the main loop does until `answer` is not empty.
 
@@ -58,8 +73,9 @@ def _run_sheet(window, modal_window, begin, then, convert):
         else:
             answer.append(value)
 
+    _front(window)
     begin(handler)
-    # No makeKeyAndOrderFront_ here: a sheet becomes key by itself, and ordering it to the front by hand
+    # No makeKeyAndOrderFront_ on the sheet here: a sheet becomes key by itself, and ordering it to the front by hand
     # turned it into a loose window that the keyboard did not reach (seen on a real Mac, example 07).
     if then is not None:
         return None
@@ -88,6 +104,7 @@ def _alert(style_name, text, title, buttons, parent=None, then=None, convert=lam
     window = _parent_window(parent, then)
     alert = _make_alert(style_name, text, title, buttons)
     if window is None:
+        _front()
         return convert(int(alert.runModal()))
     return _run_sheet(
         window, alert.window(),
@@ -143,6 +160,7 @@ def input_box(text, title="", default="", password=False, parent=None, then=None
         return str(field.stringValue()) if code == first else None
 
     if window is None:
+        _front()
         return convert(int(alert.runModal()))
     return _run_sheet(
         window, alert.window(),
@@ -159,6 +177,7 @@ def _run_panel(panel, parent, then, convert):
     """Run a file panel modally, or as a sheet on `parent`; convert(panel, ok) builds the result."""
     window = _parent_window(parent, then)
     if window is None:
+        _front()
         return convert(panel, int(panel.runModal()) == _MODAL_OK)
     return _run_sheet(
         window, panel,

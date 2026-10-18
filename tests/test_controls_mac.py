@@ -1208,3 +1208,9 @@ def test_blocking_sheet_wait_dispatches_events_until_answered():
     timer = Timer(0.1, lambda: answer.append("done"), repeat=False)
     assert _wait_for(answer) == "done"
     assert timer is not None
+
+
+def test_dialog_front_helper_runs_without_a_window():
+    from baremacgui import _dialogs
+
+    _dialogs._front()  # activates the app, no window to order
