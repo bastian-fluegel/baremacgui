@@ -29,8 +29,8 @@ Methods:
 
 - `call(function, *args, **kwargs)`: Run function(*args, **kwargs) on the UI thread and return its result.
 - `invoke(function, *args)`: Run function(*args) on the UI thread. Call this from worker threads.
-- `quit()`
-- `run()`: Show the windows and run until the last one is closed.
+- `quit()`: Quit the app. Safe to call from a menu item: it terminates once the menu has closed.
+- `run()`: Show the windows and run until the last one is closed (Ctrl-C in the terminal quits too).
 
 ### `Event()`
 

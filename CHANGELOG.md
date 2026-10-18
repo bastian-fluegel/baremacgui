@@ -37,6 +37,8 @@ Names and defaults aligned with BareWinGUI, so code moves between the two with f
 - `Window(size=)` defaults to (640, 480).
 
 ### Fixed
+- Ctrl-C in the terminal quits a running app (the Cocoa loop swallowed it).
+- `App.quit()` from a menu item needed a second click in a menu-bar app; it now terminates after the menu has closed (reported from a real Mac; the fix is unverified there).
 - A window without its own `MenuBar` kept the menus of the window before it; the standard menus now come back when it becomes key. Sheets and modal windows leave the menu bar alone.
 
 ## [0.1.0a1] - unreleased

@@ -1182,3 +1182,9 @@ def test_notify_starts_without_error():
     from baremacgui import notify
 
     notify("Build finished", "baremacgui test")
+
+
+def test_app_installs_interrupt_handler():
+    from baremacgui import App
+
+    assert App("t", menu=False)._install_interrupt() is True

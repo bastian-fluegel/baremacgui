@@ -33,12 +33,12 @@ window.BMC = {
       {
        "name": "quit",
        "signature": "()",
-       "doc": ""
+       "doc": "Quit the app. Safe to call from a menu item: it terminates once the menu has closed."
       },
       {
        "name": "run",
        "signature": "()",
-       "doc": "Show the windows and run until the last one is closed."
+       "doc": "Show the windows and run until the last one is closed (Ctrl-C in the terminal quits too)."
       }
      ]
     },

@@ -112,8 +112,21 @@ class App:
 
         AppHelper.callAfter(safe_call, function, *args)
 
+    def _install_interrupt(self):
+        """Ctrl-C in the terminal quits the app (the Cocoa loop does not run Python's signal handlers)."""
+        try:
+            import signal
+
+            from PyObjCTools import MachSignals
+
+            MachSignals.signal(signal.SIGINT, lambda _signal: self.ns.terminate_(None))
+            return True
+        except Exception:  # noqa: BLE001 - a missing nicety must not stop the app
+            return False
+
     def run(self):
-        """Show the windows and run until the last one is closed."""
+        """Show the windows and run until the last one is closed (Ctrl-C in the terminal quits too)."""
+        self._install_interrupt()
         try:
             self.ns.activate()  # macOS 14 and newer
         except AttributeError:
@@ -121,4 +134,7 @@ class App:
         self.ns.run()
 
     def quit(self):
-        self.ns.terminate_(None)
+        """Quit the app. Safe to call from a menu item: it terminates once the menu has closed."""
+        from PyObjCTools import AppHelper
+
+        AppHelper.callAfter(self.ns.terminate_, None)
