@@ -9,7 +9,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [0.1.0b1] - 2026-10-18
 
-First beta. It contains everything listed under 0.1.0a1 below plus the following.
+First beta, on PyPI (`pip install --pre baremacgui`). It contains everything listed under 0.1.0a1 below plus the following.
 
 ### Added
 - `notify(text, title, subtitle, sound)`: a Notification Center banner, posted through `osascript` (works from a plain script; attributed to Script Editor).

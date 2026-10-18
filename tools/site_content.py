@@ -67,8 +67,8 @@ GUIDE = [
         "title": "Install and first window",
         "summary": "From a clone to a window in five minutes.",
         "blocks": [
-            ("p", "You need a Mac, Python 3.10 or newer and PyObjC. BareMacGUI is not on PyPI; install it from a clone."),
-            ("shell", "git clone https://github.com/bastian-fluegel/baremacgui\ncd baremacgui\npython3 -m venv .venv\nsource .venv/bin/activate\npip install -e \".[examples]\"\npython examples/00_hello.py"),
+            ("p", "You need a Mac and Python 3.10 or newer. PyObjC is installed with it. BareMacGUI is a beta, so pip needs `--pre`; the examples come with a clone."),
+            ("shell", "pip install --pre baremacgui\n\n# or, to run the examples, from a clone:\ngit clone https://github.com/bastian-fluegel/baremacgui\ncd baremacgui\npython3 -m venv .venv\nsource .venv/bin/activate\npip install -e \".[examples]\"\npython examples/00_hello.py"),
             ("p", "`import baremacgui` also works on Linux and Windows, because AppKit is only loaded when a window is built. That is what lets the pure parts be tested everywhere."),
             ("p", "This is the whole first program. A `with` block builds the tree, the window shows itself when its block ends, and `app.run()` starts the event loop."),
             ("code", '''from baremacgui import App, Button, Label, VBox, Window, show_info

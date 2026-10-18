@@ -42,7 +42,13 @@ The screenshots come from GitHub's macOS runner, where the window is not in focu
 
 ## Install
 
-From a clone:
+Install from PyPI (a beta, so pip needs `--pre`):
+
+```
+pip install --pre baremacgui
+```
+
+Or from a clone, to run the examples:
 
 ```
 python3 -m venv .venv

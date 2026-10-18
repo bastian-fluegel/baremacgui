@@ -2094,11 +2094,11 @@ window.BMC = {
    "blocks": [
     {
      "type": "p",
-     "text": "You need a Mac, Python 3.10 or newer and PyObjC. BareMacGUI is not on PyPI; install it from a clone."
+     "text": "You need a Mac and Python 3.10 or newer. PyObjC is installed with it. BareMacGUI is a beta, so pip needs `--pre`; the examples come with a clone."
     },
     {
      "type": "shell",
-     "text": "git clone https://github.com/bastian-fluegel/baremacgui\ncd baremacgui\npython3 -m venv .venv\nsource .venv/bin/activate\npip install -e \".[examples]\"\npython examples/00_hello.py"
+     "text": "pip install --pre baremacgui\n\n# or, to run the examples, from a clone:\ngit clone https://github.com/bastian-fluegel/baremacgui\ncd baremacgui\npython3 -m venv .venv\nsource .venv/bin/activate\npip install -e \".[examples]\"\npython examples/00_hello.py"
     },
     {
      "type": "p",
