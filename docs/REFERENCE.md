@@ -1031,6 +1031,19 @@ python      interpreter to start; default: the one running this code
 An existing bundle of the same name is replaced.
 ```
 
+### `build_standalone(script, name=None, dest='.', identifier=None, version='1.0', icon=None, background=False, include=())`
+
+```text
+Create a self-contained `<dest>/<name>.app` (own interpreter and PyObjC inside) and sign it ad hoc.
+
+Needs macOS and PyInstaller (`pip install pyinstaller`, only for building, not for running the app).
+The result starts without any Python installed. It is bytecode bundled with an interpreter, not
+compiled machine code. The ad-hoc signature carries no identity and is not notarized: on the Mac
+that built it the app starts without a warning, a copy downloaded elsewhere is blocked by Gatekeeper
+until the user allows it. `include` files end up in the bundle's Resources; find them via
+`sys._MEIPASS` (unverified on a real Mac so far).
+```
+
 ## Dialogs
 
 ### `show_info(text, title='', parent=None, then=None)`

@@ -7,6 +7,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+### Added
+- `python -m baremacgui build --standalone` / `build_standalone()`: a self-contained `.app` (own interpreter and PyObjC via PyInstaller, optional extra `standalone`) that is signed ad hoc. Not verified on a real Mac yet.
+
 ## [0.1.0b1] - 2026-10-18
 
 First beta, on PyPI (`pip install --pre baremacgui`). It contains everything listed under 0.1.0a1 below plus the following.

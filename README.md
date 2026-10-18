@@ -129,7 +129,16 @@ python -m baremacgui build my_script.py --name "My Tool" --icon icon.png
 
 creates `My Tool.app` in the current folder: an `Info.plist`, the script in `Resources` and a small launcher that starts the Python that built it. The app has its own name and icon in Finder, and the script gets the same name and Dock icon through `App`. Options: `--dest`, `--identifier`, `--version`, `--background` (menu-bar app, no Dock icon), `--include` (extra files or folders next to the script). From code: `baremacgui.build_app(...)`.
 
-What it is not: the bundle is not self-contained (it needs the Python and the packages it was built with, at the same place), it is not signed or notarized, and it will not run on another Mac. Signing, notarization and a self-contained bundle need tools outside this library (for example py2app, or Apple's codesign and notarytool).
+### Standalone build (new, only checked on CI so far)
+
+```
+pip install "baremacgui[standalone]"
+python -m baremacgui build my_script.py --standalone
+```
+
+bundles an own interpreter and PyObjC (PyInstaller) so the app starts without Python, and signs it ad hoc (`codesign --sign -`, no identity). It is bytecode in a bundle, not compiled machine code. On the Mac that built it the app starts without a warning; a copy that is downloaded or sent elsewhere is blocked by Gatekeeper until the user allows it (System Settings, Privacy & Security), because it is not notarized. From code: `baremacgui.build_standalone(...)`.
+
+The plain build above is not self-contained (it needs the Python and the packages it was built with, at the same place), it is not signed or notarized, and it will not run on another Mac. Notarization needs Apple's notarytool and a Developer ID, which this library does not do.
 
 ## Screenshots
 

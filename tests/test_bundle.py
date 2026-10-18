@@ -137,3 +137,36 @@ def test_default_icon_png_is_a_valid_rounded_square(tmp_path):
 
     assert pixel(0, 0)[3] == 0  # the corner is transparent
     assert pixel(128, 40)[3] == 255 and pixel(128, 90) != pixel(128, 40)  # body, then the window
+
+
+def test_pyinstaller_command_and_signature(tmp_path):
+    extra = tmp_path / "data"
+    extra.mkdir()
+    cmd = b.pyinstaller_command("/s/tool.py", "Tool X", "local.baremacgui.tool-x", "/w/AppIcon.icns", "/w", [extra], "py")
+    assert cmd[:3] == ["py", "-m", "PyInstaller"] and "--windowed" in cmd and cmd[-1] == "/s/tool.py"
+    assert cmd[cmd.index("--name") + 1] == "Tool X"
+    assert cmd[cmd.index("--icon") + 1] == "/w/AppIcon.icns"
+    assert cmd[cmd.index("--add-data") + 1] == f"{extra}:data"
+    assert "--icon" not in b.pyinstaller_command("/s/t.py", "T", "local.baremacgui.t", None, "/w")
+    assert b.adhoc_sign_command("/x/A.app") == ["codesign", "--force", "--deep", "--sign", "-", "/x/A.app"]
+
+
+@pytest.mark.skipif(sys.platform == "darwin", reason="the error is for other systems")
+def test_standalone_needs_macos(tmp_path):
+    script = tmp_path / "s.py"
+    script.write_text("")
+    with pytest.raises(RuntimeError):
+        b.build_standalone(script, dest=tmp_path)
+    assert b.main(["build", str(script), "--standalone"]) == 1
+
+
+@pytest.mark.skipif(sys.platform != "darwin", reason="PyInstaller build on macOS")
+def test_standalone_app_builds_and_verifies(tmp_path):
+    pytest.importorskip("PyInstaller")
+    script = tmp_path / "probe.py"
+    script.write_text("print('hi')\n")
+    app = b.build_standalone(script, name="Probe Solo", dest=tmp_path, background=True)
+    with open(os.path.join(app, "Contents", "Info.plist"), "rb") as handle:
+        info = plistlib.load(handle)
+    assert info["CFBundleName"] == "Probe Solo" and info["LSUIElement"] is True
+    subprocess.run(["codesign", "--verify", "--deep", "--strict", app], check=True)

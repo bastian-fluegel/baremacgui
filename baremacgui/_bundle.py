@@ -219,6 +219,85 @@ def build_app(script, name=None, dest=".", identifier=None, version="1.0", icon=
     return bundle
 
 
+def pyinstaller_command(script, name, identifier, icon_file, workdir, include=(), python=None):
+    """The PyInstaller command line for a windowed onedir build (pure, tested everywhere)."""
+    command = [python or sys.executable, "-m", "PyInstaller", "--noconfirm", "--clean", "--windowed",
+               "--name", name, "--osx-bundle-identifier", identifier,
+               "--distpath", os.path.join(workdir, "dist"), "--workpath", os.path.join(workdir, "build"),
+               "--specpath", workdir]
+    if icon_file:
+        command += ["--icon", icon_file]
+    for extra in include:
+        extra = os.path.abspath(str(extra))
+        command += ["--add-data", f"{extra}:{os.path.basename(extra)}"]
+    return command + [script]
+
+
+def adhoc_sign_command(app):
+    """Ad-hoc signature (no identity): `codesign --force --deep --sign - <app>`."""
+    return ["codesign", "--force", "--deep", "--sign", "-", app]
+
+
+def build_standalone(script, name=None, dest=".", identifier=None, version="1.0", icon=None,
+                     background=False, include=()):
+    """Create a self-contained `<dest>/<name>.app` (own interpreter and PyObjC inside) and sign it ad hoc.
+
+    Needs macOS and PyInstaller (`pip install pyinstaller`, only for building, not for running the app).
+    The result starts without any Python installed. It is bytecode bundled with an interpreter, not
+    compiled machine code. The ad-hoc signature carries no identity and is not notarized: on the Mac
+    that built it the app starts without a warning, a copy downloaded elsewhere is blocked by Gatekeeper
+    until the user allows it. `include` files end up in the bundle's Resources; find them via
+    `sys._MEIPASS` (unverified on a real Mac so far).
+    """
+    if sys.platform != "darwin":
+        raise PlatformError("standalone builds need macOS")
+    import importlib.util
+    import tempfile
+
+    if importlib.util.find_spec("PyInstaller") is None:
+        raise BareMacGUIError("PyInstaller is not installed: pip install pyinstaller")
+    script = os.path.abspath(str(script))
+    if not os.path.isfile(script):
+        raise FileNotFoundError(f"script not found: {script}")
+    name = check_app_name(name or os.path.splitext(os.path.basename(script))[0].replace("_", " ").strip().title())
+    identifier = check_identifier(identifier or default_identifier(name))
+    if icon is not None and (not os.path.isfile(str(icon))
+                             or os.path.splitext(str(icon))[1].lower() not in (".icns", ".png")):
+        raise ValueError(f"icon must be an existing .icns or .png file, got {icon!r}")
+    for extra in include:
+        if not os.path.exists(str(extra)):
+            raise FileNotFoundError(f"included path not found: {extra}")
+
+    bundle = os.path.join(os.path.abspath(str(dest)), name + ".app")
+    with tempfile.TemporaryDirectory() as work:
+        icns = os.path.join(work, "AppIcon.icns")
+        if icon is None:
+            default_icon_png(os.path.join(work, "default.png"))
+            _icns_from_png(os.path.join(work, "default.png"), icns)
+        elif str(icon).lower().endswith(".png"):
+            _icns_from_png(os.path.abspath(str(icon)), icns)
+        else:
+            shutil.copy2(str(icon), icns)
+        subprocess.run(pyinstaller_command(script, name, identifier, icns, work, include), check=True)
+        built = os.path.join(work, "dist", name + ".app")
+        plist_path = os.path.join(built, "Contents", "Info.plist")
+        with open(plist_path, "rb") as handle:
+            info = plistlib.load(handle)
+        info.update(CFBundleName=name, CFBundleDisplayName=name, CFBundleShortVersionString=str(version),
+                    CFBundleVersion=str(version), NSHighResolutionCapable=True)
+        if background:
+            info["LSUIElement"] = True
+        with open(plist_path, "wb") as handle:
+            plistlib.dump(info, handle)
+        subprocess.run(adhoc_sign_command(built), check=True)  # after the last change to the bundle
+        subprocess.run(["codesign", "--verify", "--deep", "--strict", built], check=True)
+        if os.path.exists(bundle):
+            shutil.rmtree(bundle)
+        os.makedirs(os.path.dirname(bundle), exist_ok=True)
+        shutil.copytree(built, bundle, symlinks=True)
+    return bundle
+
+
 def main(argv=None):
     """`python -m baremacgui build script.py [options]`"""
     import argparse
@@ -234,8 +313,15 @@ def main(argv=None):
     build.add_argument("--icon")
     build.add_argument("--background", action="store_true", help="menu-bar app without Dock icon")
     build.add_argument("--include", action="append", default=[], help="extra file or folder (repeatable)")
+    build.add_argument("--standalone", action="store_true",
+                       help="bundle an own interpreter (needs PyInstaller) and sign ad hoc; runs without Python")
     args = parser.parse_args(argv)
     try:
+        if args.standalone:
+            path = build_standalone(args.script, args.name, args.dest, args.identifier, args.version,
+                                    args.icon, args.background, args.include)
+            print(path)
+            return 0
         path = build_app(args.script, args.name, args.dest, args.identifier, args.version, args.icon,
                          args.background, args.include)
     except (BareMacGUIError, OSError, ValueError, subprocess.CalledProcessError) as exc:

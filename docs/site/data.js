@@ -1845,6 +1845,13 @@ window.BMC = {
      "signature": "(script, name=None, dest='.', identifier=None, version='1.0', icon=None, background=False, include=(), python=None)",
      "doc": "Create `<dest>/<name>.app` around `script` and return its path.\n\nicon        an .icns file, or a .png (converted with sips and iconutil on macOS). Without one, a plain\n            default icon (a blue square with a small window) is made on macOS.\nbackground  a menu-bar app without Dock icon (LSUIElement), for use with StatusItem\ninclude     further files or folders copied next to the script (they are in the working directory)\npython      interpreter to start; default: the one running this code\n\nAn existing bundle of the same name is replaced.",
      "summary": "Create `<dest>/<name>.app` around `script` and return its path."
+    },
+    {
+     "name": "build_standalone",
+     "kind": "function",
+     "signature": "(script, name=None, dest='.', identifier=None, version='1.0', icon=None, background=False, include=())",
+     "doc": "Create a self-contained `<dest>/<name>.app` (own interpreter and PyObjC inside) and sign it ad hoc.\n\nNeeds macOS and PyInstaller (`pip install pyinstaller`, only for building, not for running the app).\nThe result starts without any Python installed. It is bytecode bundled with an interpreter, not\ncompiled machine code. The ad-hoc signature carries no identity and is not notarized: on the Mac\nthat built it the app starts without a warning, a copy downloaded elsewhere is blocked by Gatekeeper\nuntil the user allows it. `include` files end up in the bundle's Resources; find them via\n`sys._MEIPASS` (unverified on a real Mac so far).",
+     "summary": "Create a self-contained `<dest>/<name>.app` (own interpreter and PyObjC inside) and sign it ad hoc."
     }
    ]
   },
@@ -2381,7 +2388,19 @@ window.BMC = {
     },
     {
      "type": "note",
-     "text": "The bundle starts the Python that built it, so it only runs on that Mac and stops working when that Python is removed. It is not signed or notarized. For a bundle you can hand to others, use a tool built for that, for example py2app."
+     "text": "The bundle starts the Python that built it, so it only runs on that Mac and stops working when that Python is removed. It is not signed or notarized. For a bundle that starts without Python, use `--standalone` (below)."
+    },
+    {
+     "type": "shell",
+     "text": "pip install \"baremacgui[standalone]\"\npython -m baremacgui build my_script.py --standalone"
+    },
+    {
+     "type": "p",
+     "text": "`--standalone` bundles an own interpreter and PyObjC with PyInstaller and signs the app ad hoc (`codesign --sign -`, no identity). It is bytecode in a bundle, not compiled machine code. On the Mac that built it the app starts without a warning; a copy downloaded elsewhere is blocked by Gatekeeper until the user allows it, because it is not notarized. From code: `baremacgui.build_standalone(...)`."
+    },
+    {
+     "type": "unverified",
+     "text": "The standalone build is only checked on CI so far (bundle builds, signature verifies). Starting the result on a real Mac is still to be checked."
     },
     {
      "type": "unverified",

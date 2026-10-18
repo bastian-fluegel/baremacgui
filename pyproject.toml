@@ -31,6 +31,7 @@ dependencies = ["pyobjc-framework-Cocoa>=12; sys_platform == 'darwin'"]
 [project.optional-dependencies]
 test = ["pytest>=8"]
 examples = ["certifi"]
+standalone = ["pyinstaller>=6"]
 
 [project.urls]
 Homepage = "https://github.com/bastian-fluegel/baremacgui"
