@@ -414,6 +414,23 @@ def build(app=None, path=None, window_args=None):
         include_list.items = [str(p) for p in start.include]
     icon_source_changed()
     refresh()
+
+    def settle_layout():
+        """Hiding the other pages after the window was built leaves stale frames until the next layout pass;
+        until then a mouse click can miss its button (seen on a real Mac: "Choose" did nothing)."""
+        try:
+            win.ns.contentView().layoutSubtreeIfNeeded()
+            win.ns.displayIfNeeded()
+        except Exception:  # noqa: BLE001 - cosmetic safety net
+            pass
+
+    settle_layout()
+    try:
+        from PyObjCTools import AppHelper
+
+        AppHelper.callLater(0.2, settle_layout)
+    except ImportError:
+        pass
     return SimpleNamespace(**{k: v for k, v in locals().items() if not k.startswith("_")})
 
 
