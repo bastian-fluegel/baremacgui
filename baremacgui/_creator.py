@@ -204,7 +204,7 @@ def build(app=None, path=None, window_args=None):
                 script.text = path
                 script_changed()
 
-        open_file("Choose your script", filetypes=["py"], parent=win, then=chosen)
+        chosen(open_file("Choose your script", filetypes=["py"]))
 
     def script_changed():
         if state.name_is_auto:
@@ -257,9 +257,9 @@ def build(app=None, path=None, window_args=None):
             show_icon()
 
         if icon_source.index == 1:
-            open_file("Choose an icon", filetypes=["png", "icns"], parent=win, then=got_file)
+            got_file(open_file("Choose an icon", filetypes=["png", "icns"]))
         else:
-            pick_folder("Choose a folder with icons", parent=win, then=got_folder)
+            got_folder(pick_folder("Choose a folder with icons"))
 
     def show_icon():
         chosen = current_icon()
@@ -295,7 +295,7 @@ def build(app=None, path=None, window_args=None):
                 include_list.items = list(include_list.items) + [c for c in paths if c not in include_list.items]
             refresh()
 
-        open_file("Add files", multiple=True, parent=win, then=chosen)
+        chosen(open_file("Add files", multiple=True))
 
     def add_folders():
         def chosen(path):
@@ -303,7 +303,7 @@ def build(app=None, path=None, window_args=None):
                 include_list.items = list(include_list.items) + [path]
             refresh()
 
-        pick_folder("Add a folder", parent=win, then=chosen)
+        chosen(pick_folder("Add a folder"))
 
     def remove_included():
         row = include_list.index
@@ -318,7 +318,7 @@ def build(app=None, path=None, window_args=None):
                 dest.text = path
             refresh()
 
-        pick_folder("Where should the results go?", parent=win, then=chosen)
+        chosen(pick_folder("Where should the results go?"))
 
     def save_settings():
         def chosen(target):
@@ -326,8 +326,7 @@ def build(app=None, path=None, window_args=None):
                 inst.save_spec(spec(), target)
                 status.text = f"Settings saved: {os.path.basename(target)}"
 
-        save_file("Save settings", default_name=(name.text.strip() or "app") + inst.SPEC_SUFFIX, parent=win,
-                  then=chosen)
+        chosen(save_file("Save settings", default_name=(name.text.strip() or "app") + inst.SPEC_SUFFIX))
 
     def begin_build():
         reason = problem_for(3)
