@@ -34,6 +34,6 @@ it does not mean a person clicked it.
 - [ ] Apple Silicon, other macOS versions (the author uses an Intel Mac with macOS 15.5)
 
 ## Before beta
-- [ ] API names stable; experimental parts marked in the docs
+- [x] API names decided (`Table` and `Tree` stay); the README lists which parts are stable and which are still moving
 - [ ] Menu bar behaviour with several windows reviewed by hand (example 15: menus change when you click another window, the Window menu lists all windows, Cmd+N)
 - [ ] Accessibility: turn VoiceOver on (Cmd+F5) and walk through examples 04 and 06; tooltips appear on hover; keyboard-only use (Tab, Space) reaches every control

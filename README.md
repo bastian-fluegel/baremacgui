@@ -107,6 +107,10 @@ Compared by reading the constructor signatures of both libraries (not by running
 - Dialogs take `parent=` and `then=` (macOS sheets). `choose_color` returns a hex string like `ColorWell` (BareWinGUI: an RGB tuple); `choose_color` and `choose_font` have no Cancel, because the system panels have none: they return what is selected when the user closes the panel.
 - `Cmd` is the shortcut modifier; "Ctrl" in a shortcut string also means Cmd, so one string works on both systems.
 
+## Stability
+
+Alpha: names can still change. The parts that are expected to stay as they are: the with-block layout (`Window`, `VBox`, `HBox`, `Spacer`, `GroupBox`, `TabControl`), the standard controls, menus, dialogs, `App`, `Timer`, `Settings`. Still moving, because they have been seen on the fewest Macs: `Sidebar`, `Toolbar`, `Popover`, `StatusItem`, `IconGrid`, `build_app`, `notify`.
+
 ## Accessibility
 
 Every control takes `tooltip="..."` (the hint on hover) and `accessibility_label="..."` (what VoiceOver reads). Controls with visible text (a `Button("Save")`, a `CheckBox`) are read from their title by AppKit; give a label to everything without text of its own: icon buttons, `Image(..., description="Warning")`, `Slider`, `ProgressBar`, `SegmentedControl` with symbols, `SearchField`. The examples do this. Whether the labels read well with VoiceOver has not been checked by hand.

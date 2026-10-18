@@ -2057,7 +2057,7 @@ window.BMC = {
    "id": "13_drop",
    "title": "drop",
    "doc": "Drag files from Finder onto the window: a DropZone collects them in a table.",
-   "source": "\"\"\"Drag files from Finder onto the window: a DropZone collects them in a table.\"\"\"\nimport os\n\nfrom baremacgui import App, Button, DropZone, HBox, Label, Spacer, Table, VBox, Window\n\n\ndef human_size(size):\n    \"\"\"1536 -> '1.5 KB'.\"\"\"\n    value = float(size)\n    for unit in (\"bytes\", \"KB\", \"MB\", \"GB\"):\n        if value < 1024 or unit == \"GB\":\n            return f\"{int(value)} bytes\" if unit == \"bytes\" else f\"{value:.1f} {unit}\"\n        value /= 1024\n\n\napp = App(\"Drop\")\n\nwith Window(\"Drop files\", size=(520, 380)) as win:\n    with VBox(padding=16, gap=10):\n        zone = DropZone(\"Drop files here (folders are fine too)\")\n        table = Table([\"Name\", \"Size\", \"Folder\"], [], grow=1)\n        with HBox(gap=8):\n            summary = Label(\"Nothing dropped yet\")\n            Spacer()\n            clear = Button(\"Clear\")\n\n\ndef received():\n    for path in zone.paths:\n        size = \"\" if os.path.isdir(path) else human_size(os.path.getsize(path))\n        table.rows = table.rows + [[os.path.basename(path), size, os.path.dirname(path)]]\n    summary.text = f\"{len(table.rows)} item(s)\"\n\n\ndef clear_all():\n    table.rows = []\n    summary.text = \"Nothing dropped yet\"\n\n\nzone.on_drop(received)\nclear.on_click(clear_all)\n\nif __name__ == \"__main__\":\n    app.run()\n",
+   "source": "\"\"\"Drag files from Finder onto the window: a DropZone collects them in a table.\"\"\"\nimport os\n\nfrom baremacgui import App, Button, DropZone, HBox, Label, Spacer, Table, VBox, Window\n\n\ndef human_size(size):\n    \"\"\"1536 -> '1.5 KB'.\"\"\"\n    value = float(size)\n    for unit in (\"bytes\", \"KB\", \"MB\", \"GB\"):\n        if value < 1024 or unit == \"GB\":\n            return f\"{int(value)} bytes\" if unit == \"bytes\" else f\"{value:.1f} {unit}\"\n        value /= 1024\n\n\napp = App(\"Drop\")\n\nwith Window(\"Drop files\", size=(520, 380)) as win:\n    with VBox(padding=16, gap=10):\n        zone = DropZone(\"Drop files here (folders are fine too)\")\n        table = Table([\"Name\", \"Size\", \"Folder\"], [], widths=[220, 90, None], grow=1)\n        with HBox(gap=8):\n            summary = Label(\"Nothing dropped yet\")\n            Spacer()\n            clear = Button(\"Clear\")\n\n\ndef received():\n    for path in zone.paths:\n        size = \"\" if os.path.isdir(path) else human_size(os.path.getsize(path))\n        table.rows = table.rows + [[os.path.basename(path), size, os.path.dirname(path)]]\n    summary.text = f\"{len(table.rows)} item(s)\"\n\n\ndef clear_all():\n    table.rows = []\n    summary.text = \"Nothing dropped yet\"\n\n\nzone.on_drop(received)\nclear.on_click(clear_all)\n\nif __name__ == \"__main__\":\n    app.run()\n",
    "lines": 45,
    "screenshot": null
   },
@@ -2262,6 +2262,10 @@ window.BMC = {
     {
      "type": "p",
      "text": "Selection: `table.index` (first selected row or None), `table.indexes`, `table.selected_rows`. `on_select` fires when the user selects; `on_activate` when they double-click a row. Setting `rows` or `index` from code never fires them."
+    },
+    {
+     "type": "p",
+     "text": "`DropDown` starts with its first entry selected (`selected=0`) because it always shows one; `ComboBox`, `ListBox` and `IconGrid` start with nothing selected (`selected=None`)."
     },
     {
      "type": "p",

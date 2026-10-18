@@ -280,6 +280,7 @@ refresh()
 app.run()'''),
             ("p", "`editable=True` (or a list of column numbers) lets the user edit cells with a double-click; the position is in `table.edited`, the new text in `table.rows`. `sortable=True` sorts by a header click, numbers numerically and text case-insensitively. `table.sort(1)` sorts from code. `widths=[200, None, 80]` sets column widths in points (None is automatic)."),
             ("p", "Selection: `table.index` (first selected row or None), `table.indexes`, `table.selected_rows`. `on_select` fires when the user selects; `on_activate` when they double-click a row. Setting `rows` or `index` from code never fires them."),
+            ("p", "`DropDown` starts with its first entry selected (`selected=0`) because it always shows one; `ComboBox`, `ListBox` and `IconGrid` start with nothing selected (`selected=None`)."),
             ("p", "`ListBox` is a one-column table with `items`, `Tree` an expandable outline (set `sidebar=True` for the translucent source-list look) and `IconGrid` a wrapping grid of icons with labels. All four take `multi=True` and share `on_select` and `on_activate`."),
             ("native", "NSTableView and NSOutlineView with view-based cells, NSCollectionView for the icon grid. One cell kind per column, not per cell."),
         ],

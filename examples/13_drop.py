@@ -18,7 +18,7 @@ app = App("Drop")
 with Window("Drop files", size=(520, 380)) as win:
     with VBox(padding=16, gap=10):
         zone = DropZone("Drop files here (folders are fine too)")
-        table = Table(["Name", "Size", "Folder"], [], grow=1)
+        table = Table(["Name", "Size", "Folder"], [], widths=[220, 90, None], grow=1)
         with HBox(gap=8):
             summary = Label("Nothing dropped yet")
             Spacer()
