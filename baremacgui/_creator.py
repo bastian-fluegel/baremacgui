@@ -114,6 +114,7 @@ def build(app=None, path=None, window_args=None):
                 log = TextBox("", multiline=True, readonly=True, grow=1, height=120)
                 with HBox(gap=8):
                     status = Label("", grow=1)
+                    ci = Button("CI workflow…")
                     show = Button("Show in Finder")
 
             problem = Label("", secondary=True)
@@ -328,6 +329,19 @@ def build(app=None, path=None, window_args=None):
 
         chosen(save_file("Save settings", default_name=(name.text.strip() or "app") + inst.SPEC_SUFFIX))
 
+    def spec_file_name():
+        return (name.text.strip() or "app").lower().replace(" ", "-") + inst.SPEC_SUFFIX
+
+    def make_workflow():
+        def chosen(target):
+            if target:
+                with open(target, "w", encoding="utf-8") as handle:
+                    handle.write(inst.workflow_text(spec_file_name(), name.text.strip() or "app"))
+                status.text = (f"Workflow saved. Save the settings as {spec_file_name()} in the repository "
+                               "root and commit both.")
+
+        chosen(save_file("Save the CI workflow", default_name="build-app.yml"))
+
     def begin_build():
         reason = problem_for(3)
         if reason:
@@ -365,6 +379,7 @@ def build(app=None, path=None, window_args=None):
                 state.results = made
                 status.text = "Done: " + ", ".join(os.path.basename(m) for m in made)
                 show.visible = True
+                append(["", inst.SHARE_NOTE])
             refresh()
 
         def work():
@@ -400,6 +415,7 @@ def build(app=None, path=None, window_args=None):
     pick_dest.on_click(choose_dest)
     save.on_click(save_settings)
     show.on_click(show_in_finder)
+    ci.on_click(make_workflow)
     back.on_click(go_back)
     nxt.on_click(go_next)
 

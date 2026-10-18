@@ -39,6 +39,10 @@ def _parser():
     icons.add_argument("--folder", help="list the .icns and .png files of this folder instead of the system icons")
     icons.add_argument("--filter", default="", help="only names that contain this text")
 
+    workflow = sub.add_parser("workflow", help="write a GitHub Actions workflow that builds for Intel and Apple Silicon")
+    workflow.add_argument("--spec", required=True, help="the build file (*.bmc.json) as it lies in the repository")
+    workflow.add_argument("--out", default=".github/workflows/build-app.yml")
+
     wizard = sub.add_parser("installer", help="open the install creator (a window); optional script or build file")
     wizard.add_argument("path", nargs="?")
     return parser
@@ -84,6 +88,19 @@ def _icons(args):
     return 0
 
 
+def _workflow(args):
+    import os
+
+    spec = _installer.load_spec(args.spec)
+    root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(args.out))))  # <repo>/.github/workflows/x
+    text = _installer.workflow_text(os.path.relpath(os.path.abspath(args.spec), root), spec.name or "app")
+    os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
+    with open(args.out, "w", encoding="utf-8") as handle:
+        handle.write(text)
+    print(args.out)
+    return 0
+
+
 def _installer_window(args):
     from ._creator import run
 
@@ -94,7 +111,8 @@ def _installer_window(args):
 def main(argv=None):
     args = _parser().parse_args(argv)
     try:
-        return {"build": _build, "icons": _icons, "installer": _installer_window}[args.command](args)
+        return {"build": _build, "icons": _icons, "installer": _installer_window,
+                "workflow": _workflow}[args.command](args)
     except _ERRORS as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1

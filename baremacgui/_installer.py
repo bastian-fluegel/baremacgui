@@ -96,8 +96,22 @@ def check_spec(spec):
 
 
 def save_spec(spec, path):
+    """Write a build file. Paths inside the folder of the file are written relative to it, so the file can
+    live in a repository and work on another machine (and in CI)."""
+    base = os.path.dirname(os.path.abspath(str(path)))
+
+    def relative(value):
+        if not value or not os.path.isabs(value):
+            return value
+        inside = os.path.relpath(value, base)
+        return value if inside.startswith("..") else inside
+
+    data = spec.to_dict()
+    for key in ("script", "icon", "dest"):
+        data[key] = relative(data[key])
+    data["include"] = [relative(p) for p in data["include"]]
     with open(path, "w", encoding="utf-8") as handle:
-        json.dump(spec.to_dict(), handle, indent=2)
+        json.dump(data, handle, indent=2)
         handle.write("\n")
 
 
@@ -180,6 +194,56 @@ def local_icons(folder, limit=2000):
             if filename.lower().endswith((".icns", ".png")) and not filename.startswith("."):
                 found.append((os.path.splitext(filename)[0], os.path.join(root, filename)))
     return sorted(found)[:limit]
+
+
+# ---- handing the app on --------------------------------------------------------------------------------
+
+SHARE_NOTE = (
+    "Handing it on: the app is signed ad hoc and not notarized. On another Mac the first start is blocked "
+    "by Gatekeeper; allow it in System Settings > Privacy & Security > Open Anyway (unverified for macOS 15). "
+    "An Intel build runs on Apple Silicon only through Rosetta (unverified): build on both, see the CI workflow."
+)
+
+
+def workflow_text(spec_file, name="app"):
+    """A GitHub Actions workflow that builds the disk image on an Intel and an Apple Silicon runner.
+
+    `spec_file` is the path of the build file (*.bmc.json) inside the repository, relative to its root.
+    If the repository has a requirements.txt, it is installed first. Pure, tested everywhere."""
+    if not re.match(r"^[A-Za-z0-9_./-]+$", str(spec_file)):
+        raise ValueError(f"not a usable path for the build file: {spec_file!r}")
+    artifact = re.sub(r"[^A-Za-z0-9_.-]+", "-", str(name)).strip("-") or "app"
+    return f"""# Builds the app as a disk image for Intel and for Apple Silicon Macs (made by python -m baremacgui).
+# Start it from the Actions tab (Run workflow) or by pushing a tag like v1.0; the images are the artifacts.
+name: Build app
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - runner: macos-15-intel
+            label: intel
+          - runner: macos-latest
+            label: apple-silicon
+    runs-on: ${{{{ matrix.runner }}}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      # The released beta (0.1.0b1) has no build files yet; use the repository until the next release.
+      - run: python -m pip install "baremacgui[standalone] @ git+https://github.com/bastian-fluegel/baremacgui"
+      - run: if [ -f requirements.txt ]; then python -m pip install -r requirements.txt; fi
+      - run: python -m baremacgui build --spec {spec_file} --dest dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: {artifact}-${{{{ matrix.label }}}}
+          path: dist/*
+"""
 
 
 # ---- packaging -----------------------------------------------------------------------------------------

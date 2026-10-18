@@ -126,3 +126,33 @@ def test_terminal_spec_file_save_and_errors(script, tmp_path, capsys):
     assert _cli.main(["build", str(script), "--system-icon", "NoSuchIconAnywhere"]) == 1
     assert "no system icon" in capsys.readouterr().err
     assert _cli.main(["icons", "--folder", str(tmp_path)]) == 0
+
+
+def test_save_spec_writes_relative_paths_and_the_workflow(script, tmp_path):
+    spec = inst.BuildSpec(script=str(script), name="My Tool", include=[str(tmp_path / "data")], dest=str(tmp_path / "dist"))
+    (tmp_path / "data").mkdir()
+    target = tmp_path / "my-tool.bmc.json"
+    inst.save_spec(spec, target)
+    raw = json.loads(target.read_text())
+    assert raw["script"] == "my_tool.py" and raw["include"] == ["data"] and raw["dest"] == "dist"
+    assert inst.load_spec(target).script == str(script)
+    outside = inst.BuildSpec(script="/elsewhere/x.py")
+    inst.save_spec(outside, target)
+    assert json.loads(target.read_text())["script"] == "/elsewhere/x.py"
+    text = inst.workflow_text("my-tool.bmc.json", "My Tool")
+    assert "macos-15-intel" in text and "macos-latest" in text and "--spec my-tool.bmc.json --dest dist" in text
+    assert "name: My-Tool-${{ matrix.label }}" in text and "runs-on: ${{ matrix.runner }}" in text
+    with pytest.raises(ValueError):
+        inst.workflow_text("bad path; rm")
+    assert "Open Anyway" in inst.SHARE_NOTE
+
+
+def test_workflow_command_writes_the_file(script, tmp_path):
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    (repo / "app.py").write_text("")
+    spec = repo / "app.bmc.json"
+    inst.save_spec(inst.BuildSpec(script=str(repo / "app.py"), name="App"), spec)
+    out = repo / ".github" / "workflows" / "build-app.yml"
+    assert _cli.main(["workflow", "--spec", str(spec), "--out", str(out)]) == 0
+    assert "--spec app.bmc.json" in out.read_text()

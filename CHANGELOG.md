@@ -7,6 +7,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+### Added
+- `python -m baremacgui workflow --spec app.bmc.json` and the wizard button "CI workflow…": a GitHub Actions workflow that builds the disk image on an Intel and an Apple Silicon runner. The wizard prints a note about handing the app on (Gatekeeper, Rosetta). Not run on GitHub yet.
+
 ### Fixed
 - Dialogs and sheets bring the app and the parent window to the front first; started from a terminal they could open behind other windows and look as if nothing happened.
 
