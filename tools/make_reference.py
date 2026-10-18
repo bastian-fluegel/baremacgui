@@ -26,7 +26,7 @@ GROUPS = [
                   "ListBox", "Table", "IconGrid", "Tree", "Custom"]),
     ("Menus", ["MenuBar", "Menu", "MenuItem", "MenuSeparator", "ContextMenu", "StatusItem"]),
     ("Timer, settings and clipboard", ["Timer", "Settings", "Clipboard"]),
-    ("Packaging", ["build_app", "build_standalone"]),
+    ("Packaging", ["build_app", "build_standalone", "BuildSpec", "create_installer"]),
     ("Dialogs", ["show_info", "show_warning", "show_error", "ask_yes_no", "ask_ok_cancel", "input_box", "open_file",
                  "save_file", "pick_folder", "notify", "choose_color", "choose_font", "FontChoice"]),
 ]

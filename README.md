@@ -129,14 +129,25 @@ python -m baremacgui build my_script.py --name "My Tool" --icon icon.png
 
 creates `My Tool.app` in the current folder: an `Info.plist`, the script in `Resources` and a small launcher that starts the Python that built it. The app has its own name and icon in Finder, and the script gets the same name and Dock icon through `App`. Options: `--dest`, `--identifier`, `--version`, `--background` (menu-bar app, no Dock icon), `--include` (extra files or folders next to the script). From code: `baremacgui.build_app(...)`.
 
-### Standalone build (new, only checked on CI so far)
+### Standalone build
 
 ```
 pip install "baremacgui[standalone]"
 python -m baremacgui build my_script.py --standalone
 ```
 
-bundles an own interpreter and PyObjC (PyInstaller) so the app starts without Python, and signs it ad hoc (`codesign --sign -`, no identity). It is bytecode in a bundle, not compiled machine code. On the Mac that built it the app starts without a warning; a copy that is downloaded or sent elsewhere is blocked by Gatekeeper until the user allows it (System Settings, Privacy & Security), because it is not notarized. From code: `baremacgui.build_standalone(...)`.
+bundles an own interpreter and PyObjC (PyInstaller) so the app starts without Python, and signs it ad hoc (`codesign --sign -`, no identity). It is bytecode in a bundle, not compiled machine code. On the Mac that built it the app starts without a warning; a copy that is downloaded or sent elsewhere is blocked by Gatekeeper until the user allows it (System Settings, Privacy & Security), because it is not notarized. From code: `baremacgui.build_standalone(...)`. A standalone build of example 16 starts on the author's Intel Mac (macOS 15.5), also after zipping, copying and unpacking it; Gatekeeper for downloaded copies, Apple Silicon and other macOS versions are not checked.
+
+### Install creator (new, only built by CI so far)
+
+```
+python -m baremacgui installer                      # the wizard window
+python -m baremacgui build my_script.py --dmg --zip --system-icon GenericApplicationIcon
+python -m baremacgui build --spec my_app.bmc.json   # repeat a saved build
+python -m baremacgui icons --filter folder          # names for --system-icon
+```
+
+The wizard (built with BareMacGUI itself, `examples/17_installer.py`) asks for the script and name, the icon (a file, a folder of icons or the icons macOS ships), the files and packages the app needs, and what to make: a disk image (`.dmg`, with a link to Applications), a ZIP, or the app itself. The same can be done from the terminal with the options of `build`; `--save-spec` writes the settings to a `*.bmc.json` file. From code: `baremacgui.BuildSpec` and `baremacgui.create_installer(spec)`. All of this needs PyInstaller (`pip install "baremacgui[standalone]"`). It was not run on a real Mac yet: CI builds the window and a standalone app only.
 
 The plain build above is not self-contained (it needs the Python and the packages it was built with, at the same place), it is not signed or notarized, and it will not run on another Mac. Notarization needs Apple's notarytool and a Developer ID, which this library does not do.
 

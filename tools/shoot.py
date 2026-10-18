@@ -84,6 +84,14 @@ SCENARIOS = {
         (lambda g: (setattr(g["name"], "text", "Ada Lovelace"), setattr(g["email"], "text", "ada@example"), g["refresh"]()), 0.8, "form-invalid"),
         (lambda g: (setattr(g["email"], "text", "ada@example.com"), setattr(g["password"], "text", "analytical"), setattr(g["terms"], "checked", True), g["refresh"]()), 0.8, "form-valid"),
     ]),
+    "installer": ("17_installer.py", [
+        (lambda g: (setattr(g["wizard"].script, "text", os.path.join(ROOT, "examples", "02_settings.py")), g["wizard"].script_changed()), 1.0, "installer-app"),
+        (lambda g: g["wizard"].go_next(), 0.8, None),
+        (lambda g: (setattr(g["wizard"].icon_source, "index", 3), g["wizard"].icon_source_changed(), setattr(g["wizard"].icon_list, "index", 10), g["wizard"].show_icon()), 1.0, "installer-icon"),
+        (lambda g: g["wizard"].go_next(), 0.8, "installer-needs"),
+        (lambda g: g["wizard"].go_next(), 0.8, "installer-build"),
+        (dump_window, 0.2, None),
+    ]),
     "progress": ("09_progress.py", [
         (None, 1.0, "progress-ready"),
         (lambda g: g["begin"](), 2.0, "progress-running"),

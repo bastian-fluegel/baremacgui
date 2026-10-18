@@ -38,7 +38,7 @@ def run_example(path):
 
 
 def test_there_are_examples():
-    assert len(EXAMPLES) >= 17
+    assert len(EXAMPLES) >= 18
 
 
 @pytest.mark.parametrize("path", EXAMPLES, ids=lambda p: p.stem)

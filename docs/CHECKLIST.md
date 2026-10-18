@@ -24,6 +24,9 @@ it does not mean a person clicked it.
 - [x] `Settings` values and `Window(autosave=)` position survive a real quit and restart (example 02)
 - [ ] Several windows (example 15): clicking between windows swaps the menus, the Window menu lists the windows, a sheet or modal dialog keeps the menus of its window
 - [x] Built `.app`: starts, Finder and Dock show the name and the default icon
+- [x] Standalone `.app` (`build --standalone`, example 16): starts on the Intel Mac, also from an unpacked ZIP copy
+- [ ] Standalone `.app`: downloaded copy (Gatekeeper dialog), Apple Silicon
+- [ ] Install creator: the wizard window (all four steps, icon preview, system icons, build with log), `--dmg` opens and drags to Applications, `--zip`, saved `*.bmc.json`
 - [ ] Built `.app`: `--background` leaves no Dock icon; a custom `--icon`
 - [ ] Table checkbox column: click toggles, selection and sorting by that column behave (example 14)
 - [x] DropZone: files and folders dragged from Finder (example 13)

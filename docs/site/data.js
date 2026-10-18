@@ -257,7 +257,13 @@ window.BMC = {
      "doc": "Stack children top to bottom.",
      "summary": "Stack children top to bottom.",
      "events": [],
-     "props": [],
+     "props": [
+      {
+       "name": "visible",
+       "doc": "False hides the box and everything in it; the parent closes the gap it leaves.",
+       "rw": true
+      }
+     ],
      "methods": []
     },
     {
@@ -267,7 +273,13 @@ window.BMC = {
      "doc": "Stack children left to right.",
      "summary": "Stack children left to right.",
      "events": [],
-     "props": [],
+     "props": [
+      {
+       "name": "visible",
+       "doc": "False hides the box and everything in it; the parent closes the gap it leaves.",
+       "rw": true
+      }
+     ],
      "methods": []
     },
     {
@@ -937,6 +949,11 @@ window.BMC = {
       {
        "name": "enabled",
        "doc": "",
+       "rw": true
+      },
+      {
+       "name": "path",
+       "doc": "The file shown (None for a system symbol). Set it to show another file, or None for no picture.",
        "rw": true
       },
       {
@@ -1849,9 +1866,32 @@ window.BMC = {
     {
      "name": "build_standalone",
      "kind": "function",
-     "signature": "(script, name=None, dest='.', identifier=None, version='1.0', icon=None, background=False, include=())",
-     "doc": "Create a self-contained `<dest>/<name>.app` (own interpreter and PyObjC inside) and sign it ad hoc.\n\nNeeds macOS and PyInstaller (`pip install pyinstaller`, only for building, not for running the app).\nThe result starts without any Python installed. It is bytecode bundled with an interpreter, not\ncompiled machine code. The ad-hoc signature carries no identity and is not notarized: on the Mac\nthat built it the app starts without a warning, a copy downloaded elsewhere is blocked by Gatekeeper\nuntil the user allows it. `include` files end up in the bundle's Resources; find them via\n`sys._MEIPASS` (unverified on a real Mac so far).",
+     "signature": "(script, name=None, dest='.', identifier=None, version='1.0', icon=None, background=False, include=(), hidden_imports=(), collect_all=(), log=None)",
+     "doc": "Create a self-contained `<dest>/<name>.app` (own interpreter and PyObjC inside) and sign it ad hoc.\n\nNeeds macOS and PyInstaller (`pip install pyinstaller`, only for building, not for running the app).\nThe result starts without any Python installed. It is bytecode bundled with an interpreter, not\ncompiled machine code. The ad-hoc signature carries no identity and is not notarized: on the Mac\nthat built it the app starts without a warning, a copy downloaded elsewhere is blocked by Gatekeeper\nuntil the user allows it. `include` files end up in the bundle's Resources; find them via\n`sys._MEIPASS` (unverified on a real Mac so far).\n\nhidden_imports  module names PyInstaller cannot find by itself (imported by name at run time)\ncollect_all     packages to take along completely (data files, submodules), for the ones that need it\nlog             a function that receives each output line of the build",
      "summary": "Create a self-contained `<dest>/<name>.app` (own interpreter and PyObjC inside) and sign it ad hoc."
+    },
+    {
+     "name": "BuildSpec",
+     "kind": "class",
+     "signature": "(script: str = '', name: str = '', identifier: str = '', version: str = '1.0', icon: str = '', background: bool = False, standalone: bool = True, include: list = <factory>, packages: list = <factory>, hidden_imports: list = <factory>, outputs: list = <factory>, dest: str = '.') -> None",
+     "doc": "Everything the creator needs to know. Saved as JSON (`*.bmc.json`) so a build can be repeated.",
+     "summary": "Everything the creator needs to know. Saved as JSON (`*.bmc.json`) so a build can be repeated.",
+     "events": [],
+     "props": [],
+     "methods": [
+      {
+       "name": "to_dict",
+       "signature": "()",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "create_installer",
+     "kind": "function",
+     "signature": "(spec, log=None)",
+     "doc": "Build the app from `spec` and package it. Returns the list of files and folders made.\n\nThe app is built standalone (own interpreter, signed ad hoc) unless spec.standalone is False.\noutputs: \"app\" the bundle itself, \"zip\" a ZIP made with ditto (keeps the signature), \"dmg\" a disk image\nwith the app and a link to /Applications to drag it to. macOS only.",
+     "summary": "Build the app from `spec` and package it. Returns the list of files and folders made."
     }
    ]
   },
@@ -2091,6 +2131,14 @@ window.BMC = {
    "source": "\"\"\"Showcase: one window with most of what BareMacGUI does, all of it real AppKit.\n\nA System-Settings-style sidebar window; a sortable table with checkboxes and SF Symbols; an icon grid\nwith a segmented control and search field; switch, color well, slider with tick marks and a calendar;\ntext styles. Light and dark appearance, the accent color and every control come from the system.\n\"\"\"\nimport datetime as dt\n\nfrom baremacgui import (\n    App, CheckBox, ColorWell, DatePicker, DropDown, DropZone, HBox, IconGrid, Label, Page, ProgressBar, SearchField,\n    SegmentedControl, Separator, Sidebar, Slider, Spacer, Switch, Table, VBox, Window,\n)\n\nTASKS = [\n    [True, (\"envelope\", \"Answer the mail\"), \"9:00\"],\n    [True, (\"cart\", \"Buy groceries\"), \"10:30\"],\n    [False, (\"phone\", \"Call the plumber\"), \"11:15\"],\n    [False, (\"calendar\", \"Book the train to Munich\"), \"13:00\"],\n    [False, (\"doc.text\", \"Write the quarterly report\"), \"15:30\"],\n    [False, (\"bicycle\", \"Evening ride\"), \"18:30\"],\n    [False, (\"fork.knife\", \"Cook dinner for four\"), \"19:30\"],\n    [False, (\"book\", \"Read a chapter\"), \"21:30\"],\n]\n\nLIBRARY = [\n    (\"Photos\", \"photo.on.rectangle\"), (\"Music\", \"music.note\"), (\"Movies\", \"film\"), (\"Books\", \"book\"),\n    (\"Podcasts\", \"mic\"), (\"Maps\", \"map\"), (\"Notes\", \"note.text\"), (\"Mail\", \"envelope\"),\n    (\"Calendar\", \"calendar\"), (\"Contacts\", \"person.crop.circle\"), (\"Weather\", \"cloud.sun\"),\n    (\"Clock\", \"clock\"),\n]\n\n\ndef progress_text(rows):\n    \"\"\"'2 of 6 done'.\"\"\"\n    return f\"{sum(1 for row in rows if row[0])} of {len(rows)} done\"\n\n\ndef share_done(rows):\n    \"\"\"Finished share of the tasks, 0 to 100.\"\"\"\n    return 100.0 * sum(1 for row in rows if row[0]) / len(rows) if rows else 0.0\n\n\ndef filter_library(items, text):\n    \"\"\"The (name, symbol) pairs whose name contains `text`, ignoring case.\"\"\"\n    needle = text.strip().casefold()\n    return [item for item in items if needle in item[0].casefold()]\n\n\napp = App(\"Atelier\")\n\nwith Window(\"Atelier\", size=(900, 600), style=\"sidebar\") as win:\n    with Sidebar(selected=0, width=210) as sidebar:\n        with Page(\"Today\", symbol=\"checkmark.circle\"):\n            with VBox(padding=28, gap=10):\n                Label(\"Today\", style=\"large_title\")\n                Label(dt.date.today().strftime(\"%A, %d %B\"), secondary=True)\n                Spacer(6)\n                table = Table([\"Done\", \"Task\", \"Due\"], TASKS, kinds=[\"check\", \"icon\", \"text\"], sortable=True,\n                              grow=1, accessibility_label=\"Tasks\")\n                with HBox(gap=12):\n                    bar = ProgressBar(share_done(TASKS), accessibility_label=\"Share of tasks done\")\n                    summary = Label(progress_text(TASKS), secondary=True)\n        with Page(\"Library\", symbol=\"books.vertical\"):\n            with VBox(padding=28, gap=10):\n                Label(\"Library\", style=\"large_title\")\n                with HBox(gap=10):\n                    SegmentedControl(symbols=[\"square.grid.2x2\", \"list.bullet\"], selected=0,\n                                     accessibility_label=\"View as icons or list\")\n                    Spacer()\n                    search = SearchField(placeholder=\"Search library\", width=220, accessibility_label=\"Search library\")\n                grid = IconGrid(LIBRARY, icon_size=48, grow=1, accessibility_label=\"Library\")\n                DropZone(\"Drop files here to import\", height=64)\n        with Page(\"Appearance\", symbol=\"paintpalette\"):\n            with VBox(padding=28, gap=12):\n                Label(\"Appearance\", style=\"large_title\")\n                Label(\"Everything here is a system control, so it follows light and dark mode.\", secondary=True)\n                Spacer(8)\n                with HBox():\n                    Label(\"Accent color\", style=\"headline\")\n                    Spacer()\n                    accent = ColorWell(\"#0A84FF\", accessibility_label=\"Accent color\")\n                Separator()\n                with HBox():\n                    Label(\"Reduce motion\", style=\"headline\")\n                    Spacer()\n                    Switch(False, accessibility_label=\"Reduce motion\")\n                Separator()\n                with HBox():\n                    Label(\"Text size\", style=\"headline\")\n                    Spacer()\n                    size_slider = Slider(3, 1, 5, ticks=5, snap=True, width=220, accessibility_label=\"Text size\")\n                Separator()\n                with HBox():\n                    Label(\"Density\", style=\"headline\")\n                    Spacer()\n                    SegmentedControl([\"Compact\", \"Comfortable\", \"Spacious\"], selected=1, accessibility_label=\"Density\")\n                Separator()\n                with HBox():\n                    Label(\"Language\", style=\"headline\")\n                    Spacer()\n                    DropDown([\"English\", \"Deutsch\", \"Fran\\u00e7ais\", \"Espa\\u00f1ol\"], selected=0, width=160,\n                             accessibility_label=\"Language\")\n                Separator()\n                with HBox():\n                    Label(\"Notifications\", style=\"headline\")\n                    Spacer()\n                    CheckBox(\"Allow notifications\", checked=True)\n                Separator()\n                with HBox():\n                    Label(\"Next review\", style=\"headline\")\n                    Spacer()\n                    DatePicker(dt.date.today() + dt.timedelta(days=14), accessibility_label=\"Next review\")\n                Spacer()\n        with Page(\"About\", symbol=\"info.circle\"):\n            with VBox(padding=28, gap=8):\n                Label(\"Atelier\", style=\"large_title\")\n                Label(\"A demo window built with BareMacGUI: about 100 lines of Python, no Xcode, no Swift.\",\n                      secondary=True)\n                Spacer()\n\n\ndef refresh_tasks():\n    rows = table.rows\n    bar.value = share_done(rows)\n    summary.text = progress_text(rows)\n\n\ndef refresh_library():\n    grid.items = filter_library(LIBRARY, search.text)\n\n\ntable.on_edit(refresh_tasks)\nsearch.on_change(refresh_library)\n\nif __name__ == \"__main__\":\n    app.run()\n",
    "lines": 137,
    "screenshot": "../screenshots/showcase.png"
+  },
+  {
+   "id": "17_installer",
+   "title": "installer",
+   "doc": "The install creator that ships with BareMacGUI: a wizard that turns a script into an app, ZIP or disk image.\n\nIt is built with BareMacGUI itself (baremacgui/_creator.py). From the terminal: python -m baremacgui build --help",
+   "source": "\"\"\"The install creator that ships with BareMacGUI: a wizard that turns a script into an app, ZIP or disk image.\n\nIt is built with BareMacGUI itself (baremacgui/_creator.py). From the terminal: python -m baremacgui build --help\n\"\"\"\nfrom baremacgui import App\nfrom baremacgui._creator import build\n\napp = App(\"Install Creator\")\nwizard = build(app)\n\nif __name__ == \"__main__\":\n    app.run()\n",
+   "lines": 13,
+   "screenshot": null
   }
  ],
  "guide": [
@@ -2399,8 +2447,20 @@ window.BMC = {
      "text": "`--standalone` bundles an own interpreter and PyObjC with PyInstaller and signs the app ad hoc (`codesign --sign -`, no identity). It is bytecode in a bundle, not compiled machine code. On the Mac that built it the app starts without a warning; a copy downloaded elsewhere is blocked by Gatekeeper until the user allows it, because it is not notarized. From code: `baremacgui.build_standalone(...)`."
     },
     {
+     "type": "p",
+     "text": "To hand an app to someone, the install creator makes a disk image (`.dmg`, with a link to Applications) or a ZIP, with a window or from the terminal:"
+    },
+    {
+     "type": "shell",
+     "text": "python -m baremacgui installer\npython -m baremacgui build my_script.py --system-icon GenericApplicationIcon --dmg --zip\npython -m baremacgui icons --filter folder"
+    },
+    {
+     "type": "p",
+     "text": "The window is a wizard in four steps: script and name, icon (a file, a folder of icons or the icons macOS ships, with a preview), what the script needs (extra files and folders, packages to take along; imports found in the script are listed), and what to make. `Save settings` writes a `*.bmc.json` file that `build --spec file.bmc.json` or `installer file.bmc.json` reads again. From code: `baremacgui.BuildSpec` and `baremacgui.create_installer(spec)`. The creator itself is built with BareMacGUI (example 17)."
+    },
+    {
      "type": "unverified",
-     "text": "The standalone build is only checked on CI so far (bundle builds, signature verifies). Starting the result on a real Mac is still to be checked."
+     "text": "A standalone app of example 16 starts on the author's Intel Mac (macOS 15.5), also from a ZIP copied and unpacked there. Not checked: the Gatekeeper dialog for a downloaded copy, Apple Silicon, other macOS versions, the install creator window and disk images (CI only builds them)."
     },
     {
      "type": "unverified",

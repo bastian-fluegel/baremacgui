@@ -163,11 +163,19 @@ Methods:
 Stack children top to bottom.
 ```
 
+Properties:
+
+- `visible`: False hides the box and everything in it; the parent closes the gap it leaves.
+
 ### `HBox(padding=0, gap=8, align=None, grow=0, justify='start', **size)`
 
 ```text
 Stack children left to right.
 ```
+
+Properties:
+
+- `visible`: False hides the box and everything in it; the parent closes the gap it leaves.
 
 ### `Spacer(size=None, grow=None)`
 
@@ -535,6 +543,7 @@ Properties:
 - `accessibility_label`: The text VoiceOver reads for this control, or None (then AppKit uses the visible title).
 - `context_menu`: A ContextMenu shown on right-click (Control-click), or None.
 - `enabled`
+- `path`: The file shown (None for a system symbol). Set it to show another file, or None for no picture.
 - `tooltip`: The hint shown when the pointer rests on the control, or None.
 - `visible`: False hides the control; a box closes the gap it leaves.
 
@@ -1031,7 +1040,7 @@ python      interpreter to start; default: the one running this code
 An existing bundle of the same name is replaced.
 ```
 
-### `build_standalone(script, name=None, dest='.', identifier=None, version='1.0', icon=None, background=False, include=())`
+### `build_standalone(script, name=None, dest='.', identifier=None, version='1.0', icon=None, background=False, include=(), hidden_imports=(), collect_all=(), log=None)`
 
 ```text
 Create a self-contained `<dest>/<name>.app` (own interpreter and PyObjC inside) and sign it ad hoc.
@@ -1042,6 +1051,30 @@ compiled machine code. The ad-hoc signature carries no identity and is not notar
 that built it the app starts without a warning, a copy downloaded elsewhere is blocked by Gatekeeper
 until the user allows it. `include` files end up in the bundle's Resources; find them via
 `sys._MEIPASS` (unverified on a real Mac so far).
+
+hidden_imports  module names PyInstaller cannot find by itself (imported by name at run time)
+collect_all     packages to take along completely (data files, submodules), for the ones that need it
+log             a function that receives each output line of the build
+```
+
+### `BuildSpec(script: str = '', name: str = '', identifier: str = '', version: str = '1.0', icon: str = '', background: bool = False, standalone: bool = True, include: list = <factory>, packages: list = <factory>, hidden_imports: list = <factory>, outputs: list = <factory>, dest: str = '.') -> None`
+
+```text
+Everything the creator needs to know. Saved as JSON (`*.bmc.json`) so a build can be repeated.
+```
+
+Methods:
+
+- `to_dict()`
+
+### `create_installer(spec, log=None)`
+
+```text
+Build the app from `spec` and package it. Returns the list of files and folders made.
+
+The app is built standalone (own interpreter, signed ad hoc) unless spec.standalone is False.
+outputs: "app" the bundle itself, "zip" a ZIP made with ditto (keeps the signature), "dmg" a disk image
+with the app and a link to /Applications to drag it to. macOS only.
 ```
 
 ## Dialogs

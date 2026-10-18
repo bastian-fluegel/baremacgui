@@ -219,7 +219,8 @@ def build_app(script, name=None, dest=".", identifier=None, version="1.0", icon=
     return bundle
 
 
-def pyinstaller_command(script, name, identifier, icon_file, workdir, include=(), python=None):
+def pyinstaller_command(script, name, identifier, icon_file, workdir, include=(), python=None, hidden_imports=(),
+                        collect_all=()):
     """The PyInstaller command line for a windowed onedir build (pure, tested everywhere)."""
     command = [python or sys.executable, "-m", "PyInstaller", "--noconfirm", "--clean", "--windowed",
                "--name", name, "--osx-bundle-identifier", identifier,
@@ -230,7 +231,23 @@ def pyinstaller_command(script, name, identifier, icon_file, workdir, include=()
     for extra in include:
         extra = os.path.abspath(str(extra))
         command += ["--add-data", f"{extra}:{os.path.basename(extra)}"]
+    for module in hidden_imports:
+        command += ["--hidden-import", str(module)]
+    for package in collect_all:
+        command += ["--collect-all", str(package)]
     return command + [script]
+
+
+def _run(command, log=None):
+    """Run a command; with `log`, every output line goes to log(line) while it runs."""
+    if log is None:
+        subprocess.run(command, check=True)
+        return
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, errors="replace")
+    for line in process.stdout:
+        log(line.rstrip())
+    if process.wait() != 0:
+        raise subprocess.CalledProcessError(process.returncode, command)
 
 
 def adhoc_sign_command(app):
@@ -239,7 +256,7 @@ def adhoc_sign_command(app):
 
 
 def build_standalone(script, name=None, dest=".", identifier=None, version="1.0", icon=None,
-                     background=False, include=()):
+                     background=False, include=(), hidden_imports=(), collect_all=(), log=None):
     """Create a self-contained `<dest>/<name>.app` (own interpreter and PyObjC inside) and sign it ad hoc.
 
     Needs macOS and PyInstaller (`pip install pyinstaller`, only for building, not for running the app).
@@ -248,6 +265,10 @@ def build_standalone(script, name=None, dest=".", identifier=None, version="1.0"
     that built it the app starts without a warning, a copy downloaded elsewhere is blocked by Gatekeeper
     until the user allows it. `include` files end up in the bundle's Resources; find them via
     `sys._MEIPASS` (unverified on a real Mac so far).
+
+    hidden_imports  module names PyInstaller cannot find by itself (imported by name at run time)
+    collect_all     packages to take along completely (data files, submodules), for the ones that need it
+    log             a function that receives each output line of the build
     """
     if sys.platform != "darwin":
         raise PlatformError("standalone builds need macOS")
@@ -278,7 +299,8 @@ def build_standalone(script, name=None, dest=".", identifier=None, version="1.0"
             _icns_from_png(os.path.abspath(str(icon)), icns)
         else:
             shutil.copy2(str(icon), icns)
-        subprocess.run(pyinstaller_command(script, name, identifier, icns, work, include), check=True)
+        _run(pyinstaller_command(script, name, identifier, icns, work, include, hidden_imports=hidden_imports,
+                                 collect_all=collect_all), log)
         built = os.path.join(work, "dist", name + ".app")
         plist_path = os.path.join(built, "Contents", "Info.plist")
         with open(plist_path, "rb") as handle:
@@ -289,8 +311,8 @@ def build_standalone(script, name=None, dest=".", identifier=None, version="1.0"
             info["LSUIElement"] = True
         with open(plist_path, "wb") as handle:
             plistlib.dump(info, handle)
-        subprocess.run(adhoc_sign_command(built), check=True)  # after the last change to the bundle
-        subprocess.run(["codesign", "--verify", "--deep", "--strict", built], check=True)
+        _run(adhoc_sign_command(built), log)  # after the last change to the bundle
+        _run(["codesign", "--verify", "--deep", "--strict", built], log)
         if os.path.exists(bundle):
             shutil.rmtree(bundle)
         os.makedirs(os.path.dirname(bundle), exist_ok=True)
@@ -299,33 +321,7 @@ def build_standalone(script, name=None, dest=".", identifier=None, version="1.0"
 
 
 def main(argv=None):
-    """`python -m baremacgui build script.py [options]`"""
-    import argparse
+    """`python -m baremacgui build script.py [options]`, see _cli."""
+    from ._cli import main as run
 
-    parser = argparse.ArgumentParser(prog="python -m baremacgui", description="BareMacGUI tools")
-    sub = parser.add_subparsers(dest="command", required=True)
-    build = sub.add_parser("build", help="wrap a script in a double-clickable .app (unsigned, starts this Python)")
-    build.add_argument("script")
-    build.add_argument("--name")
-    build.add_argument("--dest", default=".")
-    build.add_argument("--identifier")
-    build.add_argument("--version", default="1.0")
-    build.add_argument("--icon")
-    build.add_argument("--background", action="store_true", help="menu-bar app without Dock icon")
-    build.add_argument("--include", action="append", default=[], help="extra file or folder (repeatable)")
-    build.add_argument("--standalone", action="store_true",
-                       help="bundle an own interpreter (needs PyInstaller) and sign ad hoc; runs without Python")
-    args = parser.parse_args(argv)
-    try:
-        if args.standalone:
-            path = build_standalone(args.script, args.name, args.dest, args.identifier, args.version,
-                                    args.icon, args.background, args.include)
-            print(path)
-            return 0
-        path = build_app(args.script, args.name, args.dest, args.identifier, args.version, args.icon,
-                         args.background, args.include)
-    except (BareMacGUIError, OSError, ValueError, subprocess.CalledProcessError) as exc:
-        print(f"error: {exc}", file=sys.stderr)
-        return 1
-    print(path)
-    return 0
+    return run(argv)

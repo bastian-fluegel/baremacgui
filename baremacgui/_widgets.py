@@ -234,6 +234,22 @@ class Image(Control):
         if description is not None:
             size["accessibility_label"] = str(description)
         super().__init__(ns, grow, **size)
+        self._path = None if path is None else str(path)
+
+    @property
+    def path(self):
+        """The file shown (None for a system symbol). Set it to show another file, or None for no picture."""
+        return self._path
+
+    @path.setter
+    def path(self, value):
+        image = None
+        if value is not None:
+            image = AK().NSImage.alloc().initWithContentsOfFile_(str(value))
+            if image is None:
+                raise FileNotFoundError(f"cannot load image: {value}")
+        self.ns.setImage_(image)
+        self._path = None if value is None else str(value)
 
 
 class Separator:

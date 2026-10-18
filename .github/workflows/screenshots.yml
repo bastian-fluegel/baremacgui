@@ -27,7 +27,7 @@ jobs:
           mkdir -p shots
           status=0
           for appearance in "" "--dark"; do
-            for scenario in hello settings widgets finder sidebar everything editor form progress tasks notes drop checklist showcase; do
+            for scenario in hello settings widgets finder sidebar everything editor form progress tasks notes drop checklist showcase installer; do
               echo "=== $scenario $appearance"
               python tools/shoot.py "$scenario" shots $appearance 2>&1 | tee -a shots/log.txt || status=1
             done

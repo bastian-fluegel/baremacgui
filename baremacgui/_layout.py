@@ -281,6 +281,15 @@ class _Box:
     def accept(self, item):
         self._items.append(item)
 
+    @property
+    def visible(self):
+        """False hides the box and everything in it; the parent closes the gap it leaves."""
+        return not bool(self.ns.isHidden())
+
+    @visible.setter
+    def visible(self, value):
+        self.ns.setHidden_(not value)
+
     def __enter__(self):
         _core.current()  # fail early with a clear message when used outside a Window
         _core.push(self)
