@@ -11,7 +11,7 @@ Two ways to get the answer:
 """
 from __future__ import annotations
 
-from ._bridge import AK, ensure_app, safe_call
+from ._bridge import AK, FN, ensure_app, safe_call
 from ._options import normalize_filetypes
 
 _MODAL_OK = 1  # NSModalResponseOK
@@ -31,9 +31,24 @@ def _parent_window(parent, then):
     return window
 
 
+def _wait_for(answer):
+    """Dispatch events like the main loop does until `answer` is not empty.
+
+    A sheet needs normal event dispatch so that the keyboard (Return, Escape, Tab) reaches it; an
+    application-modal session on a sheet window does not deliver it reliably.
+    """
+    ak, fn = AK(), FN()
+    app = ak.NSApplication.sharedApplication()
+    while not answer:
+        event = app.nextEventMatchingMask_untilDate_inMode_dequeue_(
+            ak.NSEventMaskAny, fn.NSDate.dateWithTimeIntervalSinceNow_(0.05), ak.NSDefaultRunLoopMode, True)
+        if event is not None:
+            app.sendEvent_(event)
+    return answer[0]
+
+
 def _run_sheet(window, modal_window, begin, then, convert):
     """Run a sheet on `window`. begin(handler) starts it, handler gets the response code."""
-    app = AK().NSApplication.sharedApplication()
     answer = []
 
     def handler(code):
@@ -42,14 +57,13 @@ def _run_sheet(window, modal_window, begin, then, convert):
             safe_call(then, value)
         else:
             answer.append(value)
-            app.stopModalWithCode_(int(code))
 
     begin(handler)
-    modal_window.makeKeyAndOrderFront_(None)  # the keyboard must go to the sheet, not to the window behind it
+    # No makeKeyAndOrderFront_ here: a sheet becomes key by itself, and ordering it to the front by hand
+    # turned it into a loose window that the keyboard did not reach (seen on a real Mac, example 07).
     if then is not None:
         return None
-    app.runModalForWindow_(modal_window)
-    return answer[0] if answer else None
+    return _wait_for(answer)
 
 
 def _make_alert(style_name, text, title, buttons):

@@ -37,6 +37,7 @@ Names and defaults aligned with BareWinGUI, so code moves between the two with f
 - `Window(size=)` defaults to (640, 480).
 
 ### Fixed
+- Sheet dialogs (`parent=win`) did not react to the keyboard on a real Mac (Return, Escape, Tab) and showed as a loose window: the sheet is no longer ordered to the front by hand, and the blocking form waits with normal event dispatch instead of an application-modal session (unverified on the Mac).
 - Alerts and sheets: Escape presses the last button of a yes/no or ok/cancel question, and the sheet is made the key window so the keyboard reaches it (a real Mac showed an alert from example 07 that ignored the keyboard; the fix is unverified there).
 - Ctrl-C in the terminal quits a running app (the Cocoa loop swallowed it).
 - `App.quit()` from a menu item needed a second click in a menu-bar app; it now terminates after the menu has closed (reported from a real Mac; the fix is unverified there).

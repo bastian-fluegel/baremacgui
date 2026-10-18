@@ -1198,3 +1198,13 @@ def test_alert_keyboard_buttons():
     assert str(first.keyEquivalent()) == "\r" and str(last.keyEquivalent()) == "\x1b"
     single = _make_alert("NSAlertStyleInformational", "Done", "t", ["OK"])
     assert str(single.buttons()[0].keyEquivalent()) == "\r"
+
+
+def test_blocking_sheet_wait_dispatches_events_until_answered():
+    from baremacgui import Timer
+    from baremacgui._dialogs import _wait_for
+
+    answer = []
+    timer = Timer(0.1, lambda: answer.append("done"), repeat=False)
+    assert _wait_for(answer) == "done"
+    assert timer is not None
