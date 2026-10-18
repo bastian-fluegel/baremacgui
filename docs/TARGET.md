@@ -48,4 +48,4 @@ Editable tables and sorting, rich text, drag and drop, clipboard, a drawing canv
 notifications, saved settings, a web view, `.app` packaging and signing. See the roadmap.
 
 ## Definition of "alpha is done"
-See `docs/ALPHA-CHECKLIST.md`.
+See `docs/CHECKLIST.md`.

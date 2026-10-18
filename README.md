@@ -12,7 +12,7 @@ BareMacGUI is a thin Python layer for native macOS windows. Real AppKit controls
 
 The package and import name is `baremacgui`. The API shape follows BareWinGUI, the author's library for Windows.
 
-> **Status: alpha (0.1.0a1).** The API may still change. The automated tests build every control on real macOS runners; clicking, typing and shortcuts are only partly checked by hand. See "What is verified" below.
+> **Status: beta (0.1.0b1).** The API may still change in small ways. The automated tests build every control on real macOS runners; clicking, typing and shortcuts are only partly checked by hand. See "What is verified" below.
 
 ```python
 from baremacgui import App, Button, Label, VBox, Window, show_info
@@ -109,7 +109,7 @@ Compared by reading the constructor signatures of both libraries (not by running
 
 ## Stability
 
-Alpha: names can still change. The parts that are expected to stay as they are: the with-block layout (`Window`, `VBox`, `HBox`, `Spacer`, `GroupBox`, `TabControl`), the standard controls, menus, dialogs, `App`, `Timer`, `Settings`. Still moving, because they have been seen on the fewest Macs: `Sidebar`, `Toolbar`, `Popover`, `StatusItem`, `IconGrid`, `build_app`, `notify`.
+Beta: names are decided, small changes can still happen. The parts that are expected to stay as they are: the with-block layout (`Window`, `VBox`, `HBox`, `Spacer`, `GroupBox`, `TabControl`), the standard controls, menus, dialogs, `App`, `Timer`, `Settings`. Still moving, because they have been seen on the fewest Macs: `Sidebar`, `Toolbar`, `Popover`, `StatusItem`, `IconGrid`, `build_app`, `notify`.
 
 ## Accessibility
 
@@ -168,29 +168,30 @@ Checked by hand on an Intel Mac (macOS 15.5) with Python 3.14 and PyObjC 12.2.2,
 - Screenshots from GitHub's macOS runner (a newer macOS than the Mac above, light and dark; `tools/shoot.py`, workflow "Screenshots") show all examples, and in example 06 the icon view with selection, the tree, the popover, the new-folder sheet and the delete sheet. The scenarios call the handler functions and set controls from code; they do not simulate mouse clicks.
 - The test suite passes on GitHub Actions for Ubuntu, macOS on Apple Silicon and macOS on Intel (`macos-latest`, `macos-15-intel`), Python 3.10 and 3.14. On the macOS runners the tests build every control and container, exercise properties and events by calling them from code, create menus, context menus, timers and pickers, and run each example up to `app.run()`. No mouse or keyboard input is simulated.
 - The wheel builds and installs into a clean environment, and `import baremacgui` does not import AppKit (CI job `package`).
+- Examples 07 (editor), 12 to 16 (menu-bar clock, drop zone, checklist, several windows, showcase) on the same Mac: they start and look right (showcase in light and dark). In example 15 the menu bar shows the menus of the front window. Dropping files and a folder from Finder onto the drop zone works. The menu-bar clock appears, updates, its menu works, and it quits from the menu and with Ctrl-C (both fixed after a first run showed them broken). The sheet in the editor (discard changes) reacts to Return, Escape and Tab (fixed after a first run).
+- Example 02: the saved theme and the window position survive a real quit and restart.
+- A built `.app` (`python -m baremacgui build`) starts, shows its name and the default icon in Finder and Dock.
+- VoiceOver was tried briefly on examples 04 and 05 and read the sidebar; a proper walk-through has not been done.
 - Screenshots of examples 07 to 09 (editor, form, progress) from the macOS runner look right in light and dark appearance; the menu bar of the editor is not visible in them.
 
 Not yet checked on real hardware:
 - Clicking through example 06 by hand: the icon view, double-click navigation, the popover, the sheet and the delete dialog. They look right in screenshots from the GitHub macOS runner (see below), but real mouse input was not simulated there. The most fragile: the blocking sheet form (without `then`), the double-click on icons, and hiding/showing the table and icon grid in example 06.
 - `Sidebar` details: dragging the divider, hiding it, the minimum window size, light appearance.
 - Example 04 after the `Table` restyle: back/forward navigation, double-click into folders, search filter, light appearance.
-- The Advanced tab, `ask_yes_no`, the file dialogs.
+- The Advanced tab of example 03, the file dialogs, `input_box`.
 - The menu bar shortcuts (Cmd+C, Cmd+V, Cmd+A, Cmd+Q), custom `MenuItem` shortcuts, `Window.add_shortcut`, `default_button` (Return) and `cancel_button` (Escape).
 - `ContextMenu` on right-click for `Table`, `IconGrid`, `Tree` and `TextBox`.
 - `TextBox.on_change` while typing (single and multi line), and that setting `.text` from code does not fire it.
 - `Window.on_close` veto with the red button, `Window.show_modal`, the menu bar switching between windows.
 - `input_box`, `ask_ok_cancel`, the date and time pickers with the mouse, `Timer` while a menu is open.
 - Editing a `Table` cell by double-click and Return/Tab/Escape behaviour, clicking a header to sort (CI only drives it from code), and that an edit in a sorted table does not re-sort until the next click.
-- `StatusItem` and `App(background=True)`: the entry appears and updates, the menu works, no Dock icon, the app keeps running without windows. Example 12.
-- `SplitView`, `StatusItem` and examples 11 and 12 are built and tested on the macOS runners (green CI); a screenshot of example 11 shows the divider moved from code. The menu-bar item itself is not visible in screenshots.
-- `SplitView`: dragging the dividers by mouse, remembering them across a restart (`autosave=`), window resizing with `fixed=` panes.
-- `Settings` across real app restarts (CI only checks that a second object sees the values), `Window(autosave=)` restoring the position after a real quit.
+- `SplitView` and example 11 are built on the macOS runners (a screenshot shows the divider moved from code). Not checked by hand: dragging the dividers by mouse, remembering them across a restart (`autosave=`), window resizing with `fixed=` panes.
 - `ColorWell` with the real color panel, `Switch` by mouse, `clipboard` pasting into other apps.
 - `Table(kinds=...)`: CI toggles the checkbox with `performClick`; clicking it by mouse, and how the checkbox and symbol cells look in light and dark, are unchecked.
 - `tooltip` and `accessibility_label` are set and read back on the real views (CI). How VoiceOver speaks them, and the tooltip appearing on hover, are unchecked.
-- Several windows: CI checks which menu bar is installed when each window becomes key (own `MenuBar`, standard menus, sheets and modal windows leave it alone). Switching by really clicking between windows, and the list of windows in the Window menu, are unchecked.
-- `.app` bundles: CI builds one, starts its launcher and checks that the script sees the app name, its folder and its icon. Double-clicking in Finder, the Finder icon, the name in the Dock, and `--background` (no Dock icon) are unchecked.
-- `DropZone` with a real drag from Finder (CI feeds it a pasteboard with file URLs and calls the drag methods; the mouse drag itself, the highlight and the cursor are unchecked).
+- Several windows: switching by clicking between windows, and the list of windows in the Window menu, are not explicitly checked.
+- `.app` bundles: `--background` (no Dock icon) is unchecked; so is a bundle with your own `--icon` and with `--include`.
+- `DropZone`: the highlight while hovering and the cursor for refused items.
 - `Table` and `Tree` `on_activate` ignoring double-clicks on the header or empty space (uses `clickedRow`).
 - Light appearance for the other examples.
 - Apple Silicon, other macOS versions, multiple displays.

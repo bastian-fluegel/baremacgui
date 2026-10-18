@@ -1,4 +1,4 @@
-# Checklist: from alpha to beta
+# Checklist: from beta to 1.0
 
 Tick a box only when it is really done. "Checked by CI" means a test builds the object on a macOS runner;
 it does not mean a person clicked it.
@@ -18,14 +18,16 @@ it does not mean a person clicked it.
 - [ ] `TextBox.on_change` while typing, in single-line and multi-line boxes
 - [ ] `Window.on_close` veto with the red button, `show_modal`
 - [ ] Blocking sheet dialogs (without `then=`), file dialogs, `input_box`
-- [ ] StatusItem: icon and title in the menu bar, menu actions, quit from the menu (example 12); a background App stays alive without windows
+- [x] StatusItem: icon and title in the menu bar, menu actions, quit from the menu and Ctrl-C (example 12)
 - [ ] SplitView: drag the divider, minimum pane size, divider position remembered after restart (example 11)
 - [ ] Table: double-click edit, Return/Tab/Escape in the editor, header click sorting, selection kept after sorting
-- [ ] `Settings` values and `Window(autosave=)` position survive a real quit and restart
+- [x] `Settings` values and `Window(autosave=)` position survive a real quit and restart (example 02)
 - [ ] Several windows (example 15): clicking between windows swaps the menus, the Window menu lists the windows, a sheet or modal dialog keeps the menus of its window
-- [ ] Built `.app`: double-click in Finder starts the script, Finder shows the icon, Dock shows the name and icon, `--background` leaves no Dock icon
+- [x] Built `.app`: starts, Finder and Dock show the name and the default icon
+- [ ] Built `.app`: `--background` leaves no Dock icon; a custom `--icon`
 - [ ] Table checkbox column: click toggles, selection and sorting by that column behave (example 14)
-- [ ] DropZone: drag files and folders from Finder onto it (example 13); highlight while hovering, "not allowed" cursor for refused items
+- [x] DropZone: files and folders dragged from Finder (example 13)
+- [ ] DropZone: highlight while hovering, "not allowed" cursor for refused items
 - [ ] `choose_color` and `choose_font`: the panels open, picking by mouse works, closing returns the pick; vertical Slider with ticks
 - [ ] ColorWell opens the color panel and reports picks; Switch by mouse; clipboard paste in another app
 - [ ] `notify`: the banner appears (allow notifications for Script Editor in System Settings); `Table(widths=)` looks right
@@ -33,7 +35,7 @@ it does not mean a person clicked it.
 - [ ] Sidebar window: divider drag, hide, minimum size
 - [ ] Apple Silicon, other macOS versions (the author uses an Intel Mac with macOS 15.5)
 
-## Before beta
+## Before 1.0
 - [x] API names decided (`Table` and `Tree` stay); the README lists which parts are stable and which are still moving
 - [ ] Menu bar behaviour with several windows reviewed by hand (example 15: menus change when you click another window, the Window menu lists all windows, Cmd+N)
 - [ ] Accessibility: turn VoiceOver on (Cmd+F5) and walk through examples 04 and 06; tooltips appear on hover; keyboard-only use (Tab, Space) reaches every control

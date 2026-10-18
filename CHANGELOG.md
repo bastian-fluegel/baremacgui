@@ -7,6 +7,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [0.1.0b1] - 2026-10-18
+
+First beta. It contains everything listed under 0.1.0a1 below plus the following.
+
 ### Added
 - `notify(text, title, subtitle, sound)`: a Notification Center banner, posted through `osascript` (works from a plain script; attributed to Script Editor).
 - `Table(widths=[...])`: column widths in points.
@@ -44,7 +48,7 @@ Names and defaults aligned with BareWinGUI, so code moves between the two with f
 - `App.quit()` from a menu item needed a second click in a menu-bar app; it now terminates after the menu has closed (reported from a real Mac; the fix is unverified there).
 - A window without its own `MenuBar` kept the menus of the window before it; the standard menus now come back when it becomes key. Sheets and modal windows leave the menu bar alone.
 
-## [0.1.0a1] - unreleased
+## [0.1.0a1] - never tagged
 
 First tagged state of the project. Alpha: the automated tests build real AppKit views on macOS CI runners
 (Apple Silicon and Intel), but real mouse and keyboard behaviour is only checked by hand and partly not at all
