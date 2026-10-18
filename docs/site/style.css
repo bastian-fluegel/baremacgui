@@ -185,3 +185,8 @@ th { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: v
 }
 @media (prefers-reduced-motion: reduce) { .side { transition: none; } }
 .palette[hidden] { display: none; }
+.offscreen { position: fixed; opacity: 0; }
+.after-note { margin-top: 14px; }
+.pill.gap-l { margin-left: 8px; }
+.card img { width: 100%; border-radius: 8px; border: 1px solid var(--line); margin-bottom: 10px; }
+.table-wrap.spaced { margin-top: 20px; }

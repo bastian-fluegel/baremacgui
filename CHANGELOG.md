@@ -12,6 +12,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 First beta, on PyPI (`pip install --pre baremacgui`). It contains everything listed under 0.1.0a1 below plus the following.
 
 ### Added
+- The documentation web app stays self-contained and presentation-only (strict CSP, no `innerHTML`, no inline styles, nothing loaded from elsewhere), enforced by `tests/test_site.py`.
 - `notify(text, title, subtitle, sound)`: a Notification Center banner, posted through `osascript` (works from a plain script; attributed to Script Editor).
 - `Table(widths=[...])`: column widths in points.
 - Documentation web app in `docs/site` (guide, reference, examples, search): open `docs/site/index.html` in a browser. `tools/make_site.py` generates its data from the docstrings and checks the guide snippets against the API.

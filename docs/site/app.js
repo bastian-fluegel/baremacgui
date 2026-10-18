@@ -77,7 +77,7 @@
       if (btn) { var o = btn.textContent; btn.textContent = ok ? "Copied" : "Press ⌘C"; setTimeout(function () { btn.textContent = o; }, 1400); }
     }
     function fallback() {
-      var ta = h("textarea", { style: "position:fixed;opacity:0" }); ta.value = text; document.body.appendChild(ta); ta.select();
+      var ta = h("textarea", { class: "offscreen" }); ta.value = text; document.body.appendChild(ta); ta.select();
       var ok = false; try { ok = document.execCommand("copy"); } catch (e) {} ta.remove(); done(ok);
     }
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { done(true); }, fallback);
@@ -135,7 +135,7 @@
         h("div", { class: "eyebrow", text: "Native macOS windows from Python" }),
         h("h1", { text: "A thin Python layer on AppKit." }),
         h("p", { class: "lead" }),
-        codeBlock("git clone https://github.com/bastian-fluegel/baremacgui\ncd baremacgui\npip install -e \".[examples]\"\npython examples/16_showcase.py", "Terminal", true)),
+        codeBlock("pip install --pre baremacgui\npython -c \"import baremacgui; print(baremacgui.__version__)\"", "Terminal", true)),
       showcase && showcase.screenshot ? h("a", { href: "#ex.16_showcase" }, h("img", { class: "shot", src: showcase.screenshot, alt: "The showcase example: a sidebar window with a task table", loading: "lazy" })) : null);
     var lead = hero.querySelector(".lead"); lead.appendChild(rich("Windows are built with `with` blocks, handlers take no arguments, and every control is a real AppKit view. It is an alpha: names can still change."));
 
@@ -157,7 +157,7 @@
     return h("div", { class: "wide" }, hero, cards,
       h("h2", { text: "Which control do I need?" }), needs,
       h("h2", { text: "What this site claims" }), status,
-      h("p", { style: "margin-top:14px" }, rich("Everything here is generated from the library's docstrings and examples (`tools/make_site.py`). The guide marks what is only checked by CI.")));
+      h("p", { class: "after-note" }, rich("Everything here is generated from the library's docstrings and examples (`tools/make_site.py`). The guide marks what is only checked by CI.")));
   }
 
   function pageGuide(id) {
@@ -233,7 +233,7 @@
     if (it.props && it.props.length) {
       out.appendChild(h("h2", { text: "Properties" }));
       out.appendChild(members(it.props, function (p) {
-        return h("li", null, h("code", { class: "n", text: p.name }), p.rw ? "" : h("span", { class: "pill", style: "margin-left:8px", text: "read-only" }), p.doc ? h("span", { class: "d", text: p.doc }) : null);
+        return h("li", null, h("code", { class: "n", text: p.name }), p.rw ? "" : h("span", { class: "pill gap-l", text: "read-only" }), p.doc ? h("span", { class: "d", text: p.doc }) : null);
       }));
     }
     if (it.methods && it.methods.length) {
@@ -258,7 +258,7 @@
       h("p", { class: "lead", text: "Each file is a complete program in the examples folder. Screenshots come from a macOS CI runner." }));
     wrap.appendChild(h("div", { class: "cards" }, D.examples.map(function (e) {
       return h("a", { class: "card", href: "#ex." + e.id },
-        e.screenshot ? h("img", { src: e.screenshot, alt: "", loading: "lazy", style: "width:100%;border-radius:8px;border:1px solid var(--line);margin-bottom:10px" }) : null,
+        e.screenshot ? h("img", { src: e.screenshot, alt: "", loading: "lazy" }) : null,
         h("b", { text: e.id }), h("span", { text: (e.doc.split("\n")[0] || e.title) }));
     })));
     return wrap;
@@ -284,7 +284,7 @@
     });
     return h("div", { class: "wide" }, h("div", { class: "eyebrow", text: "Start" }), h("h1", { text: "Differences from BareWinGUI" }),
       h("p", { class: "lead", text: "BareMacGUI keeps the API shape of its Windows sibling: with blocks, handlers without arguments, on_* events, App.invoke. These are the places where macOS asks for something else." }),
-      h("div", { class: "table-wrap", style: "margin-top:20px" }, h("table", null,
+      h("div", { class: "table-wrap spaced" }, h("table", null,
         h("thead", null, h("tr", null, ["Topic", "BareMacGUI", "BareWinGUI", "Why"].map(function (c) { return h("th", { text: c }); }))), h("tbody", null, rows))),
       note("unverified", "The BareWinGUI column was read from its source. It was not run next to BareMacGUI."));
   }
@@ -317,15 +317,26 @@
 
   /* ---------- theme ---------- */
   var THEMES = ["system", "light", "dark"], ICON = {
-    system: '<svg viewBox="0 0 20 20" width="18" height="18"><rect x="3" y="4" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 17h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
-    light: '<svg viewBox="0 0 20 20" width="18" height="18"><circle cx="10" cy="10" r="3.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 2.5v2M10 15.5v2M2.5 10h2M15.5 10h2M4.7 4.7l1.4 1.4M13.9 13.9l1.4 1.4M4.7 15.3l1.4-1.4M13.9 6.1l1.4-1.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
-    dark: '<svg viewBox="0 0 20 20" width="18" height="18"><path d="M16 11.5A6.5 6.5 0 0 1 8.5 4a6.5 6.5 0 1 0 7.5 7.5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>'
+    system: [["rect", { x: 3, y: 4, width: 14, height: 10, rx: 2 }], ["path", { d: "M7 17h6", "stroke-linecap": "round" }]],
+    light: [["circle", { cx: 10, cy: 10, r: 3.5 }], ["path", { d: "M10 2.5v2M10 15.5v2M2.5 10h2M15.5 10h2M4.7 4.7l1.4 1.4M13.9 13.9l1.4 1.4M4.7 15.3l1.4-1.4M13.9 6.1l1.4-1.4", "stroke-linecap": "round" }]],
+    dark: [["path", { d: "M16 11.5A6.5 6.5 0 0 1 8.5 4a6.5 6.5 0 1 0 7.5 7.5z", "stroke-linejoin": "round" }]]
   };
+  function svgIcon(spec) {
+    var NS = "http://www.w3.org/2000/svg", svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", "0 0 20 20"); svg.setAttribute("width", "18"); svg.setAttribute("height", "18");
+    spec.forEach(function (part) {
+      var el = document.createElementNS(NS, part[0]);
+      for (var k in part[1]) el.setAttribute(k, part[1][k]);
+      el.setAttribute("fill", "none"); el.setAttribute("stroke", "currentColor"); el.setAttribute("stroke-width", "1.5");
+      svg.appendChild(el);
+    });
+    return svg;
+  }
   var theme = store("bmc-theme") || "system";
   if (THEMES.indexOf(theme) < 0) theme = "system";
   function applyTheme() {
     if (theme === "system") document.documentElement.removeAttribute("data-theme"); else document.documentElement.setAttribute("data-theme", theme);
-    var b = $("#themeBtn"); b.innerHTML = ICON[theme]; b.title = "Theme: " + theme; b.setAttribute("aria-label", "Theme: " + theme + ". Click to change.");
+    var b = $("#themeBtn"); b.textContent = ""; b.appendChild(svgIcon(ICON[theme])); b.title = "Theme: " + theme; b.setAttribute("aria-label", "Theme: " + theme + ". Click to change.");
   }
   $("#themeBtn").addEventListener("click", function () { theme = THEMES[(THEMES.indexOf(theme) + 1) % 3]; store("bmc-theme", theme); applyTheme(); });
   applyTheme();

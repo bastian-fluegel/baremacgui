@@ -130,6 +130,7 @@ def bundle(out_path):
             return f"data:image/png;base64,{raw}"
         return re.sub(r"(?:\.\./)?screenshots/([A-Za-z0-9_.-]+\.png)", repl, text)
 
+    html = re.sub(r'<meta http-equiv="Content-Security-Policy"[^>]*>\n?', "", html)  # inline copies need no CSP
     html = html.replace('<link rel="stylesheet" href="style.css">', f"<style>\n{css}\n</style>")
     html = html.replace('<script src="data.js"></script>', f"<script>\n{inline_shots(data)}\n</script>")
     html = html.replace('<script src="app.js"></script>', f"<script>\n{js}\n</script>")
