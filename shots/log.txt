@@ -1,0 +1,1142 @@
+start hello light
+screenshot hello-light: exit 0, 86068 bytes 
+scenario finished
+start settings light
+screenshot settings-light: exit 0, 98085 bytes 
+scenario finished
+start widgets light
+screenshot widgets-light: exit 0, 130265 bytes 
+window 'Widgets' content 520
+NSStackView y=0 h=520 w=647 hugV=250.0
+  NSStackView y=476 h=28 w=615 hugV=250.0
+    NSImageView y=-2 h=32 w=28 hugV=250.0
+      _NSImageViewSimpleImageView y=5 h=21 w=28 hugV=250.0
+    NSTextField y=6 h=16 w=112 hugV=750.0
+      _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=112 hugV=250.0
+    NSView y=0 h=28 w=471 hugV=250.0
+  NSBox y=461 h=5 w=615 hugV=750.0
+    _NSBoxSeparatorView y=2 h=1 w=615 hugV=250.0
+  NSStackView y=361 h=90 w=615 hugV=250.0
+    NSStackView y=0 h=90 w=66 hugV=250.0
+      NSTextField y=74 h=16 w=48 hugV=750.0
+        _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=48 hugV=250.0
+      NSStackView y=8 h=60 w=66 hugV=250.0
+        NSButton y=44 h=16 w=47 hugV=250.0
+          _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=16 w=47 hugV=250.0
+        NSButton y=22 h=16 w=66 hugV=250.0
+          _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=16 w=66 hugV=250.0
+        NSButton y=0 h=16 w=51 hugV=250.0
+          _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=16 w=51 hugV=250.0
+      NSView y=0 h=8 w=66 hugV=1.0
+    NSStackView y=0 h=90 w=120 hugV=250.0
+      NSTextField y=74 h=16 w=48 hugV=750.0
+        _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=48 hugV=250.0
+      NSPopUpButton y=44 h=24 w=84 hugV=750.0
+        _TtGC6AppKit18_NSCoreHostingViewVS_17AppKitPopUpButton_ y=0 h=24 w=84 hugV=250.0
+      NSTextField y=22 h=16 w=49 hugV=750.0
+        _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=49 hugV=250.0
+      NSSlider y=0 h=16 w=120 hugV=750.0
+        _TtGC6AppKit18_NSCoreHostingViewVS_P10$189b3d3a413SliderWrapper_ y=0 h=16 w=120 hugV=250.0
+          _TtGC6AppKit22NSCorePlatformViewHostGVS_32PlatformViewRepresentableAdaptorGVS_P10$189b3fc3412WindowPortalGV7SwiftUI21_ViewModifier_ContentVS_16LiftPortalEffect____ y=0 h=16 w=20 hugV=250.0
+            _TtC6AppKitP33_3163C09D58C8C57067DCBFBB784729CE14LiftPortalView y=0 h=16 w=20 hugV=250.0
+              _TtGC6AppKit18_NSCoreHostingViewGV7SwiftUI21_ViewModifier_ContentVS_16LiftPortalEffect__ y=0 h=16 w=20 hugV=250.0
+      NSView y=0 h=0 w=120 hugV=1.0
+    NSView y=0 h=90 w=397 hugV=250.0
+  NSStackView y=325 h=24 w=615 hugV=250.0
+    NSTextField y=4 h=16 w=81 hugV=750.0
+      _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=81 hugV=250.0
+    NSSwitch y=0 h=24 w=54 hugV=750.0
+      _TtGC6AppKit18_NSCoreHostingViewVS_P10$189b3d6e812AppKitSwitch_ y=0 h=24 w=54 hugV=250.0
+        _TtGC6AppKit22NSCorePlatformViewHostGVS_32PlatformViewRepresentableAdaptorGVS_P10$189b3fc3412WindowPortalGV7SwiftUI21_ViewModifier_ContentVS_16LiftPortalEffect____ y=2 h=20 w=32 hugV=250.0
+          _TtC6AppKitP33_3163C09D58C8C57067DCBFBB784729CE14LiftPortalView y=0 h=20 w=32 hugV=250.0
+            _TtGC6AppKit18_NSCoreHostingViewGV7SwiftUI21_ViewModifier_ContentVS_16LiftPortalEffect__ y=0 h=20 w=32 hugV=250.0
+    NSView y=0 h=24 w=16 hugV=250.0
+    NSTextField y=4 h=16 w=47 hugV=750.0
+      _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=47 hugV=250.0
+    NSColorWell y=0 h=24 w=44 hugV=250.0
+      _TtGC6AppKit18_NSCoreHostingViewVS_15AppKitColorWell_ y=0 h=24 w=44 hugV=250.0
+    NSView y=0 h=24 w=236 hugV=250.0
+    NSButton y=0 h=24 w=97 hugV=750.0
+      _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=24 w=97 hugV=250.0
+  NSStackView y=80 h=233 w=615 hugV=1.0
+    NSScrollView y=0 h=233 w=201 hugV=1.0
+      _NSScrollViewContentBackgroundView y=0 h=233 w=201 hugV=250.0
+        NSVisualEffectView y=0 h=233 w=201 hugV=250.0
+      NSClipView y=0 h=233 w=184 hugV=250.0
+        NSTableView y=0 h=250 w=184 hugV=750.0
+          NSTableRowView y=10 h=24 w=184 hugV=250.0
+            NSView y=0 h=24 w=164 hugV=250.0
+            NSTableCellView y=0 h=24 w=152 hugV=250.0
+              NSTextField y=4 h=16 w=152 hugV=750.0
+          NSTableRowView y=34 h=24 w=184 hugV=250.0
+            NSTableCellView y=0 h=24 w=152 hugV=250.0
+              NSTextField y=4 h=16 w=152 hugV=750.0
+          NSTableRowView y=58 h=24 w=184 hugV=250.0
+            NSTableCellView y=0 h=24 w=152 hugV=250.0
+              NSTextField y=4 h=16 w=152 hugV=750.0
+          NSTableRowView y=82 h=24 w=184 hugV=250.0
+            NSTableCellView y=0 h=24 w=152 hugV=250.0
+              NSTextField y=4 h=16 w=152 hugV=750.0
+          NSTableRowView y=106 h=24 w=184 hugV=250.0
+            NSTableCellView y=0 h=24 w=152 hugV=250.0
+              NSTextField y=4 h=16 w=152 hugV=750.0
+          NSTableRowView y=130 h=24 w=184 hugV=250.0
+            NSTableCellView y=0 h=24 w=152 hugV=250.0
+              NSTextField y=4 h=16 w=152 hugV=750.0
+          NSTableRowView y=154 h=24 w=184 hugV=250.0
+            NSTableCellView y=0 h=24 w=152 hugV=250.0
+              NSTextField y=4 h=16 w=152 hugV=750.0
+          NSTableRowView y=178 h=24 w=184 hugV=250.0
+            NSTableCellView y=0 h=24 w=152 hugV=250.0
+              NSTextField y=4 h=16 w=152 hugV=750.0
+          NSTableRowView y=202 h=24 w=184 hugV=250.0
+            NSTableCellView y=0 h=24 w=152 hugV=250.0
+              NSTextField y=4 h=16 w=152 hugV=750.0
+          NSTableRowView y=226 h=24 w=184 hugV=250.0
+            NSTableCellView y=0 h=24 w=152 hugV=250.0
+              NSTextField y=4 h=16 w=152 hugV=750.0
+      NSScroller y=0 h=233 w=17 hugV=750.0
+    NSScrollView y=0 h=233 w=402 hugV=1.0
+      _NSScrollViewContentBackgroundView y=0 h=233 w=402 hugV=250.0
+        NSVisualEffectView y=0 h=233 w=402 hugV=250.0
+      _TtCC6AppKit14NSScrollPocketP33_EC3F85FAB7755D56E669206D2B17725B12BackdropView y=0 h=28 w=402 hugV=250.0
+      NSClipView y=0 h=233 w=402 hugV=250.0
+        NSTableView y=0 h=205 w=402 hugV=750.0
+          NSTableRowView y=5 h=24 w=402 hugV=250.0
+            NSTableCellView y=0 h=24 w=113 hugV=250.0
+              NSTextField y=4 h=16 w=113 hugV=750.0
+            NSTableCellView y=0 h=24 w=112 hugV=250.0
+              NSTextField y=4 h=16 w=112 hugV=750.0
+            NSTableCellView y=0 h=24 w=111 hugV=250.0
+              NSTextField y=4 h=16 w=111 hugV=750.0
+          NSTableRowView y=29 h=24 w=402 hugV=250.0
+            NSTableCellView y=0 h=24 w=113 hugV=250.0
+              NSTextField y=4 h=16 w=113 hugV=750.0
+            NSTableCellView y=0 h=24 w=112 hugV=250.0
+              NSTextField y=4 h=16 w=112 hugV=750.0
+            NSTableCellView y=0 h=24 w=111 hugV=250.0
+              NSTextField y=4 h=16 w=111 hugV=750.0
+          NSTableRowView y=53 h=24 w=402 hugV=250.0
+            NSTableCellView y=0 h=24 w=113 hugV=250.0
+              NSTextField y=4 h=16 w=113 hugV=750.0
+            NSTableCellView y=0 h=24 w=112 hugV=250.0
+              NSTextField y=4 h=16 w=112 hugV=750.0
+            NSTableCellView y=0 h=24 w=111 hugV=250.0
+              NSTextField y=4 h=16 w=111 hugV=750.0
+          NSTableRowView y=77 h=24 w=402 hugV=250.0
+            NSTableCellView y=0 h=24 w=113 hugV=250.0
+              NSTextField y=4 h=16 w=113 hugV=750.0
+            NSTableCellView y=0 h=24 w=112 hugV=250.0
+              NSTextField y=4 h=16 w=112 hugV=750.0
+            NSTableCellView y=0 h=24 w=111 hugV=250.0
+              NSTextField y=4 h=16 w=111 hugV=750.0
+      NSScrollPocket y=0 h=28 w=402 hugV=250.0
+        _TtCC6AppKit14NSScrollPocketP33_EC3F85FAB7755D56E669206D2B17725B10PocketMask y=-28 h=56 w=402 hugV=250.0
+          NSView y=0 h=56 w=402 hugV=250.0
+            NSView y=36 h=48 w=458 hugV=250.0
+        _TtCC6AppKit14NSScrollPocketP33_EC3F85FAB7755D56E669206D2B17725B10PocketBlur y=-28 h=56 w=402 hugV=250.0
+          _TtCC6AppKit14NSScrollPocketP33_EC3F85FAB7755D56E669206D2B17725B10PortalView y=0 h=56 w=402 hugV=250.0
+        NSHardPocketView y=0 h=28 w=402 hugV=250.0
+          _NSScrollViewContentBackgroundView y=0 h=28 w=402 hugV=250.0
+        _TtCC6AppKit14NSScrollPocketP33_EC3F85FAB7755D56E669206D2B17725B19LuminanceAdjustment y=-28 h=56 w=402 hugV=250.0
+          NSView y=0 h=56 w=402 hugV=250.0
+            NSView y=0 h=56 w=402 hugV=250.0
+              _TtCC6AppKit14NSScrollPocketP33_EC3F85FAB7755D56E669206D2B17725B12BackdropView y=0 h=56 w=402 hugV=250.0
+              _NSScrollViewContentBackgroundView y=0 h=56 w=402 hugV=250.0
+            NSView y=0 h=56 w=402 hugV=250.0
+              NSView y=0 h=56 w=402 hugV=250.0
+              NSView y=0 h=56 w=402 hugV=250.0
+          _TtCC6AppKit14NSScrollPocketP33_EC3F85FAB7755D56E669206D2B17725B10PortalView y=0 h=56 w=402 hugV=250.0
+        NSView y=0 h=28 w=402 hugV=250.0
+          _TtCC6AppKit14NSScrollPocketP33_EC3F85FAB7755D56E669206D2B17725B21AdditionalDimmingView y=0 h=0 w=0 hugV=250.0
+      NSClipView y=0 h=28 w=402 hugV=250.0
+        NSBannerView y=0 h=28 w=402 hugV=250.0
+          NSHardPocketView y=0 h=28 w=402 hugV=250.0
+            _NSScrollViewContentBackgroundView y=0 h=28 w=402 hugV=250.0
+              NSVisualEffectView y=0 h=28 w=402 hugV=250.0
+          _NSBannerDecorationView y=0 h=28 w=402 hugV=250.0
+        NSTableHeaderView y=0 h=28 w=402 hugV=250.0
+      NSScroller y=28 h=0 w=17 hugV=750.0
+      _NSCornerView y=0 h=28 w=17 hugV=250.0
+      NSBannerView y=0 h=28 w=17 hugV=250.0
+        NSHardPocketView y=0 h=28 w=17 hugV=250.0
+          _NSScrollViewContentBackgroundView y=0 h=28 w=17 hugV=250.0
+            NSVisualEffectView y=0 h=28 w=17 hugV=250.0
+        _NSBannerDecorationView y=0 h=28 w=17 hugV=250.0
+  NSTextField y=52 h=16 w=619 hugV=750.0
+    _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=619 hugV=250.0
+  NSStackView y=16 h=24 w=615 hugV=250.0
+    NSProgressIndicator y=2 h=20 w=559 hugV=750.0
+    NSButton y=0 h=24 w=48 hugV=750.0
+      _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=24 w=48 hugV=250.0
+--- details of the top stack
+fittingSize 407 intrinsic -1
+NSStackView h=28 intrinsicH=-1 fitH=28 hug=250.0 resist=750.0
+    constraint attr=8/0 rel=-1 const=28 mult=1.00 prio=700.0
+NSBox h=5 intrinsicH=1 fitH=5 hug=750.0 resist=750.0
+    constraint attr=8/0 rel=0 const=1 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=0 const=1 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=-1 const=5 mult=1.00 prio=700.0
+    constraint attr=7/0 rel=0 const=615 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=0 const=1 mult=1.00 prio=1000.0
+NSStackView h=90 intrinsicH=-1 fitH=90 hug=250.0 resist=750.0
+    constraint attr=8/0 rel=-1 const=90 mult=1.00 prio=700.0
+NSStackView h=24 intrinsicH=-1 fitH=24 hug=250.0 resist=750.0
+    constraint attr=8/0 rel=-1 const=24 mult=1.00 prio=700.0
+NSStackView h=233 intrinsicH=-1 fitH=120 hug=1.0 resist=750.0
+    constraint attr=7/7 rel=0 const=0 mult=2.00 prio=500.0
+    constraint attr=8/8 rel=0 const=0 mult=1.00 prio=1000.0
+    constraint attr=8/8 rel=0 const=0 mult=1.00 prio=1000.0
+NSTextField h=16 intrinsicH=16 fitH=16 hug=750.0 resist=750.0
+    constraint attr=8/0 rel=0 const=16 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=-1 const=16 mult=1.00 prio=700.0
+    constraint attr=7/0 rel=0 const=615 mult=1.00 prio=1000.0
+    constraint attr=7/0 rel=0 const=619 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=0 const=16 mult=1.00 prio=1000.0
+NSStackView h=24 intrinsicH=-1 fitH=24 hug=250.0 resist=750.0
+    constraint attr=8/0 rel=-1 const=24 mult=1.00 prio=700.0
+  top constraint 7 0 7 const=-32 prio=1000.0
+  top constraint 7 0 7 const=-32 prio=1000.0
+  top constraint 7 0 7 const=-32 prio=1000.0
+  top constraint 7 0 7 const=-32 prio=1000.0
+  top constraint 7 0 7 const=-32 prio=1000.0
+  top constraint 7 0 7 const=-32 prio=1000.0
+  top constraint 7 0 7 const=-32 prio=1000.0
+  top constraint 1 0 1 const=16 prio=260.0
+  top constraint 1 0 1 const=16 prio=260.0
+  top constraint 1 0 1 const=16 prio=260.0
+  top constraint 1 0 1 const=16 prio=260.0
+  top constraint 1 0 1 const=16 prio=260.0
+  top constraint 1 0 1 const=16 prio=260.0
+  top constraint 1 0 1 const=16 prio=260.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 3 0 3 const=16 prio=1000.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 3 0 4 const=12 prio=1000.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 3 0 4 const=12 prio=1000.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 3 0 4 const=12 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 3 0 4 const=12 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 3 0 4 const=12 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 4 0 4 const=16 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 3 0 4 const=12 prio=1000.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 1 0 1 const=16 prio=249.99998474121094
+  top constraint 1 0 1 const=16 prio=249.99998474121094
+  top constraint 1 0 1 const=16 prio=249.99998474121094
+  top constraint 1 0 1 const=16 prio=249.99998474121094
+  top constraint 2 0 2 const=16 prio=249.99998474121094
+  top constraint 2 0 2 const=16 prio=249.99998474121094
+  top constraint 2 0 2 const=16 prio=249.99998474121094
+  top constraint 1 0 1 const=16 prio=249.99998474121094
+  top constraint 2 0 2 const=16 prio=249.99998474121094
+  top constraint 2 0 2 const=16 prio=249.99998474121094
+  top constraint 2 0 2 const=16 prio=249.99998474121094
+  top constraint 2 0 2 const=16 prio=249.99998474121094
+  top constraint 1 0 1 const=16 prio=249.99998474121094
+  top constraint 1 0 1 const=16 prio=249.99998474121094
+scenario finished
+start finder light
+screenshot finder-start-light: exit 0, 99106 bytes 
+screenshot finder-documents-light: exit 0, 99790 bytes 
+screenshot finder-back-light: exit 0, 99284 bytes 
+scenario finished
+start sidebar light
+screenshot sidebar-general-light: exit 0, 99750 bytes 
+screenshot sidebar-appearance-light: exit 0, 101432 bytes 
+screenshot sidebar-about-light: exit 0, 96383 bytes 
+scenario finished
+start everything light
+screenshot everything-list-light: exit 0, 106233 bytes 
+screenshot everything-icons-light: exit 0, 103215 bytes 
+screenshot everything-documents-light: exit 0, 105332 bytes 
+screenshot everything-icon-selected-light: exit 0, 107288 bytes 
+screenshot everything-popover-light: exit 0, 127162 bytes 
+screenshot everything-sheet-light: exit 0, 131377 bytes 
+screenshot everything-delete-sheet-light: exit 0, 126792 bytes 
+scenario finished
+start editor light
+screenshot editor-empty-light: exit 0, 85904 bytes 
+screenshot editor-text-light: exit 0, 91943 bytes 
+scenario finished
+start form light
+screenshot form-empty-light: exit 0, 99097 bytes 
+screenshot form-invalid-light: exit 0, 101703 bytes 
+screenshot form-valid-light: exit 0, 97947 bytes 
+scenario finished
+start progress light
+screenshot progress-ready-light: exit 0, 88490 bytes 
+screenshot progress-running-light: exit 0, 89581 bytes 
+screenshot progress-cancelled-light: exit 0, 91227 bytes 
+scenario finished
+start tasks light
+screenshot tasks-start-light: exit 0, 100469 bytes 
+screenshot tasks-sorted-light: exit 0, 100666 bytes 
+scenario finished
+start notes light
+screenshot notes-start-light: exit 0, 91131 bytes 
+screenshot notes-new-light: exit 0, 91143 bytes 
+screenshot notes-wide-light: exit 0, 91327 bytes 
+scenario finished
+start drop light
+screenshot drop-empty-light: exit 0, 92932 bytes 
+screenshot drop-received-light: exit 0, 101002 bytes 
+scenario finished
+start checklist light
+screenshot checklist-start-light: exit 0, 100006 bytes 
+screenshot checklist-ticked-light: exit 0, 100372 bytes 
+scenario finished
+start showcase light
+screenshot showcase-today-light: exit 0, 120392 bytes 
+screenshot showcase-library-light: exit 0, 120318 bytes 
+screenshot showcase-appearance-light: exit 0, 125384 bytes 
+scenario finished
+start installer light
+screenshot installer-app-light: exit 0, 110650 bytes 
+screenshot installer-icon-light: exit 0, 126953 bytes 
+screenshot installer-needs-light: exit 0, 109474 bytes 
+screenshot installer-build-light: exit 0, 109733 bytes 
+window 'Install Creator' content 502
+NSStackView y=0 h=502 w=680 hugV=250.0
+  NSTextField y=456 h=26 w=52 hugV=750.0
+    _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=26 w=52 hugV=250.0
+  NSTextField y=430 h=16 w=207 hugV=750.0
+    _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=207 hugV=250.0
+  NSBox y=417 h=5 w=640 hugV=750.0
+    _NSBoxSeparatorView y=2 h=1 w=640 hugV=250.0
+  NSStackView y=184 h=318 w=640 hugV=1.0
+    NSTextField y=302 h=16 w=40 hugV=750.0
+      _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=40 hugV=250.0
+    NSStackView y=268 h=24 w=640 hugV=250.0
+      NSTextField y=0 h=24 w=551 hugV=750.0
+        _TtGC6AppKit18_NSCoreHostingViewVS_P10$189b3db5815AppKitTextField_ y=0 h=24 w=551 hugV=250.0
+        AppKit.NSSimpleLabel y=4 h=16 w=543 hugV=250.0
+      NSButton y=0 h=24 w=81 hugV=750.0
+        _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=24 w=81 hugV=250.0
+    NSTextField y=242 h=16 w=66 hugV=750.0
+      _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=66 hugV=250.0
+    NSTextField y=208 h=24 w=640 hugV=750.0
+      _TtGC6AppKit18_NSCoreHostingViewVS_P10$189b3db5815AppKitTextField_ y=0 h=24 w=640 hugV=250.0
+      AppKit.NSSimpleLabel y=4 h=16 w=632 hugV=250.0
+    NSStackView y=174 h=24 w=640 hugV=250.0
+      NSTextField y=4 h=16 w=50 hugV=750.0
+        _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=50 hugV=250.0
+      NSTextField y=0 h=24 w=80 hugV=750.0
+        _TtGC6AppKit18_NSCoreHostingViewVS_P10$189b3db5815AppKitTextField_ y=0 h=24 w=80 hugV=250.0
+        AppKit.NSSimpleLabel y=4 h=16 w=72 hugV=250.0
+      NSTextField y=4 h=16 w=58 hugV=750.0
+        _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=58 hugV=250.0
+      NSTextField y=0 h=24 w=436 hugV=750.0
+        _TtGC6AppKit18_NSCoreHostingViewVS_P10$189b3db5815AppKitTextField_ y=0 h=24 w=436 hugV=250.0
+        AppKit.NSSimpleLabel y=4 h=16 w=428 hugV=250.0
+    NSButton y=148 h=16 w=201 hugV=250.0
+      _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=16 w=201 hugV=250.0
+    NSView y=0 h=148 w=640 hugV=1.0
+  NSStackView y=184 h=318 w=640 hugV=1.0
+    NSStackView y=0 h=318 w=640 hugV=1.0
+      NSStackView y=0 h=318 w=220 hugV=250.0
+        NSStackView y=236 h=82 w=134 hugV=250.0
+          NSButton y=66 h=16 w=126 hugV=250.0
+            _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=16 w=126 hugV=250.0
+          NSButton y=44 h=16 w=90 hugV=250.0
+            _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=16 w=90 hugV=250.0
+          NSButton y=22 h=16 w=122 hugV=250.0
+            _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=16 w=122 hugV=250.0
+          NSButton y=0 h=16 w=134 hugV=250.0
+            _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=16 w=134 hugV=250.0
+        NSButton y=294 h=24 w=119 hugV=750.0
+          _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=24 w=119 hugV=250.0
+        NSSearchField y=204 h=24 w=220 hugV=750.0
+          _TtGC6AppKit18_NSCoreHostingViewVS_P10$189b3d84417AppKitSearchField_ y=0 h=24 w=220 hugV=250.0
+            _TtGC6AppKit22NSCorePlatformViewHostGVS_32PlatformViewRepresentableAdaptorVVS_P10$189b3d96826SearchFieldAccessoryButton39SearchFieldAccessoryButtonRepresentable__ y=8 h=9 w=15 hugV=250.0
+              NSButton y=-3 h=15 w=15 hugV=250.0
+            _TtGC6AppKit22NSCorePlatformViewHostGVS_32PlatformViewRepresentableAdaptorVVS_P10$189b3d96826SearchFieldAccessoryButton39SearchFieldAccessoryButtonRepresentable__ y=8 h=9 w=15 hugV=250.0
+              NSButton y=-3 h=15 w=15 hugV=250.0
+          AppKit.NSSimpleLabel y=4 h=16 w=173 hugV=250.0
+        NSView y=0 h=196 w=220 hugV=1.0
+      NSStackView y=0 h=318 w=248 hugV=250.0
+        NSScrollView y=0 h=318 w=248 hugV=1.0
+          _NSScrollViewContentBackgroundView y=0 h=318 w=231 hugV=250.0
+            NSVisualEffectView y=0 h=318 w=231 hugV=250.0
+          NSClipView y=0 h=318 w=231 hugV=250.0
+            NSTableView y=0 h=6226 w=231 hugV=750.0
+              NSTableRowView y=154 h=24 w=231 hugV=250.0
+              NSTableRowView y=178 h=24 w=231 hugV=250.0
+              NSTableRowView y=202 h=24 w=231 hugV=250.0
+              NSTableRowView y=226 h=24 w=231 hugV=250.0
+              NSTableRowView y=250 h=24 w=231 hugV=250.0
+              NSTableRowView y=274 h=24 w=231 hugV=250.0
+              NSTableRowView y=298 h=24 w=231 hugV=250.0
+              NSTableRowView y=322 h=24 w=231 hugV=250.0
+              NSTableRowView y=346 h=24 w=231 hugV=250.0
+              NSTableRowView y=370 h=24 w=231 hugV=250.0
+              NSTableRowView y=394 h=24 w=231 hugV=250.0
+              NSTableRowView y=418 h=24 w=231 hugV=250.0
+              NSTableRowView y=442 h=24 w=231 hugV=250.0
+              NSTableRowView y=466 h=24 w=231 hugV=250.0
+          NSScroller y=0 h=318 w=17 hugV=750.0
+      NSStackView y=0 h=318 w=140 hugV=250.0
+        NSImageView y=190 h=128 w=128 hugV=250.0
+          _NSImageViewSimpleImageView y=0 h=128 w=128 hugV=250.0
+        NSTextField y=166 h=16 w=93 hugV=750.0
+          _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=93 hugV=250.0
+        NSView y=0 h=158 w=140 hugV=1.0
+  NSStackView y=184 h=318 w=640 hugV=1.0
+    NSTextField y=302 h=16 w=402 hugV=750.0
+      _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=402 hugV=250.0
+    NSTextField y=276 h=16 w=364 hugV=750.0
+      _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=364 hugV=250.0
+    NSScrollView y=130 h=136 w=640 hugV=1.0
+      _NSScrollViewContentBackgroundView y=0 h=136 w=640 hugV=250.0
+        NSVisualEffectView y=0 h=136 w=640 hugV=250.0
+      NSClipView y=0 h=136 w=640 hugV=250.0
+        NSTableView y=0 h=136 w=640 hugV=750.0
+      NSScroller y=0 h=0 w=17 hugV=750.0
+    NSStackView y=96 h=24 w=640 hugV=250.0
+      NSButton y=0 h=24 w=81 hugV=750.0
+        _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=24 w=81 hugV=250.0
+      NSButton y=0 h=24 w=97 hugV=750.0
+        _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=24 w=97 hugV=250.0
+      NSButton y=0 h=24 w=73 hugV=750.0
+        _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=24 w=73 hugV=250.0
+      NSView y=0 h=24 w=365 hugV=250.0
+    NSTextField y=70 h=16 w=463 hugV=750.0
+      _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=463 hugV=250.0
+    NSScrollView y=0 h=60 w=640 hugV=250.0
+      NSClipView y=0 h=60 w=623 hugV=250.0
+        NSTextView y=0 h=60 w=623 hugV=250.0
+          _NSTextSelectionView y=0 h=60 w=623 hugV=250.0
+          _NSTextRenderingSurfacesGroupView y=0 h=60 w=623 hugV=250.0
+          _NSTextContentView y=0 h=60 w=623 hugV=250.0
+      NSScroller y=0 h=60 w=17 hugV=750.0
+  NSStackView y=91 h=318 w=640 hugV=1.0
+    NSButton y=302 h=16 w=209 hugV=250.0
+      _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=16 w=209 hugV=250.0
+    NSButton y=276 h=16 w=43 hugV=250.0
+      _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=16 w=43 hugV=250.0
+    NSButton y=250 h=16 w=105 hugV=250.0
+      _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=16 w=105 hugV=250.0
+    NSButton y=224 h=16 w=371 hugV=250.0
+      _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=16 w=371 hugV=250.0
+    NSStackView y=190 h=24 w=640 hugV=250.0
+      NSTextField y=4 h=16 w=49 hugV=750.0
+        _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=49 hugV=250.0
+      NSTextField y=0 h=24 w=498 hugV=750.0
+        _TtGC6AppKit18_NSCoreHostingViewVS_P10$189b3db5815AppKitTextField_ y=0 h=24 w=498 hugV=250.0
+        AppKit.NSSimpleLabel y=4 h=16 w=490 hugV=250.0
+      NSButton y=0 h=24 w=81 hugV=750.0
+        _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=24 w=81 hugV=250.0
+    NSTextField y=164 h=16 w=357 hugV=750.0
+      _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=357 hugV=250.0
+    NSProgressIndicator y=298 h=20 w=120 hugV=750.0
+    NSScrollView y=34 h=120 w=640 hugV=1.0
+      NSClipView y=0 h=120 w=623 hugV=250.0
+        NSTextView y=0 h=120 w=623 hugV=250.0
+          _NSTextSelectionView y=0 h=120 w=623 hugV=250.0
+          _NSTextRenderingSurfacesGroupView y=0 h=120 w=623 hugV=250.0
+          _NSTextContentView y=0 h=120 w=623 hugV=250.0
+      NSScroller y=0 h=120 w=17 hugV=750.0
+    NSStackView y=0 h=24 w=640 hugV=250.0
+      NSTextField y=4 h=16 w=644 hugV=750.0
+        _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=644 hugV=250.0
+      NSButton y=0 h=24 w=114 hugV=750.0
+        _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=24 w=114 hugV=250.0
+  NSTextField y=65 h=16 w=4 hugV=750.0
+    _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=4 hugV=250.0
+  NSBox y=52 h=5 w=640 hugV=750.0
+    _NSBoxSeparatorView y=2 h=1 w=640 hugV=250.0
+  NSStackView y=20 h=24 w=640 hugV=250.0
+    NSButton y=0 h=24 w=116 hugV=750.0
+      _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=24 w=116 hugV=250.0
+    NSView y=0 h=24 w=391 hugV=250.0
+    NSButton y=0 h=24 w=54 hugV=750.0
+      _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=24 w=54 hugV=250.0
+    NSButton y=0 h=24 w=55 hugV=750.0
+      _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=24 w=55 hugV=250.0
+--- details of the top stack
+fittingSize 494 intrinsic -1
+NSTextField h=26 intrinsicH=26 fitH=26 hug=750.0 resist=750.0
+    constraint attr=7/0 rel=0 const=48 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=0 const=26 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=-1 const=26 mult=1.00 prio=700.0
+    constraint attr=7/0 rel=0 const=52 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=0 const=26 mult=1.00 prio=1000.0
+NSTextField h=16 intrinsicH=16 fitH=16 hug=750.0 resist=750.0
+    constraint attr=7/0 rel=0 const=203 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=0 const=16 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=-1 const=16 mult=1.00 prio=700.0
+    constraint attr=7/0 rel=0 const=207 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=0 const=16 mult=1.00 prio=1000.0
+NSBox h=5 intrinsicH=1 fitH=5 hug=750.0 resist=750.0
+    constraint attr=8/0 rel=0 const=1 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=0 const=1 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=-1 const=5 mult=1.00 prio=700.0
+    constraint attr=7/0 rel=0 const=640 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=0 const=1 mult=1.00 prio=1000.0
+NSStackView h=318 intrinsicH=-1 fitH=170 hug=1.0 resist=750.0
+    constraint attr=7/7 rel=0 const=0 mult=1.00 prio=1000.0
+    constraint attr=7/7 rel=0 const=0 mult=1.00 prio=1000.0
+NSStackView h=318 intrinsicH=-1 fitH=160 hug=1.0 resist=750.0
+    constraint attr=7/7 rel=0 const=0 mult=1.00 prio=1000.0
+NSStackView h=318 intrinsicH=-1 fitH=302 hug=1.0 resist=750.0
+    constraint attr=7/7 rel=0 const=0 mult=1.00 prio=1000.0
+    constraint attr=7/7 rel=0 const=0 mult=1.00 prio=1000.0
+NSStackView h=318 intrinsicH=-1 fitH=310 hug=1.0 resist=750.0
+    constraint attr=7/7 rel=0 const=0 mult=1.00 prio=1000.0
+    constraint attr=7/7 rel=0 const=0 mult=1.00 prio=1000.0
+    constraint attr=7/7 rel=0 const=0 mult=1.00 prio=1000.0
+NSTextField h=16 intrinsicH=16 fitH=16 hug=750.0 resist=750.0
+    constraint attr=7/0 rel=0 const=0 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=0 const=16 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=-1 const=16 mult=1.00 prio=700.0
+    constraint attr=7/0 rel=0 const=4 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=0 const=16 mult=1.00 prio=1000.0
+NSBox h=5 intrinsicH=1 fitH=5 hug=750.0 resist=750.0
+    constraint attr=8/0 rel=0 const=1 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=0 const=1 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=-1 const=5 mult=1.00 prio=700.0
+    constraint attr=7/0 rel=0 const=640 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=0 const=1 mult=1.00 prio=1000.0
+NSStackView h=24 intrinsicH=-1 fitH=24 hug=250.0 resist=750.0
+    constraint attr=8/0 rel=-1 const=24 mult=1.00 prio=700.0
+  top constraint 8 0 8 const=0 prio=500.0
+  top constraint 8 0 8 const=0 prio=500.0
+  top constraint 8 0 8 const=0 prio=500.0
+  top constraint 7 0 7 const=-40 prio=1000.0
+  top constraint 7 0 7 const=-40 prio=1000.0
+  top constraint 7 0 7 const=-40 prio=1000.0
+  top constraint 7 0 7 const=-40 prio=1000.0
+  top constraint 7 0 7 const=-40 prio=1000.0
+  top constraint 7 0 7 const=-40 prio=1000.0
+  top constraint 7 0 7 const=-40 prio=1000.0
+  top constraint 1 0 1 const=20 prio=260.0
+  top constraint 1 0 1 const=20 prio=260.0
+  top constraint 1 0 1 const=20 prio=260.0
+  top constraint 1 0 1 const=20 prio=260.0
+  top constraint 1 0 1 const=20 prio=260.0
+  top constraint 1 0 1 const=20 prio=260.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 3 0 4 const=10 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 4 0 4 const=20 prio=1000.0
+  top constraint 3 0 3 const=20 prio=1000.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 3 0 4 const=10 prio=1000.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 3 0 4 const=10 prio=1000.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 3 0 4 const=10 prio=1000.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 1 0 1 const=20 prio=249.99998474121094
+  top constraint 2 0 2 const=20 prio=249.99998474121094
+  top constraint 1 0 1 const=20 prio=249.99998474121094
+  top constraint 2 0 2 const=20 prio=249.99998474121094
+  top constraint 2 0 2 const=20 prio=249.99998474121094
+  top constraint 2 0 2 const=20 prio=249.99998474121094
+  top constraint 2 0 2 const=20 prio=249.99998474121094
+  top constraint 2 0 2 const=20 prio=249.99998474121094
+  top constraint 1 0 1 const=20 prio=249.99998474121094
+  top constraint 1 0 1 const=20 prio=249.99998474121094
+  top constraint 1 0 1 const=20 prio=249.99998474121094
+  top constraint 1 0 1 const=20 prio=249.99998474121094
+  top constraint 3 0 3 const=0 prio=250.0
+  top constraint 1 0 1 const=0 prio=250.0
+  top constraint 3 0 3 const=0 prio=250.0
+  top constraint 1 0 1 const=0 prio=250.0
+  top constraint 3 0 3 const=0 prio=250.0
+  top constraint 1 0 1 const=0 prio=250.0
+  top constraint 1 0 1 const=20 prio=260.0
+  top constraint 3 0 4 const=10 prio=1000.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 3 0 4 const=10 prio=1000.0
+  top constraint 1 0 1 const=20 prio=249.99998474121094
+  top constraint 2 0 2 const=20 prio=249.99998474121094
+scenario finished
+start hello dark
+screenshot hello-dark: exit 0, 86570 bytes 
+scenario finished
+start settings dark
+screenshot settings-dark: exit 0, 98851 bytes 
+scenario finished
+start widgets dark
+screenshot widgets-dark: exit 0, 128325 bytes 
+window 'Widgets' content 520
+NSStackView y=0 h=520 w=647 hugV=250.0
+  NSStackView y=476 h=28 w=615 hugV=250.0
+    NSImageView y=-2 h=32 w=28 hugV=250.0
+      _NSImageViewSimpleImageView y=5 h=21 w=28 hugV=250.0
+    NSTextField y=6 h=16 w=112 hugV=750.0
+      _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=112 hugV=250.0
+    NSView y=0 h=28 w=471 hugV=250.0
+  NSBox y=461 h=5 w=615 hugV=750.0
+    _NSBoxSeparatorView y=2 h=1 w=615 hugV=250.0
+  NSStackView y=361 h=90 w=615 hugV=250.0
+    NSStackView y=0 h=90 w=66 hugV=250.0
+      NSTextField y=74 h=16 w=48 hugV=750.0
+        _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=48 hugV=250.0
+      NSStackView y=8 h=60 w=66 hugV=250.0
+        NSButton y=44 h=16 w=47 hugV=250.0
+          _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=16 w=47 hugV=250.0
+        NSButton y=22 h=16 w=66 hugV=250.0
+          _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=16 w=66 hugV=250.0
+        NSButton y=0 h=16 w=51 hugV=250.0
+          _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=16 w=51 hugV=250.0
+      NSView y=0 h=8 w=66 hugV=1.0
+    NSStackView y=0 h=90 w=120 hugV=250.0
+      NSTextField y=74 h=16 w=48 hugV=750.0
+        _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=48 hugV=250.0
+      NSPopUpButton y=44 h=24 w=84 hugV=750.0
+        _TtGC6AppKit18_NSCoreHostingViewVS_17AppKitPopUpButton_ y=0 h=24 w=84 hugV=250.0
+      NSTextField y=22 h=16 w=49 hugV=750.0
+        _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=49 hugV=250.0
+      NSSlider y=0 h=16 w=120 hugV=750.0
+        _TtGC6AppKit18_NSCoreHostingViewVS_P10$189b3d3a413SliderWrapper_ y=0 h=16 w=120 hugV=250.0
+          _TtGC6AppKit22NSCorePlatformViewHostGVS_32PlatformViewRepresentableAdaptorGVS_P10$189b3fc3412WindowPortalGV7SwiftUI21_ViewModifier_ContentVS_16LiftPortalEffect____ y=0 h=16 w=20 hugV=250.0
+            _TtC6AppKitP33_3163C09D58C8C57067DCBFBB784729CE14LiftPortalView y=0 h=16 w=20 hugV=250.0
+              _TtGC6AppKit18_NSCoreHostingViewGV7SwiftUI21_ViewModifier_ContentVS_16LiftPortalEffect__ y=0 h=16 w=20 hugV=250.0
+      NSView y=0 h=0 w=120 hugV=1.0
+    NSView y=0 h=90 w=397 hugV=250.0
+  NSStackView y=325 h=24 w=615 hugV=250.0
+    NSTextField y=4 h=16 w=81 hugV=750.0
+      _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=81 hugV=250.0
+    NSSwitch y=0 h=24 w=54 hugV=750.0
+      _TtGC6AppKit18_NSCoreHostingViewVS_P10$189b3d6e812AppKitSwitch_ y=0 h=24 w=54 hugV=250.0
+        _TtGC6AppKit22NSCorePlatformViewHostGVS_32PlatformViewRepresentableAdaptorGVS_P10$189b3fc3412WindowPortalGV7SwiftUI21_ViewModifier_ContentVS_16LiftPortalEffect____ y=2 h=20 w=32 hugV=250.0
+          _TtC6AppKitP33_3163C09D58C8C57067DCBFBB784729CE14LiftPortalView y=0 h=20 w=32 hugV=250.0
+            _TtGC6AppKit18_NSCoreHostingViewGV7SwiftUI21_ViewModifier_ContentVS_16LiftPortalEffect__ y=0 h=20 w=32 hugV=250.0
+    NSView y=0 h=24 w=16 hugV=250.0
+    NSTextField y=4 h=16 w=47 hugV=750.0
+      _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=47 hugV=250.0
+    NSColorWell y=0 h=24 w=44 hugV=250.0
+      _TtGC6AppKit18_NSCoreHostingViewVS_15AppKitColorWell_ y=0 h=24 w=44 hugV=250.0
+    NSView y=0 h=24 w=236 hugV=250.0
+    NSButton y=0 h=24 w=97 hugV=750.0
+      _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=24 w=97 hugV=250.0
+  NSStackView y=80 h=233 w=615 hugV=1.0
+    NSScrollView y=0 h=233 w=201 hugV=1.0
+      _NSScrollViewContentBackgroundView y=0 h=233 w=201 hugV=250.0
+        NSVisualEffectView y=0 h=233 w=201 hugV=250.0
+      NSClipView y=0 h=233 w=184 hugV=250.0
+        NSTableView y=0 h=250 w=184 hugV=750.0
+          NSTableRowView y=10 h=24 w=184 hugV=250.0
+            NSView y=0 h=24 w=164 hugV=250.0
+            NSTableCellView y=0 h=24 w=152 hugV=250.0
+              NSTextField y=4 h=16 w=152 hugV=750.0
+          NSTableRowView y=34 h=24 w=184 hugV=250.0
+            NSTableCellView y=0 h=24 w=152 hugV=250.0
+              NSTextField y=4 h=16 w=152 hugV=750.0
+          NSTableRowView y=58 h=24 w=184 hugV=250.0
+            NSTableCellView y=0 h=24 w=152 hugV=250.0
+              NSTextField y=4 h=16 w=152 hugV=750.0
+          NSTableRowView y=82 h=24 w=184 hugV=250.0
+            NSTableCellView y=0 h=24 w=152 hugV=250.0
+              NSTextField y=4 h=16 w=152 hugV=750.0
+          NSTableRowView y=106 h=24 w=184 hugV=250.0
+            NSTableCellView y=0 h=24 w=152 hugV=250.0
+              NSTextField y=4 h=16 w=152 hugV=750.0
+          NSTableRowView y=130 h=24 w=184 hugV=250.0
+            NSTableCellView y=0 h=24 w=152 hugV=250.0
+              NSTextField y=4 h=16 w=152 hugV=750.0
+          NSTableRowView y=154 h=24 w=184 hugV=250.0
+            NSTableCellView y=0 h=24 w=152 hugV=250.0
+              NSTextField y=4 h=16 w=152 hugV=750.0
+          NSTableRowView y=178 h=24 w=184 hugV=250.0
+            NSTableCellView y=0 h=24 w=152 hugV=250.0
+              NSTextField y=4 h=16 w=152 hugV=750.0
+          NSTableRowView y=202 h=24 w=184 hugV=250.0
+            NSTableCellView y=0 h=24 w=152 hugV=250.0
+              NSTextField y=4 h=16 w=152 hugV=750.0
+          NSTableRowView y=226 h=24 w=184 hugV=250.0
+            NSTableCellView y=0 h=24 w=152 hugV=250.0
+              NSTextField y=4 h=16 w=152 hugV=750.0
+      NSScroller y=0 h=233 w=17 hugV=750.0
+    NSScrollView y=0 h=233 w=402 hugV=1.0
+      _NSScrollViewContentBackgroundView y=0 h=233 w=402 hugV=250.0
+        NSVisualEffectView y=0 h=233 w=402 hugV=250.0
+      _TtCC6AppKit14NSScrollPocketP33_EC3F85FAB7755D56E669206D2B17725B12BackdropView y=0 h=28 w=402 hugV=250.0
+      NSClipView y=0 h=233 w=402 hugV=250.0
+        NSTableView y=0 h=205 w=402 hugV=750.0
+          NSTableRowView y=5 h=24 w=402 hugV=250.0
+            NSTableCellView y=0 h=24 w=113 hugV=250.0
+              NSTextField y=4 h=16 w=113 hugV=750.0
+            NSTableCellView y=0 h=24 w=112 hugV=250.0
+              NSTextField y=4 h=16 w=112 hugV=750.0
+            NSTableCellView y=0 h=24 w=111 hugV=250.0
+              NSTextField y=4 h=16 w=111 hugV=750.0
+          NSTableRowView y=29 h=24 w=402 hugV=250.0
+            NSTableCellView y=0 h=24 w=113 hugV=250.0
+              NSTextField y=4 h=16 w=113 hugV=750.0
+            NSTableCellView y=0 h=24 w=112 hugV=250.0
+              NSTextField y=4 h=16 w=112 hugV=750.0
+            NSTableCellView y=0 h=24 w=111 hugV=250.0
+              NSTextField y=4 h=16 w=111 hugV=750.0
+          NSTableRowView y=53 h=24 w=402 hugV=250.0
+            NSTableCellView y=0 h=24 w=113 hugV=250.0
+              NSTextField y=4 h=16 w=113 hugV=750.0
+            NSTableCellView y=0 h=24 w=112 hugV=250.0
+              NSTextField y=4 h=16 w=112 hugV=750.0
+            NSTableCellView y=0 h=24 w=111 hugV=250.0
+              NSTextField y=4 h=16 w=111 hugV=750.0
+          NSTableRowView y=77 h=24 w=402 hugV=250.0
+            NSTableCellView y=0 h=24 w=113 hugV=250.0
+              NSTextField y=4 h=16 w=113 hugV=750.0
+            NSTableCellView y=0 h=24 w=112 hugV=250.0
+              NSTextField y=4 h=16 w=112 hugV=750.0
+            NSTableCellView y=0 h=24 w=111 hugV=250.0
+              NSTextField y=4 h=16 w=111 hugV=750.0
+      NSScrollPocket y=0 h=28 w=402 hugV=250.0
+        _TtCC6AppKit14NSScrollPocketP33_EC3F85FAB7755D56E669206D2B17725B10PocketMask y=-28 h=56 w=402 hugV=250.0
+          NSView y=0 h=56 w=402 hugV=250.0
+            NSView y=36 h=48 w=458 hugV=250.0
+        _TtCC6AppKit14NSScrollPocketP33_EC3F85FAB7755D56E669206D2B17725B10PocketBlur y=-28 h=56 w=402 hugV=250.0
+          _TtCC6AppKit14NSScrollPocketP33_EC3F85FAB7755D56E669206D2B17725B10PortalView y=0 h=56 w=402 hugV=250.0
+        NSHardPocketView y=0 h=28 w=402 hugV=250.0
+          _NSScrollViewContentBackgroundView y=0 h=28 w=402 hugV=250.0
+        _TtCC6AppKit14NSScrollPocketP33_EC3F85FAB7755D56E669206D2B17725B19LuminanceAdjustment y=-28 h=56 w=402 hugV=250.0
+          NSView y=0 h=56 w=402 hugV=250.0
+            NSView y=0 h=56 w=402 hugV=250.0
+              _TtCC6AppKit14NSScrollPocketP33_EC3F85FAB7755D56E669206D2B17725B12BackdropView y=0 h=56 w=402 hugV=250.0
+              _NSScrollViewContentBackgroundView y=0 h=56 w=402 hugV=250.0
+            NSView y=0 h=56 w=402 hugV=250.0
+              NSView y=0 h=56 w=402 hugV=250.0
+              NSView y=0 h=56 w=402 hugV=250.0
+          _TtCC6AppKit14NSScrollPocketP33_EC3F85FAB7755D56E669206D2B17725B10PortalView y=0 h=56 w=402 hugV=250.0
+        NSView y=0 h=28 w=402 hugV=250.0
+          _TtCC6AppKit14NSScrollPocketP33_EC3F85FAB7755D56E669206D2B17725B21AdditionalDimmingView y=0 h=0 w=0 hugV=250.0
+      NSClipView y=0 h=28 w=402 hugV=250.0
+        NSBannerView y=0 h=28 w=402 hugV=250.0
+          NSHardPocketView y=0 h=28 w=402 hugV=250.0
+            _NSScrollViewContentBackgroundView y=0 h=28 w=402 hugV=250.0
+              NSVisualEffectView y=0 h=28 w=402 hugV=250.0
+          _NSBannerDecorationView y=0 h=28 w=402 hugV=250.0
+        NSTableHeaderView y=0 h=28 w=402 hugV=250.0
+      NSScroller y=28 h=0 w=17 hugV=750.0
+      _NSCornerView y=0 h=28 w=17 hugV=250.0
+      NSBannerView y=0 h=28 w=17 hugV=250.0
+        NSHardPocketView y=0 h=28 w=17 hugV=250.0
+          _NSScrollViewContentBackgroundView y=0 h=28 w=17 hugV=250.0
+            NSVisualEffectView y=0 h=28 w=17 hugV=250.0
+        _NSBannerDecorationView y=0 h=28 w=17 hugV=250.0
+  NSTextField y=52 h=16 w=619 hugV=750.0
+    _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=619 hugV=250.0
+  NSStackView y=16 h=24 w=615 hugV=250.0
+    NSProgressIndicator y=2 h=20 w=559 hugV=750.0
+    NSButton y=0 h=24 w=48 hugV=750.0
+      _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=24 w=48 hugV=250.0
+--- details of the top stack
+fittingSize 407 intrinsic -1
+NSStackView h=28 intrinsicH=-1 fitH=28 hug=250.0 resist=750.0
+    constraint attr=8/0 rel=-1 const=28 mult=1.00 prio=700.0
+NSBox h=5 intrinsicH=1 fitH=5 hug=750.0 resist=750.0
+    constraint attr=8/0 rel=0 const=1 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=0 const=1 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=-1 const=5 mult=1.00 prio=700.0
+    constraint attr=7/0 rel=0 const=615 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=0 const=1 mult=1.00 prio=1000.0
+NSStackView h=90 intrinsicH=-1 fitH=90 hug=250.0 resist=750.0
+    constraint attr=8/0 rel=-1 const=90 mult=1.00 prio=700.0
+NSStackView h=24 intrinsicH=-1 fitH=24 hug=250.0 resist=750.0
+    constraint attr=8/0 rel=-1 const=24 mult=1.00 prio=700.0
+NSStackView h=233 intrinsicH=-1 fitH=120 hug=1.0 resist=750.0
+    constraint attr=7/7 rel=0 const=0 mult=2.00 prio=500.0
+    constraint attr=8/8 rel=0 const=0 mult=1.00 prio=1000.0
+    constraint attr=8/8 rel=0 const=0 mult=1.00 prio=1000.0
+NSTextField h=16 intrinsicH=16 fitH=16 hug=750.0 resist=750.0
+    constraint attr=8/0 rel=0 const=16 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=-1 const=16 mult=1.00 prio=700.0
+    constraint attr=7/0 rel=0 const=615 mult=1.00 prio=1000.0
+    constraint attr=7/0 rel=0 const=619 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=0 const=16 mult=1.00 prio=1000.0
+NSStackView h=24 intrinsicH=-1 fitH=24 hug=250.0 resist=750.0
+    constraint attr=8/0 rel=-1 const=24 mult=1.00 prio=700.0
+  top constraint 7 0 7 const=-32 prio=1000.0
+  top constraint 7 0 7 const=-32 prio=1000.0
+  top constraint 7 0 7 const=-32 prio=1000.0
+  top constraint 7 0 7 const=-32 prio=1000.0
+  top constraint 7 0 7 const=-32 prio=1000.0
+  top constraint 7 0 7 const=-32 prio=1000.0
+  top constraint 7 0 7 const=-32 prio=1000.0
+  top constraint 1 0 1 const=16 prio=260.0
+  top constraint 1 0 1 const=16 prio=260.0
+  top constraint 1 0 1 const=16 prio=260.0
+  top constraint 1 0 1 const=16 prio=260.0
+  top constraint 1 0 1 const=16 prio=260.0
+  top constraint 1 0 1 const=16 prio=260.0
+  top constraint 1 0 1 const=16 prio=260.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 3 0 3 const=16 prio=1000.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 3 0 4 const=12 prio=1000.0
+  top constraint 3 0 4 const=12 prio=1000.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 3 0 4 const=12 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 3 0 4 const=12 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 3 0 4 const=12 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 4 0 4 const=16 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 3 0 4 const=12 prio=1000.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 1 0 1 const=16 prio=249.99998474121094
+  top constraint 1 0 1 const=16 prio=249.99998474121094
+  top constraint 1 0 1 const=16 prio=249.99998474121094
+  top constraint 1 0 1 const=16 prio=249.99998474121094
+  top constraint 2 0 2 const=16 prio=249.99998474121094
+  top constraint 2 0 2 const=16 prio=249.99998474121094
+  top constraint 2 0 2 const=16 prio=249.99998474121094
+  top constraint 1 0 1 const=16 prio=249.99998474121094
+  top constraint 2 0 2 const=16 prio=249.99998474121094
+  top constraint 2 0 2 const=16 prio=249.99998474121094
+  top constraint 2 0 2 const=16 prio=249.99998474121094
+  top constraint 2 0 2 const=16 prio=249.99998474121094
+  top constraint 1 0 1 const=16 prio=249.99998474121094
+  top constraint 1 0 1 const=16 prio=249.99998474121094
+scenario finished
+start finder dark
+screenshot finder-start-dark: exit 0, 99724 bytes 
+screenshot finder-documents-dark: exit 0, 100486 bytes 
+screenshot finder-back-dark: exit 0, 99841 bytes 
+scenario finished
+start sidebar dark
+screenshot sidebar-general-dark: exit 0, 100497 bytes 
+screenshot sidebar-appearance-dark: exit 0, 98672 bytes 
+screenshot sidebar-about-dark: exit 0, 96895 bytes 
+scenario finished
+start everything dark
+screenshot everything-list-dark: exit 0, 107635 bytes 
+screenshot everything-icons-dark: exit 0, 104129 bytes 
+screenshot everything-documents-dark: exit 0, 106466 bytes 
+screenshot everything-icon-selected-dark: exit 0, 108124 bytes 
+screenshot everything-popover-dark: exit 0, 121522 bytes 
+screenshot everything-sheet-dark: exit 0, 120257 bytes 
+screenshot everything-delete-sheet-dark: exit 0, 117981 bytes 
+scenario finished
+start editor dark
+screenshot editor-empty-dark: exit 0, 86907 bytes 
+screenshot editor-text-dark: exit 0, 91868 bytes 
+scenario finished
+start form dark
+screenshot form-empty-dark: exit 0, 99573 bytes 
+screenshot form-invalid-dark: exit 0, 102126 bytes 
+screenshot form-valid-dark: exit 0, 98347 bytes 
+scenario finished
+start progress dark
+screenshot progress-ready-dark: exit 0, 88637 bytes 
+screenshot progress-running-dark: exit 0, 89857 bytes 
+screenshot progress-cancelled-dark: exit 0, 91241 bytes 
+scenario finished
+start tasks dark
+screenshot tasks-start-dark: exit 0, 101361 bytes 
+screenshot tasks-sorted-dark: exit 0, 101545 bytes 
+scenario finished
+start notes dark
+screenshot notes-start-dark: exit 0, 93229 bytes 
+screenshot notes-new-dark: exit 0, 92893 bytes 
+screenshot notes-wide-dark: exit 0, 92893 bytes 
+scenario finished
+start drop dark
+screenshot drop-empty-dark: exit 0, 93267 bytes 
+screenshot drop-received-dark: exit 0, 102050 bytes 
+scenario finished
+start checklist dark
+screenshot checklist-start-dark: exit 0, 100625 bytes 
+screenshot checklist-ticked-dark: exit 0, 100973 bytes 
+scenario finished
+start showcase dark
+screenshot showcase-today-dark: exit 0, 121593 bytes 
+screenshot showcase-library-dark: exit 0, 123472 bytes 
+screenshot showcase-appearance-dark: exit 0, 119960 bytes 
+scenario finished
+start installer dark
+screenshot installer-app-dark: exit 0, 111727 bytes 
+screenshot installer-icon-dark: exit 0, 129337 bytes 
+screenshot installer-needs-dark: exit 0, 110924 bytes 
+screenshot installer-build-dark: exit 0, 110875 bytes 
+window 'Install Creator' content 502
+NSStackView y=0 h=502 w=680 hugV=250.0
+  NSTextField y=456 h=26 w=52 hugV=750.0
+    _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=26 w=52 hugV=250.0
+  NSTextField y=430 h=16 w=207 hugV=750.0
+    _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=207 hugV=250.0
+  NSBox y=417 h=5 w=640 hugV=750.0
+    _NSBoxSeparatorView y=2 h=1 w=640 hugV=250.0
+  NSStackView y=184 h=318 w=640 hugV=1.0
+    NSTextField y=302 h=16 w=40 hugV=750.0
+      _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=40 hugV=250.0
+    NSStackView y=268 h=24 w=640 hugV=250.0
+      NSTextField y=0 h=24 w=551 hugV=750.0
+        _TtGC6AppKit18_NSCoreHostingViewVS_P10$189b3db5815AppKitTextField_ y=0 h=24 w=551 hugV=250.0
+        AppKit.NSSimpleLabel y=4 h=16 w=543 hugV=250.0
+      NSButton y=0 h=24 w=81 hugV=750.0
+        _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=24 w=81 hugV=250.0
+    NSTextField y=242 h=16 w=66 hugV=750.0
+      _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=66 hugV=250.0
+    NSTextField y=208 h=24 w=640 hugV=750.0
+      _TtGC6AppKit18_NSCoreHostingViewVS_P10$189b3db5815AppKitTextField_ y=0 h=24 w=640 hugV=250.0
+      AppKit.NSSimpleLabel y=4 h=16 w=632 hugV=250.0
+    NSStackView y=174 h=24 w=640 hugV=250.0
+      NSTextField y=4 h=16 w=50 hugV=750.0
+        _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=50 hugV=250.0
+      NSTextField y=0 h=24 w=80 hugV=750.0
+        _TtGC6AppKit18_NSCoreHostingViewVS_P10$189b3db5815AppKitTextField_ y=0 h=24 w=80 hugV=250.0
+        AppKit.NSSimpleLabel y=4 h=16 w=72 hugV=250.0
+      NSTextField y=4 h=16 w=58 hugV=750.0
+        _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=58 hugV=250.0
+      NSTextField y=0 h=24 w=436 hugV=750.0
+        _TtGC6AppKit18_NSCoreHostingViewVS_P10$189b3db5815AppKitTextField_ y=0 h=24 w=436 hugV=250.0
+        AppKit.NSSimpleLabel y=4 h=16 w=428 hugV=250.0
+    NSButton y=148 h=16 w=201 hugV=250.0
+      _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=16 w=201 hugV=250.0
+    NSView y=0 h=148 w=640 hugV=1.0
+  NSStackView y=184 h=318 w=640 hugV=1.0
+    NSStackView y=0 h=318 w=640 hugV=1.0
+      NSStackView y=0 h=318 w=220 hugV=250.0
+        NSStackView y=236 h=82 w=134 hugV=250.0
+          NSButton y=66 h=16 w=126 hugV=250.0
+            _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=16 w=126 hugV=250.0
+          NSButton y=44 h=16 w=90 hugV=250.0
+            _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=16 w=90 hugV=250.0
+          NSButton y=22 h=16 w=122 hugV=250.0
+            _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=16 w=122 hugV=250.0
+          NSButton y=0 h=16 w=134 hugV=250.0
+            _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=16 w=134 hugV=250.0
+        NSButton y=294 h=24 w=119 hugV=750.0
+          _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=24 w=119 hugV=250.0
+        NSSearchField y=204 h=24 w=220 hugV=750.0
+          _TtGC6AppKit18_NSCoreHostingViewVS_P10$189b3d84417AppKitSearchField_ y=0 h=24 w=220 hugV=250.0
+            _TtGC6AppKit22NSCorePlatformViewHostGVS_32PlatformViewRepresentableAdaptorVVS_P10$189b3d96826SearchFieldAccessoryButton39SearchFieldAccessoryButtonRepresentable__ y=8 h=9 w=15 hugV=250.0
+              NSButton y=-3 h=15 w=15 hugV=250.0
+            _TtGC6AppKit22NSCorePlatformViewHostGVS_32PlatformViewRepresentableAdaptorVVS_P10$189b3d96826SearchFieldAccessoryButton39SearchFieldAccessoryButtonRepresentable__ y=8 h=9 w=15 hugV=250.0
+              NSButton y=-3 h=15 w=15 hugV=250.0
+          AppKit.NSSimpleLabel y=4 h=16 w=173 hugV=250.0
+        NSView y=0 h=196 w=220 hugV=1.0
+      NSStackView y=0 h=318 w=248 hugV=250.0
+        NSScrollView y=0 h=318 w=248 hugV=1.0
+          _NSScrollViewContentBackgroundView y=0 h=318 w=231 hugV=250.0
+            NSVisualEffectView y=0 h=318 w=231 hugV=250.0
+          NSClipView y=0 h=318 w=231 hugV=250.0
+            NSTableView y=0 h=6226 w=231 hugV=750.0
+              NSTableRowView y=154 h=24 w=231 hugV=250.0
+              NSTableRowView y=178 h=24 w=231 hugV=250.0
+              NSTableRowView y=202 h=24 w=231 hugV=250.0
+              NSTableRowView y=226 h=24 w=231 hugV=250.0
+              NSTableRowView y=250 h=24 w=231 hugV=250.0
+              NSTableRowView y=274 h=24 w=231 hugV=250.0
+              NSTableRowView y=298 h=24 w=231 hugV=250.0
+              NSTableRowView y=322 h=24 w=231 hugV=250.0
+              NSTableRowView y=346 h=24 w=231 hugV=250.0
+              NSTableRowView y=370 h=24 w=231 hugV=250.0
+              NSTableRowView y=394 h=24 w=231 hugV=250.0
+              NSTableRowView y=418 h=24 w=231 hugV=250.0
+              NSTableRowView y=442 h=24 w=231 hugV=250.0
+              NSTableRowView y=466 h=24 w=231 hugV=250.0
+          NSScroller y=0 h=318 w=17 hugV=750.0
+      NSStackView y=0 h=318 w=140 hugV=250.0
+        NSImageView y=190 h=128 w=128 hugV=250.0
+          _NSImageViewSimpleImageView y=0 h=128 w=128 hugV=250.0
+        NSTextField y=166 h=16 w=93 hugV=750.0
+          _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=93 hugV=250.0
+        NSView y=0 h=158 w=140 hugV=1.0
+  NSStackView y=184 h=318 w=640 hugV=1.0
+    NSTextField y=302 h=16 w=402 hugV=750.0
+      _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=402 hugV=250.0
+    NSTextField y=276 h=16 w=364 hugV=750.0
+      _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=364 hugV=250.0
+    NSScrollView y=130 h=136 w=640 hugV=1.0
+      _NSScrollViewContentBackgroundView y=0 h=136 w=640 hugV=250.0
+        NSVisualEffectView y=0 h=136 w=640 hugV=250.0
+      NSClipView y=0 h=136 w=640 hugV=250.0
+        NSTableView y=0 h=136 w=640 hugV=750.0
+      NSScroller y=0 h=0 w=17 hugV=750.0
+    NSStackView y=96 h=24 w=640 hugV=250.0
+      NSButton y=0 h=24 w=81 hugV=750.0
+        _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=24 w=81 hugV=250.0
+      NSButton y=0 h=24 w=97 hugV=750.0
+        _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=24 w=97 hugV=250.0
+      NSButton y=0 h=24 w=73 hugV=750.0
+        _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=24 w=73 hugV=250.0
+      NSView y=0 h=24 w=365 hugV=250.0
+    NSTextField y=70 h=16 w=463 hugV=750.0
+      _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=463 hugV=250.0
+    NSScrollView y=0 h=60 w=640 hugV=250.0
+      NSClipView y=0 h=60 w=623 hugV=250.0
+        NSTextView y=0 h=60 w=623 hugV=250.0
+          _NSTextSelectionView y=0 h=60 w=623 hugV=250.0
+          _NSTextRenderingSurfacesGroupView y=0 h=60 w=623 hugV=250.0
+          _NSTextContentView y=0 h=60 w=623 hugV=250.0
+      NSScroller y=0 h=60 w=17 hugV=750.0
+  NSStackView y=91 h=318 w=640 hugV=1.0
+    NSButton y=302 h=16 w=209 hugV=250.0
+      _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=16 w=209 hugV=250.0
+    NSButton y=276 h=16 w=43 hugV=250.0
+      _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=16 w=43 hugV=250.0
+    NSButton y=250 h=16 w=105 hugV=250.0
+      _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=16 w=105 hugV=250.0
+    NSButton y=224 h=16 w=371 hugV=250.0
+      _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=16 w=371 hugV=250.0
+    NSStackView y=190 h=24 w=640 hugV=250.0
+      NSTextField y=4 h=16 w=49 hugV=750.0
+        _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=49 hugV=250.0
+      NSTextField y=0 h=24 w=498 hugV=750.0
+        _TtGC6AppKit18_NSCoreHostingViewVS_P10$189b3db5815AppKitTextField_ y=0 h=24 w=498 hugV=250.0
+        AppKit.NSSimpleLabel y=4 h=16 w=490 hugV=250.0
+      NSButton y=0 h=24 w=81 hugV=750.0
+        _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=24 w=81 hugV=250.0
+    NSTextField y=164 h=16 w=357 hugV=750.0
+      _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=357 hugV=250.0
+    NSProgressIndicator y=298 h=20 w=120 hugV=750.0
+    NSScrollView y=34 h=120 w=640 hugV=1.0
+      NSClipView y=0 h=120 w=623 hugV=250.0
+        NSTextView y=0 h=120 w=623 hugV=250.0
+          _NSTextSelectionView y=0 h=120 w=623 hugV=250.0
+          _NSTextRenderingSurfacesGroupView y=0 h=120 w=623 hugV=250.0
+          _NSTextContentView y=0 h=120 w=623 hugV=250.0
+      NSScroller y=0 h=120 w=17 hugV=750.0
+    NSStackView y=0 h=24 w=640 hugV=250.0
+      NSTextField y=4 h=16 w=644 hugV=750.0
+        _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=644 hugV=250.0
+      NSButton y=0 h=24 w=114 hugV=750.0
+        _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=24 w=114 hugV=250.0
+  NSTextField y=65 h=16 w=4 hugV=750.0
+    _TtC6AppKitP33_72EBFCF981BE77E1C6F26FD717D0893922NSTextFieldSimpleLabel y=0 h=16 w=4 hugV=250.0
+  NSBox y=52 h=5 w=640 hugV=750.0
+    _NSBoxSeparatorView y=2 h=1 w=640 hugV=250.0
+  NSStackView y=20 h=24 w=640 hugV=250.0
+    NSButton y=0 h=24 w=116 hugV=750.0
+      _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=24 w=116 hugV=250.0
+    NSView y=0 h=24 w=391 hugV=250.0
+    NSButton y=0 h=24 w=54 hugV=750.0
+      _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=24 w=54 hugV=250.0
+    NSButton y=0 h=24 w=55 hugV=750.0
+      _TtGC6AppKit18_NSCoreHostingViewVS_12AppKitButton_ y=0 h=24 w=55 hugV=250.0
+--- details of the top stack
+fittingSize 494 intrinsic -1
+NSTextField h=26 intrinsicH=26 fitH=26 hug=750.0 resist=750.0
+    constraint attr=7/0 rel=0 const=48 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=0 const=26 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=-1 const=26 mult=1.00 prio=700.0
+    constraint attr=7/0 rel=0 const=52 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=0 const=26 mult=1.00 prio=1000.0
+NSTextField h=16 intrinsicH=16 fitH=16 hug=750.0 resist=750.0
+    constraint attr=7/0 rel=0 const=203 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=0 const=16 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=-1 const=16 mult=1.00 prio=700.0
+    constraint attr=7/0 rel=0 const=207 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=0 const=16 mult=1.00 prio=1000.0
+NSBox h=5 intrinsicH=1 fitH=5 hug=750.0 resist=750.0
+    constraint attr=8/0 rel=0 const=1 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=0 const=1 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=-1 const=5 mult=1.00 prio=700.0
+    constraint attr=7/0 rel=0 const=640 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=0 const=1 mult=1.00 prio=1000.0
+NSStackView h=318 intrinsicH=-1 fitH=170 hug=1.0 resist=750.0
+    constraint attr=7/7 rel=0 const=0 mult=1.00 prio=1000.0
+    constraint attr=7/7 rel=0 const=0 mult=1.00 prio=1000.0
+NSStackView h=318 intrinsicH=-1 fitH=160 hug=1.0 resist=750.0
+    constraint attr=7/7 rel=0 const=0 mult=1.00 prio=1000.0
+NSStackView h=318 intrinsicH=-1 fitH=302 hug=1.0 resist=750.0
+    constraint attr=7/7 rel=0 const=0 mult=1.00 prio=1000.0
+    constraint attr=7/7 rel=0 const=0 mult=1.00 prio=1000.0
+NSStackView h=318 intrinsicH=-1 fitH=310 hug=1.0 resist=750.0
+    constraint attr=7/7 rel=0 const=0 mult=1.00 prio=1000.0
+    constraint attr=7/7 rel=0 const=0 mult=1.00 prio=1000.0
+    constraint attr=7/7 rel=0 const=0 mult=1.00 prio=1000.0
+NSTextField h=16 intrinsicH=16 fitH=16 hug=750.0 resist=750.0
+    constraint attr=7/0 rel=0 const=0 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=0 const=16 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=-1 const=16 mult=1.00 prio=700.0
+    constraint attr=7/0 rel=0 const=4 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=0 const=16 mult=1.00 prio=1000.0
+NSBox h=5 intrinsicH=1 fitH=5 hug=750.0 resist=750.0
+    constraint attr=8/0 rel=0 const=1 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=0 const=1 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=-1 const=5 mult=1.00 prio=700.0
+    constraint attr=7/0 rel=0 const=640 mult=1.00 prio=1000.0
+    constraint attr=8/0 rel=0 const=1 mult=1.00 prio=1000.0
+NSStackView h=24 intrinsicH=-1 fitH=24 hug=250.0 resist=750.0
+    constraint attr=8/0 rel=-1 const=24 mult=1.00 prio=700.0
+  top constraint 8 0 8 const=0 prio=500.0
+  top constraint 8 0 8 const=0 prio=500.0
+  top constraint 8 0 8 const=0 prio=500.0
+  top constraint 7 0 7 const=-40 prio=1000.0
+  top constraint 7 0 7 const=-40 prio=1000.0
+  top constraint 7 0 7 const=-40 prio=1000.0
+  top constraint 7 0 7 const=-40 prio=1000.0
+  top constraint 7 0 7 const=-40 prio=1000.0
+  top constraint 7 0 7 const=-40 prio=1000.0
+  top constraint 7 0 7 const=-40 prio=1000.0
+  top constraint 1 0 1 const=20 prio=260.0
+  top constraint 1 0 1 const=20 prio=260.0
+  top constraint 1 0 1 const=20 prio=260.0
+  top constraint 1 0 1 const=20 prio=260.0
+  top constraint 1 0 1 const=20 prio=260.0
+  top constraint 1 0 1 const=20 prio=260.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 3 0 4 const=10 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 3 0 3 const=20 prio=1000.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 4 0 4 const=20 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 3 0 4 const=10 prio=1000.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 3 0 4 const=10 prio=1000.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 3 0 4 const=10 prio=1000.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 1 0 1 const=20 prio=249.99998474121094
+  top constraint 2 0 2 const=20 prio=249.99998474121094
+  top constraint 1 0 1 const=20 prio=249.99998474121094
+  top constraint 2 0 2 const=20 prio=249.99998474121094
+  top constraint 2 0 2 const=20 prio=249.99998474121094
+  top constraint 2 0 2 const=20 prio=249.99998474121094
+  top constraint 2 0 2 const=20 prio=249.99998474121094
+  top constraint 2 0 2 const=20 prio=249.99998474121094
+  top constraint 1 0 1 const=20 prio=249.99998474121094
+  top constraint 1 0 1 const=20 prio=249.99998474121094
+  top constraint 1 0 1 const=20 prio=249.99998474121094
+  top constraint 1 0 1 const=20 prio=249.99998474121094
+  top constraint 3 0 3 const=0 prio=250.0
+  top constraint 1 0 1 const=0 prio=250.0
+  top constraint 3 0 3 const=0 prio=250.0
+  top constraint 1 0 1 const=0 prio=250.0
+  top constraint 3 0 3 const=0 prio=250.0
+  top constraint 1 0 1 const=0 prio=250.0
+  top constraint 1 0 1 const=20 prio=260.0
+  top constraint 3 0 4 const=10 prio=1000.0
+  top constraint 1 1 1 const=0 prio=1000.0
+  top constraint 2 1 2 const=0 prio=1000.0
+  top constraint 3 0 4 const=10 prio=1000.0
+  top constraint 1 0 1 const=20 prio=249.99998474121094
+  top constraint 2 0 2 const=20 prio=249.99998474121094
+scenario finished
